@@ -159,28 +159,28 @@ Backend/
 ```bash
 
 ├── frontend/
-├── public/
-│   └── index.html
+├── public/                                 # Static files
+│   └── index.html                          # Single HTML file used by React
 ├── src/
 │   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Table.jsx
-│   │   └── Form.jsx
+│   │   ├── Navbar.jsx                      # Navigation bar
+│   │   ├── Table.jsx                       # Reusable table component
+│   │   └── Form.jsx                        # Reusable form component
 │   │
-│   ├── pages/
-│   │   ├── Members.jsx
-│   │   ├── Scholars.jsx
-│   │   ├── Finance.jsx
-│   │   ├── Transactions.jsx
-│   │   └── Reports.jsx
+│   ├── pages/                              # Page-level components
+│   │   ├── Members.jsx                     # Members page
+│   │   ├── Scholars.jsx                    # Scholars page
+│   │   ├── Finance.jsx                     # Finance page
+│   │   ├── Transactions.jsx                # Transactions page
+│   │   └── Reports.jsx                     # Reports page
 │   │
-│   ├── services/
-│   │   └── api.js   (axios config)
+│   ├── services/                           # API connection logic
+│   │   └── api.js                          # axios config
 │   │
-│   ├── App.jsx
-│   └── main.jsx
+│   ├── App.jsx                             # React entry point
+│   └── main.jsx                            # React entry point
 │
-└── package.json
+└── package.json                            # Frontend dependencies
 ```
 ```
 
