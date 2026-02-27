@@ -131,3 +131,69 @@ Frontend/
     ├── app.js          # Main React application component
     └── assets/         # Static resources (images, styles)
 ```
+```
+
+The upVIS system follows the Model–View–Controller (MVC) architectural pattern combined with a layered backend design. Although the frontend files are served inside the backend directory, the system maintains clear separation between presentation, routing, business logic, and data access layers.
+
+The project structure is organized as follows:
+
+upVIS/
+│
+├── Backend/                                # Main application directory
+│   │
+│   ├── Controllers/                        # Handles business logic (MVC - Controller)
+│   │   ├── distributionController.js       # Processes scholar distribution operations
+│   │   ├── donationController.js           # Handles donation recording and logic
+│   │   ├── donorController.js              # Manages donor-related operations
+│   │   ├── expenseController.js            # Processes expense entries
+│   │   ├── financeController.js            # Computes financial summaries and totals
+│   │   ├── memberController.js             # Manages organization member records
+│   │   ├── reportController.js             # Generates system reports
+│   │   └── scholarController.js            # Manages scholar registry and status
+│   │
+│   ├── Model/                              # Data access layer (MVC - Model)
+│   │   ├── Distributions.js                # Distribution database schema
+│   │   ├── Donations.js                    # Donation database schema
+│   │   ├── Donors.js                       # Donor database schema
+│   │   ├── Expenses.js                     # Expense database schema
+│   │   ├── Members.js                      # Member database schema
+│   │   ├── Reports.js                      # Reporting data schema
+│   │   └── Scholars.js                     # Scholar database schema
+│   │
+│   ├── Routes/                             # API endpoint definitions
+│   │   ├── distributionRoutes.js           # Routes for distribution requests
+│   │   ├── donationRoutes.js               # Routes for donation endpoints
+│   │   ├── donorRoutes.js                  # Routes for donor management
+│   │   ├── expenseRoutes.js                # Routes for expense operations
+│   │   ├── financeRoutes.js                # Routes for financial summaries
+│   │   ├── memberRoutes.js                 # Routes for member management
+│   │   ├── reportRoutes.js                 # Routes for reporting features
+│   │   └── scholarRoutes.js                # Routes for scholar operations
+│   │
+│   ├── public/                             # Frontend files (MVC - View Layer)
+│   │   ├── index.html                      # Dashboard interface
+│   │   ├── finance.html                    # Finance monitoring page
+│   │   ├── scholars.html                   # Scholar registry interface
+│   │   ├── members.html                    # Organization members page
+│   │   ├── transactions.html               # Donation and expense records page
+│   │   ├── styles.css                      # Application styling
+│   │   └── *.js                            # Client-side JavaScript files
+│   │
+│   ├── tests/                              # API endpoint testing files
+│   │   ├── distribution.http               # Distribution endpoint tests
+│   │   ├── donors.http                     # Donor endpoint tests
+│   │   ├── members.http                    # Member endpoint tests
+│   │   └── scholars.http                   # Scholar endpoint tests
+│   │
+│   └── server.js                           # Express server entry point
+│
+└── README.md                               # Project documentation
+```
+
+### Structure Explanation
+      a. Controllers/ handle business logic and request processing.
+      b. Model/ defines database schemas and performs CRUD operations.
+      c. Routes/ defines API endpoints and connects them to controllers.
+      d. public/ contains the user interface files (HTML, CSS, JS) served by the backend.
+      e. tests/ contains endpoint testing files for validation.
+      f. server.js initializes the Express server and middleware configuration.
