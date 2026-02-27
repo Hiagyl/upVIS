@@ -9,6 +9,59 @@
 upVIS (UPV Virgils Integrated System) is a web-based information system designed to automate the financial management and scholar support operations of UPV Virgils.
 The primary user of the system is the Administrator, who manages donations, expenses, scholar records, member records, and distribution tracking.
 
+The system centralizes:
+
+- 📦 Distribution records
+
+- 🧑 Members directory
+
+- 🎓 Scholars directory
+
+- ❤️ Donors directory
+
+- 💰 Donation tracking
+
+- 💸 Expense tracking
+
+- 📊 Financial records and summaries
+
+The goal of the system is to ensure transparency, proper tracking of distributions, and accurate financial reporting for the organization.
+
+### Core Entities and Responsibilities
+
+- **Member**
+      Represents organization's officers or volunteers.
+      - Helps in distributions
+
+- **Scholar**
+      Represents the beneficiaries of the organization.
+      - Receives distributions
+
+- **Donor**
+      Represents individuals who donates funds.
+      - Can make multiple donations
+
+- **Donation**
+      Represents financial donations by the donors.
+      - Linked to a donor
+      - Contributes to financial records
+
+- **Expense**
+      Represents the operational cost of the organization
+      - Deducted from the total donations
+
+- **Distribution**
+      Represents the distributed grocery of money.
+      - Involves the scholar and the details about the distribution.
+
+- **FinancialRecord**
+      Represents the summary of the finances of the organization.
+      - Total Donations
+      - Total Expenses
+      - Remaining Balance
+
+### Interaction Flow
+
 The interaction flow is as follows:
    1. The Administrator interacts with the View Layer through HTML pages in the public/ folder.
    2. Client-side JavaScript sends HTTP requests to the backend.
