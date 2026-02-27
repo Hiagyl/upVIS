@@ -236,6 +236,7 @@ frontend/
 │
 └── package.json                            # Frontend dependencies
 ```
+##
 
 The system is structured into two primary components: Backend and Frontend, ensuring clear separation of responsibilities and maintainability.
 
