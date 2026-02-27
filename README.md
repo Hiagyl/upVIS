@@ -29,36 +29,37 @@ The goal of the system is to ensure transparency, proper tracking of distributio
 
 ### Core Entities and Responsibilities
 
-- **Member**
-      Represents organization's officers or volunteers.
-      - Helps in distributions
+- **Member**  
+  Represents the organization's officers or volunteers.  
+  - Helps in distributions  
 
-- **Scholar**
-      Represents the beneficiaries of the organization.
-      - Receives distributions
+- **Scholar**  
+  Represents the beneficiaries of the organization.  
+  - Receives distributions  
 
-- **Donor**
-      Represents individuals who donates funds.
-      - Can make multiple donations
+- **Donor**  
+  Represents individuals who donate funds.  
+  - Can make multiple donations  
 
-- **Donation**
-      Represents financial donations by the donors.
-      - Linked to a donor
-      - Contributes to financial records
+- **Donation**  
+  Represents financial donations made by donors.  
+  - Linked to a donor  
+  - Contributes to financial records  
 
-- **Expense**
-      Represents the operational cost of the organization
-      - Deducted from the total donations
+- **Expense**  
+  Represents the operational costs of the organization.  
+  - Deducted from the total donations  
 
-- **Distribution**
-      Represents the distributed grocery of money.
-      - Involves the scholar and the details about the distribution.
+- **Distribution**  
+  Represents the distribution of groceries or monetary assistance.  
+  - Involves the scholar  
+  - Contains details about the distribution  
 
-- **FinancialRecord**
-      Represents the summary of the finances of the organization.
-      - Total Donations
-      - Total Expenses
-      - Remaining Balance
+- **FinancialRecord**  
+  Represents the financial summary of the organization.  
+  - Total Donations  
+  - Total Expenses  
+  - Remaining Balance  
 
 ### Interaction Flow
 
@@ -164,7 +165,7 @@ Each layer has a defined responsibility that improves maintainability, scalabili
 <span>The backend serves as the core of the system. It handles API requests, processes logic, and manages communication with the database. The backend is structured following the MVC architectural pattern to separate concerns between data handling, request processing, and routing.</span>
 
 ```bash
-Backend/  
+backend/  
 ├── Controllers/                    # Contains business logic and request handlers  
 │   ├── distributionController.js   # Handles scholar distribution operations  
 │   ├── donationController.js       # Handles donation recording and processing  
@@ -211,7 +212,7 @@ Backend/
 
 ```bash
 
-├── frontend/
+frontend/
 ├── public/                                 # Static files
 │   └── index.html                          # Single HTML file used by React
 ├── src/
@@ -241,6 +242,7 @@ The upVIS system follows the Model–View–Controller (MVC) architectural patte
 
 The project structure is organized as follows:
 
+```
 upVIS/
 │
 ├── Backend/                                # Main application directory
