@@ -33,7 +33,7 @@ This architecture enables centralized data processing while allowing administrat
 
 The backend follows the MVC architectural pattern:
 
-# Model (Model/)
+Model (Model/)
 Represents the system’s data and database interaction logic.
 
 Examples:
@@ -43,14 +43,14 @@ Examples:
       d. Members.js
 These files define the structure of financial records, scholar data, and member data.
 
-# View (public/)
+View (public/)
 Contains:
       a. HTML pages (e.g., finance.html, scholars.html)
       b. CSS styling
       c. Client-side JavaScript
 This layer handles presentation and user interaction.
 
-# Controller (Controllers/)
+Controller (Controllers/)
 Contains business logic for processing requests.
 
 Examples:
