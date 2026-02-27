@@ -62,20 +62,31 @@ The goal of the system is to ensure transparency, proper tracking of distributio
   - Remaining Balance  
 
 ### Conceptual Model
-
+#### User-System Interaction
 <p align="center">
   <img src="./img1.png" width="500"/>
 </p>
 
 The user can manage and track different transactions and directories in the system as shown in the image above. Basically, the system is just composed of different pages with functionalities related to managing a specific transaction or members, donors, and recipients of the organization.
 
+#### Distribution Flow
+<p align="center">
+  <img src="./img3.png" width="500"/>
+</p>
+This is a high-level overview of the process done in the system. Donors will donate donations(money) and it will be used to purchase groceries and other expenses for the distribution to the scholars.
+
+#### Financial Flow
+<p align="center">
+  <img src="./img4.png" width="500"/>
+</p>
+This is a high-level overview of the financial transactions happening in the system. Donations from the donors will be the main source of finance in this organization and expenses will be deducted from the overall donations to determine the balance. They will be used for the financial reports.
 ### Entity-Relationsip Diagram of upVIS
 
 <p align="center">
   <img src="./img2.png" width="500"/>
 </p>
 
-The diagram above shows the relationship between the entities in this system.
+The diagram above shows the relationship between the entities in this system. This also shows the cardinality of the entities.
 
 ### Interaction Flow
 
