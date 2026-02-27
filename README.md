@@ -41,35 +41,54 @@ Model (Model/)
 Represents the system’s data and database interaction logic.
 
 Examples:
+
       a. Donations.js
+      
       b. Expenses.js
+      
       c. Scholars.js
+      
       d. Members.js
+      
 These files define the structure of financial records, scholar data, and member data.
 
 View (public/)
 Contains:
+
       a. HTML pages (e.g., finance.html, scholars.html)
+      
       b. CSS styling
+      
       c. Client-side JavaScript
+      
 This layer handles presentation and user interaction.
 
 Controller (Controllers/)
 Contains business logic for processing requests.
 
 Examples:
+
       a. financeController.js
+      
       b. scholarController.js
+      
       c. memberController.js
+      
 Controllers validate input, compute financial summaries, and coordinate database operations.
 
 ### 3️. Layered Architecture
 The system is also structured as a layered architecture:
+
       a. Presentation Layer → public/
+      
       b. Routing Layer → Routes/
+      
       c. Application Logic Layer → Controllers/
+      
       d. Data Access Layer → Model/
+      
       e. Testing Layer → tests/
+      
 Each layer has a defined responsibility, improving maintainability, scalability, and clarity of responsibilities.
 
 ---
