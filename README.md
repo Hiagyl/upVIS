@@ -25,7 +25,9 @@ The interaction flow is as follows:
    
 upVIS follows a Client–Server architecture.
       a. The Client is the web browser used by UPV Virgils administrators.
+      
       b. The Server is the Node.js + Express backend application.
+      
       c. Communication happens via HTTP requests and responses.
 This architecture enables centralized data processing while allowing administrators to access the system through standard web browsers.
 
