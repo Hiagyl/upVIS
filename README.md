@@ -236,5 +236,3 @@ frontend/
 │
 └── package.json                            # Frontend dependencies
 ```
-```
-
