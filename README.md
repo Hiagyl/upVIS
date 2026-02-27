@@ -61,6 +61,22 @@ The goal of the system is to ensure transparency, proper tracking of distributio
   - Total Expenses  
   - Remaining Balance  
 
+### Conceptual Model
+
+<p align="center">
+  <img src="./img1.png" width="500"/>
+</p>
+
+The user can manage and track different transactions and directories in the system as shown in the image above. Basically, the system is just composed of different pages with functionalities related to managing a specific transaction or members, donors, and recipients of the organization.
+
+### Entity-Relationsip Diagram of upVIS
+
+<p align="center">
+  <img src="./img2.png" width="500"/>
+</p>
+
+The diagram above shows the relationship between the entities in this system.
+
 ### Interaction Flow
 
 The interaction flow is as follows:
