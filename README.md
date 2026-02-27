@@ -21,6 +21,53 @@ The interaction flow is as follows:
 
 ## Software Architecture
 
+1. Client–Server Architecture
+   
+upVIS follows a Client–Server architecture.
+      a. The Client is the web browser used by UPV Virgils administrators.
+      b. The Server is the Node.js + Express backend application.
+      c. Communication happens via HTTP requests and responses.
+This architecture enables centralized data processing while allowing administrators to access the system through standard web browsers.
+
+2️. Model–View–Controller (MVC)
+
+The backend follows the MVC architectural pattern:
+
+# Model (Model/)
+Represents the system’s data and database interaction logic.
+
+Examples:
+      a. Donations.js
+      b. Expenses.js
+      c. Scholars.js
+      d. Members.js
+These files define the structure of financial records, scholar data, and member data.
+
+# View (public/)
+Contains:
+      a. HTML pages (e.g., finance.html, scholars.html)
+      b. CSS styling
+      c. Client-side JavaScript
+This layer handles presentation and user interaction.
+
+# Controller (Controllers/)
+Contains business logic for processing requests.
+
+Examples:
+      a. financeController.js
+      b. scholarController.js
+      c. memberController.js
+Controllers validate input, compute financial summaries, and coordinate database operations.
+
+3️. Layered Architecture
+The system is also structured as a layered architecture:
+      a. Presentation Layer → public/
+      b. Routing Layer → Routes/
+      c. Application Logic Layer → Controllers/
+      d. Data Access Layer → Model/
+      e. Testing Layer → tests/
+Each layer has a defined responsibility, improving maintainability, scalability, and clarity of responsibilities.
+
 ---
 
 ## Project Stucture 
