@@ -111,13 +111,52 @@ Each layer has a defined responsibility that improves maintainability, scalabili
 <span>The backend serves as the core of the system. It handles API requests, processes logic, and manages communication with the database. The backend is structured following the MVC architectural pattern to separate concerns between data handling, request processing, and routing.</span>
 
 ```bash
-Backend/
-├── Controllers/      # Handle logic and request handlers
-├── Model/            # Database schemas and data operations
-├── Routes/           # API endpoint definitions
-├── public/           # Static files served by backend
-├── tests/            # Unit and integration tests
-└── server.js         # Application entry point
+Backend/  
+├── Controllers/                    # Contains business logic and request handlers  
+│   ├── distributionController.js   # Handles scholar distribution operations  
+│   ├── donationController.js       # Handles donation recording and processing  
+│   ├── donorController.js          # Manages donor-related logic  
+│   ├── expenseController.js        # Handles expense tracking and validation  
+│   ├── financeController.js        # Computes totals and financial summaries  
+│   ├── memberController.js         # Manages organization member records  
+│   ├── reportController.js         # Generates financial and summary reports  
+│   └── scholarController.js        # Manages scholar records and status  
+│
+├── Model/                          # Defines database schemas and data operations  
+│   ├── Distributions.js            # Distribution data model  
+│   ├── Donations.js                # Donation data model  
+│   ├── Donors.js                   # Donor data model  
+│   ├── Expenses.js                 # Expense data model  
+│   ├── Members.js                  # Organization member data model  
+│   ├── Reports.js                  # Reporting data model  
+│   └── Scholars.js                 # Scholar data model  
+│
+├── Routes/                         # Defines API endpoints and maps them to controllers  
+│   ├── distributionRoutes.js       # Routes for distribution-related requests  
+│   ├── donationRoutes.js           # Routes for donation operations  
+│   ├── donorRoutes.js              # Routes for donor operations  
+│   ├── expenseRoutes.js            # Routes for expense operations  
+│   ├── financeRoutes.js            # Routes for finance summaries  
+│   ├── memberRoutes.js             # Routes for member management  
+│   ├── reportRoutes.js             # Routes for reporting  
+│   └── scholarRoutes.js            # Routes for scholar management  
+│
+├── public/                         # Frontend static files served by Express  
+│   ├── index.html                  # Dashboard page  
+│   ├── finance.html                # Finance monitoring page  
+│   ├── scholars.html               # Scholar registry page  
+│   ├── members.html                # Organization members page  
+│   ├── transactions.html           # Donation and expense records page  
+│   ├── styles.css                  # UI styling  
+│   └── *.js                        # Client-side JavaScript files  
+│
+├── tests/                          # API endpoint testing files  
+│   ├── distribution.http             
+│   ├── donors.http                 
+│   ├── members.http                
+│   └── scholars.http               
+│
+└── server.js           # Main entry point of the Express application
 ```
 ##
 ### Frontend Structure
