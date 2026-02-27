@@ -236,3 +236,11 @@ frontend/
 │
 └── package.json                            # Frontend dependencies
 ```
+
+The system is structured into two primary components: Backend and Frontend, ensuring clear separation of responsibilities and maintainability.
+
+The Backend follows the MVC (Model–View–Controller) architecture. Controllers manage business logic and request handling, Models define database schemas and perform CRUD operations, and Routes map API endpoints to their respective controllers. Additional testing files validate API functionality, while server.js initializes the Express server and middleware. This structure promotes modularity, scalability, and organized code management.
+
+The Frontend is built using React and serves as the client-side interface. It consists of reusable components, page-level views, and centralized API service logic for backend communication. The application entry points (App.jsx and main.jsx) manage routing and rendering. This layered approach ensures a responsive, maintainable, and well-organized user interface.
+
+Overall, the project structure supports clean architecture principles, efficient development, and long-term scalability of the full-stack application.
