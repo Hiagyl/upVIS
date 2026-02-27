@@ -6,6 +6,17 @@
 
 ## Logical View Diagram
 
+upVIS (UPV Virgils Integrated System) is a web-based information system designed to automate the financial management and scholar support operations of UPV Virgils.
+The primary user of the system is the Administrator, who manages donations, expenses, scholar records, member records, and distribution tracking.
+
+The interaction flow is as follows:
+   1. The Administrator interacts with the View Layer through HTML pages in the public/ folder.
+   2. Client-side JavaScript sends HTTP requests to the backend.
+   3. Requests are handled by the Routing Layer (Routes/).
+   4. Routes forward requests to the appropriate Controllers.
+   5. Controllers process business logic and interact with Models.
+   6. Models communicate with the database to store or retrieve data.
+
 ---
 
 ## Software Architecture
