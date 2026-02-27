@@ -21,7 +21,7 @@ The interaction flow is as follows:
 
 ## Software Architecture
 
-1. Client–Server Architecture
+### 1. Client–Server Architecture
    
 upVIS follows a Client–Server architecture.
 
@@ -33,7 +33,7 @@ upVIS follows a Client–Server architecture.
       
 This architecture enables centralized data processing while allowing administrators to access the system through standard web browsers.
 
-2️. Model–View–Controller (MVC)
+### 2️. Model–View–Controller (MVC)
 
 The backend follows the MVC architectural pattern:
 
@@ -63,7 +63,7 @@ Examples:
       c. memberController.js
 Controllers validate input, compute financial summaries, and coordinate database operations.
 
-3️. Layered Architecture
+### 3️. Layered Architecture
 The system is also structured as a layered architecture:
       a. Presentation Layer → public/
       b. Routing Layer → Routes/
