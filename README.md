@@ -110,10 +110,10 @@ Examples:
       
 These files define the structure of financial records, scholar data, and member data.
 
-##### View (public/)
+##### View (frotend/)
 Contains:
 
-      a. HTML pages (e.g., finance.html, scholars.html)
+      a. React Components
       
       b. CSS styling
       
@@ -139,11 +139,11 @@ The system is also structured as a layered architecture:
 
       a. Presentation Layer → public/
       
-      b. Routing Layer → Routes/
+      b. Routing Layer → routes/
       
-      c. Application Logic Layer → Controllers/
+      c. Application Logic Layer → controllers/
       
-      d. Data Access Layer → Model/
+      d. Data Access Layer → model/
       
       e. Testing Layer → tests/
 
@@ -158,7 +158,14 @@ Each layer has a defined responsibility that improves maintainability, scalabili
 
 <span>The project is divided into two main components: Frontend and Backend. The backend follows an MVC structure to ensure separation of concerns, while the frontend handles user interface logic.</span>
 
-##
+### High-Level Structure
+
+```bash
+upVIS/  
+├── backend/      # This is the server in our client/server model that contains the model + control
+└── frontend/     # React frontend view
+```
+
 ### Backend Structure
 <span>Description</span>
 
@@ -204,7 +211,7 @@ backend/
 │
 └── server.js           # Main entry point of the Express application
 ```
-##
+
 ### Frontend Structure
 <span>Description</span>
 
