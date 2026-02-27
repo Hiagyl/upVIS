@@ -17,8 +17,6 @@ The interaction flow is as follows:
    5. Controllers process business logic and interact with Models.
    6. Models communicate with the database to store or retrieve data.
 
-## 🏗 Logical View Diagram
-
 <p align="center">
   <img src="./LogicalDiagram.png" width="500"/>
 </p>
