@@ -29,6 +29,7 @@ upVIS follows a Client–Server architecture.
       b. The Server is the Node.js + Express backend application.
       
       c. Communication happens via HTTP requests and responses.
+      
 This architecture enables centralized data processing while allowing administrators to access the system through standard web browsers.
 
 2️. Model–View–Controller (MVC)
