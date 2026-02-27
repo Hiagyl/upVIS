@@ -92,6 +92,8 @@ The system is also structured as a layered architecture:
       d. Data Access Layer → Model/
       
       e. Testing Layer → tests/
+
+      f. Data Layer → MongoDB Atlas
       
 Each layer has a defined responsibility that improves maintainability, scalability, and clarity of responsibilities.
 
