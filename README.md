@@ -93,7 +93,7 @@ The system is also structured as a layered architecture:
       
       e. Testing Layer → tests/
       
-Each layer has a defined responsibility, improving maintainability, scalability, and clarity of responsibilities.
+Each layer has a defined responsibility that improves maintainability, scalability, and clarity of responsibilities.
 
 ---
 
