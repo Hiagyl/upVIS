@@ -141,14 +141,6 @@ Backend/
 │   ├── reportRoutes.js             # Routes for reporting  
 │   └── scholarRoutes.js            # Routes for scholar management  
 │
-├── public/                         # Frontend static files served by Express  
-│   ├── index.html                  # Dashboard page  
-│   ├── finance.html                # Finance monitoring page  
-│   ├── scholars.html               # Scholar registry page  
-│   ├── members.html                # Organization members page  
-│   ├── transactions.html           # Donation and expense records page  
-│   ├── styles.css                  # UI styling  
-│   └── *.js                        # Client-side JavaScript files  
 │
 ├── tests/                          # API endpoint testing files  
 │   ├── distribution.http             
@@ -165,10 +157,30 @@ Backend/
  <span>The frontend serves as the client-side application that interacts with users. It is responsible for rendering UI components, handling user input, and communicating with the backend through REST API calls.</span>
 
 ```bash
-Frontend/
-└── src/
-    ├── app.js          # Main React application component
-    └── assets/         # Static resources (images, styles)
+
+├── frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Table.jsx
+│   │   └── Form.jsx
+│   │
+│   ├── pages/
+│   │   ├── Members.jsx
+│   │   ├── Scholars.jsx
+│   │   ├── Finance.jsx
+│   │   ├── Transactions.jsx
+│   │   └── Reports.jsx
+│   │
+│   ├── services/
+│   │   └── api.js   (axios config)
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+└── package.json
 ```
 ```
 
