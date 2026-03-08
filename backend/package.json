@@ -2,44 +2,22 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "dev": "nodemon server.js",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^5.2.1",
-    "express-mongo-sanitize": "^2.2.0",
-    "express-rate-limit": "^8.3.0",
-    "express-validator": "^7.3.1",
-    "helmet": "^8.1.0",
-    "hpp": "^0.2.3",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.2.4"
+    "mongoose": "^8.20.2"
   },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
-    "eslint": "^10.0.3",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-react": "^7.37.5",
-    "globals": "^17.4.0",
-    "jest": "^30.2.0",
-    "nodemon": "^3.1.14",
-    "prettier": "^3.8.1",
-    "supertest": "^7.2.2",
-    "typescript-eslint": "^8.56.1"
-  }
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {}
 }

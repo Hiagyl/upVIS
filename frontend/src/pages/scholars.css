@@ -1,0 +1,590 @@
+/* ─── Reset & Base ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #080d1e;
+  --bg-card: #0f152f;
+  --bg-card-hover: #131a36;
+  --border: #243059;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --danger: #ef4444;
+  --success: #16a34a;
+  --text: #e2e8f0;
+  --text-muted: #6b7893;
+  --gradient-start: #1e3a8a;
+  --gradient-end: #2563eb;
+  --sidebar-width: 240px;
+  --topbar-height: 60px;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+.fd-app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────────── */
+.fd-sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.fd-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.fd-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  flex-shrink: 0;
+}
+
+.fd-brand h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.fd-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.fd-nav h3 {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.fd-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+}
+
+.fd-nav a:hover {
+  background: var(--bg-card-hover);
+  color: var(--text);
+}
+
+.fd-nav a.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.fd-icon {
+  width: 22px;
+  height: 22px;
+  background: var(--border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ─── Main ────────────────────────────────────────────────────────────────────── */
+.fd-main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Topbar ─────────────────────────────────────────────────────────────────── */
+.fd-topbar {
+  height: var(--topbar-height);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.fd-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  width: 300px;
+}
+
+.fd-search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13px;
+  width: 100%;
+}
+
+.fd-search-bar input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ─── Content ────────────────────────────────────────────────────────────────── */
+.fd-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fd-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fd-section-title h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ─── Sort Controls ──────────────────────────────────────────────────────────── */
+.fd-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fd-sort-controls select {
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.fd-sort-controls select:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Card ───────────────────────────────────────────────────────────────────── */
+.fd-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+/* ─── Table ──────────────────────────────────────────────────────────────────── */
+.fd-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fd-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.fd-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.fd-table tbody tr {
+  transition: background 0.12s;
+}
+
+.fd-table tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+
+.fd-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.fd-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0 !important;
+}
+
+/* ─── Avatar ─────────────────────────────────────────────────────────────────── */
+.sc-avatar-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.sc-avatar-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+}
+
+.sc-avatar-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid var(--border);
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────────── */
+.fd-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fd-badge-active {
+  background: rgba(22, 163, 74, 0.15);
+  color: #4ade80;
+}
+
+.fd-badge-graduate {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.fd-badge-inactive {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+/* ─── Action Buttons ─────────────────────────────────────────────────────────── */
+.fd-action-btn {
+  padding: 4px 9px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: opacity 0.15s;
+}
+
+.fd-action-btn:hover {
+  opacity: 0.85;
+}
+
+.fd-view-btn {
+  background: var(--accent);
+  color: white;
+}
+
+.fd-edit-btn {
+  background: var(--success);
+  color: white;
+}
+
+.fd-delete-btn {
+  background: var(--danger);
+  color: white;
+}
+
+/* ─── Primary Button ─────────────────────────────────────────────────────────── */
+.fd-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.fd-btn.fd-btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.fd-btn.fd-btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+/* ─── Modal ──────────────────────────────────────────────────────────────────── */
+.fd-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(2px);
+}
+
+.fd-modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 540px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Wide details modal */
+.sc-wide-modal {
+  width: 600px;
+}
+
+.fd-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+.fd-modal-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.fd-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+
+.fd-close:hover {
+  color: var(--text);
+}
+
+.fd-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fd-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.fd-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fd-form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fd-form-group input,
+.fd-form-group select {
+  padding: 9px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.fd-form-group input:focus,
+.fd-form-group select:focus {
+  border-color: var(--accent);
+}
+
+.fd-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.fd-btn-secondary {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.fd-btn-secondary:hover {
+  background: var(--bg-card-hover);
+}
+
+.fd-btn-primary {
+  padding: 8px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.fd-btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+/* ─── Details Modal ──────────────────────────────────────────────────────────── */
+.sc-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.sc-profile-avatar {
+  flex-shrink: 0;
+}
+
+.sc-profile-avatar .sc-avatar-img,
+.sc-profile-avatar .sc-avatar-placeholder {
+  width: 72px;
+  height: 72px;
+  font-size: 26px;
+}
+
+.sc-profile-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sc-profile-info p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.sc-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.sc-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sc-detail-item label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sc-detail-item span {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ─── Animation ──────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.22s ease-out;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fd-sidebar { display: none; }
+  .fd-main { margin-left: 0; }
+  .fd-search-bar { width: 100%; }
+  .fd-form-row { grid-template-columns: 1fr; }
+  .sc-details-grid { grid-template-columns: 1fr; }
+  .sc-profile-header { flex-direction: column; text-align: center; }
+}
