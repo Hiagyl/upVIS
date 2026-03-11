@@ -7,25 +7,6 @@
   padding: 0;
 }
 
-:root {
-  --bg: #080d1e;
-  --bg-card: #0f152f;
-  --bg-card-hover: #131a36;
-  --border: #243059;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --text: #e2e8f0;
-  --text-muted: #6b7893;
-  --gradient-start: #1e3a8a;
-  --gradient-end: #2563eb;
-  --sidebar-width: 240px;
-  --topbar-height: 60px;
-  --radius: 10px;
-  --radius-sm: 6px;
-}
-
 body {
   background: var(--bg);
   color: var(--text);
