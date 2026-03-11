@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ITransaction } from './transactions';
+import { ITransaction } from '../transactions';
 
 // Individual transactions to be sent to scholars when generate distributions
 export interface IIndividualDistribution {

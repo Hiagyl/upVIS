@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ITransaction } from './transactions';
+import { ITransaction } from '../transactions';
 
 
 export interface IDistributions extends ITransaction {
