@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -39,6 +38,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/hpp": "^0.2.7",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.4.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "concurrently": "^9.2.1",

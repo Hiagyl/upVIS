@@ -10,26 +10,11 @@ if (envFound.error) {
 }
 
 export default {
-  /**
-   * Your favorite port
-   */
   port: parseInt(process.env.PORT || "5000", 10),
-
-  /**
-   * That special MongoDB connection string
-   */
   databaseURL: process.env.MONGODB_URI,
-
-  /**
-   * Used by Winston logger
-   */
   logs: {
     level: process.env.LOG_LEVEL || "silly",
   },
-
-  /**
-   * API configs
-   */
   api: {
     prefix: "/api",
   },
