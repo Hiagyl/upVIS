@@ -1,6 +1,6 @@
 ### Variables
 @baseUrl = http://localhost:5000/api
-@mID = MEM-2026-001
+@mID = MEM-2026-002
 
 ### 1. Create a New Member
 # @name createMember
