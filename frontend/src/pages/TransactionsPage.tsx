@@ -4,20 +4,18 @@ import { transactionService } from '../services/api';
 import Sidebar from '../components/layout/Sidebar';
 import TransactionTable from '../components/dashboard/TransactionTable';
 import Modal from '../components/shared/Modal';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, ScrollText, History } from 'lucide-react';
 
 const TransactionsPage = () => {
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<any>(null);
 
-    // 1. FETCH TRANSACTIONS
     const { data, isLoading, error } = useQuery({
         queryKey: ['transactions'],
         queryFn: transactionService.getAll,
     });
 
-    // 2. DELETE MUTATION
     const deleteMutation = useMutation({
         mutationFn: (id: string) => transactionService.delete(id),
         onSuccess: () => {
@@ -25,7 +23,6 @@ const TransactionsPage = () => {
         },
     });
 
-    // 3. SAVE (CREATE/UPDATE) MUTATION
     const saveMutation = useMutation({
         mutationFn: (formData: any) =>
             editingItem
@@ -54,98 +51,114 @@ const TransactionsPage = () => {
     const transactions = data?.data || [];
 
     return (
-        <div className="flex bg-gray-50 min-h-screen">
+        <div className="flex bg-[#FAF9F6] min-h-screen">
             <Sidebar />
-            <main className="flex-1 ml-64 p-8">
-                <header className="mb-8 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Transaction History</h1>
-                        <p className="text-gray-500">A detailed log of all upVIS financial movements.</p>
+            <main className="flex-1 ml-72 p-12">
+
+                {/* Header: High Contrast Landmark */}
+                <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
+                    <div className="flex items-center gap-6">
+                        <div className="p-4 bg-slate-900 rounded-2xl text-amber-400">
+                            <ScrollText size={32} />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
+                                Financial Ledger
+                            </h1>
+                            <p className="text-lg text-slate-500 font-medium font-serif italic">
+                                A permanent chronicle of all scholarship movements.
+                            </p>
+                        </div>
                     </div>
+
                     <button
                         onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-                        className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-emerald-700 transition-all shadow-sm active:scale-95"
+                        className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
                     >
-                        <PlusCircle size={20} />
-                        New Transaction
+                        <PlusCircle size={24} strokeWidth={3} />
+                        New Entry
                     </button>
                 </header>
 
                 {isLoading ? (
-                    <div className="animate-pulse space-y-4">
-                        <div className="bg-white h-12 w-full rounded-t-xl border border-gray-200"></div>
-                        <div className="bg-white h-64 w-full rounded-b-xl border border-gray-200"></div>
+                    <div className="flex flex-col items-center justify-center p-20 gap-4 text-center">
+                        <History className="text-amber-500 animate-spin-reverse mb-2" size={48} />
+                        <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">Consulting the Records...</p>
                     </div>
                 ) : error ? (
-                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl">
-                        Error loading transactions: {(error as any).message}
+                    <div className="p-8 bg-red-50 border-2 border-red-200 text-red-800 rounded-2xl text-xl font-bold">
+                        The ledger is currently unavailable: {(error as any).message}
                     </div>
                 ) : (
+                    /* Table rendered directly on the background without an extra nested container box */
                     <TransactionTable
                         transactions={transactions}
                         onEdit={(t: any) => { setEditingItem(t); setIsModalOpen(true); }}
                         onDelete={(id: string) => {
-                            if (window.confirm("Permanently delete this record?")) deleteMutation.mutate(id);
+                            if (window.confirm("Do you wish to strike this entry from the records?")) deleteMutation.mutate(id);
                         }}
                     />
                 )}
 
-                {/* --- ADD/EDIT TRANSACTION MODAL --- */}
+                {/* --- CHRONICLE ENTRY MODAL --- */}
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={editingItem ? "Edit Transaction" : "Record New Transaction"}
+                    title={editingItem ? "Amend Ledger Entry" : "Record New Entry"}
                 >
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="p-2 space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                            <label className="block text-lg font-bold text-slate-800 mb-2">Description of Event</label>
                             <input
                                 name="description"
                                 defaultValue={editingItem?.description}
                                 required
-                                className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
-                                placeholder="e.g., Annual Youth Donation"
+                                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl focus:border-amber-500 outline-none transition-colors"
+                                placeholder="e.g., Semester Tuition Grant"
                             />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Amount (₱)</label>
+                                <label className="block text-lg font-bold text-slate-800 mb-2">Amount (₱)</label>
                                 <input
                                     name="amount"
                                     type="number"
                                     defaultValue={editingItem?.amount}
                                     required
-                                    className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                    className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Type</label>
+                                <label className="block text-lg font-bold text-slate-800 mb-2">Entry Type</label>
                                 <select
                                     name="type"
                                     defaultValue={editingItem?.type || "donation"}
-                                    className="w-full border border-gray-300 rounded-lg p-2.5"
+                                    className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-white cursor-pointer hover:border-amber-500 transition-colors"
                                 >
-                                    <option value="donation">Donation (+)</option>
-                                    <option value="expense">Expense (-)</option>
+                                    <option value="donation">Donation (Increase)</option>
+                                    <option value="expense">Expense (Decrease)</option>
                                 </select>
                             </div>
                         </div>
+
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                            <label className="block text-lg font-bold text-slate-800 mb-2">Allocation Category</label>
                             <input
                                 name="category"
                                 defaultValue={editingItem?.category}
                                 required
-                                className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
-                                placeholder="e.g., Logistics, Food, etc."
+                                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                                placeholder="e.g., Medical Assistance"
                             />
                         </div>
+
                         <button
                             type="submit"
                             disabled={saveMutation.isPending}
-                            className="w-full bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 disabled:bg-emerald-300 transition-colors mt-2"
+                            className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
                         >
-                            {saveMutation.isPending ? 'Saving Record...' : (editingItem ? 'Update Record' : 'Save Transaction')}
+                            {saveMutation.isPending ? 'Updating the Chronicle...' : (editingItem ? 'Amend Entry' : 'Commit Entry')}
                         </button>
                     </form>
                 </Modal>

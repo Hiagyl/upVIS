@@ -4,9 +4,10 @@ import {
     LayoutDashboard,
     Receipt,
     Users,
-    Wallet,
     GraduationCap,
-    ShieldCheck 
+    ShieldCheck,
+    Compass,
+    Circle
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -17,21 +18,34 @@ const Sidebar = () => {
         { name: 'Transactions', icon: <Receipt size={20} />, href: '/transactions' },
         { name: 'Donors', icon: <Users size={20} />, href: '/donors' },
         { name: 'Scholars', icon: <GraduationCap size={20} />, href: '/scholars' },
-        { name: 'Members', icon: <ShieldCheck size={20} />, href: '/members' }, // New Item
+        { name: 'Members', icon: <ShieldCheck size={20} />, href: '/members' },
     ];
 
     return (
-        <div className="h-screen w-64 bg-slate-900 text-white flex flex-col fixed left-0 top-0 z-50 shadow-xl">
-            {/* Brand Logo Area */}
-            <div className="p-6 text-2xl font-bold border-b border-slate-800 flex items-center gap-2">
-                <div className="bg-blue-500/10 p-2 rounded-lg">
-                    <Wallet className="text-blue-400" size={24} />
+        <div className="h-screen w-72 bg-[#FAF9F6] text-slate-800 flex flex-col fixed left-0 top-0 z-50 shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r-4 border-amber-100">
+
+            {/* Angelic Brand Emblem */}
+            <div className="p-8 mb-4 border-b-2 border-amber-50">
+                <div className="flex items-center gap-4">
+                    <div className="bg-amber-100 p-2.5 rounded-full shadow-sm">
+                        <Compass className="text-amber-700" size={28} strokeWidth={2.5} />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-2xl font-serif font-black tracking-tight text-slate-900 leading-none">
+                            up<span className="text-amber-600">VIS</span>
+                        </span>
+                        <span className="text-[10px] uppercase tracking-[0.15em] text-amber-700 font-bold mt-1">
+                            Scholarship Guide
+                        </span>
+                    </div>
                 </div>
-                <span className="tracking-tight italic">upVIS</span>
             </div>
 
-            {/* Navigation Links */}
-            <nav className="flex-1 p-4 space-y-2">
+            {/* Navigation - Smaller links and tighter spacing */}
+            <nav className="flex-1 px-4 space-y-1.5">
+                <p className="px-4 text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-3">
+                    Main Menu
+                </p>
                 {menuItems.map((item) => {
                     const isActive = location.pathname === item.href;
 
@@ -39,37 +53,40 @@ const Sidebar = () => {
                         <Link
                             key={item.name}
                             to={item.href}
-                            className={`group relative flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${isActive
-                                    ? 'bg-blue-600/10 text-blue-400'
-                                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                            className={`group relative flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 border-2 ${isActive
+                                ? 'bg-slate-900 text-white border-slate-900 shadow-md'
+                                : 'text-slate-600 border-transparent hover:bg-amber-50 hover:border-amber-200 hover:text-slate-900'
                                 }`}
                         >
-                            {/* Active Indicator Bar */}
-                            {isActive && (
-                                <div className="absolute left-[-16px] h-6 w-1 bg-blue-500 rounded-r-full shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                            )}
-
-                            <span className={`${isActive ? 'text-blue-400' : 'group-hover:scale-110 transition-transform'}`}>
+                            <span className={`${isActive ? 'text-amber-400' : 'text-slate-400 group-hover:text-amber-600'}`}>
                                 {item.icon}
                             </span>
 
-                            <span className="font-semibold text-sm tracking-wide">
+                            <span className={`text-base tracking-wide ${isActive ? 'font-bold' : 'font-semibold font-serif'}`}>
                                 {item.name}
                             </span>
+
+                            {isActive && (
+                                <Circle className="ml-auto text-amber-400 fill-amber-400" size={8} />
+                            )}
                         </Link>
                     );
                 })}
             </nav>
 
-            {/* Footer info */}
-            <div className="p-6 border-t border-slate-800">
-                <div className="bg-slate-800/50 rounded-lg p-3 text-center">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">System Status</p>
-                    <div className="flex items-center justify-center gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-xs text-slate-300">v1.0.0-beta</span>
+            {/* Accessible Footer */}
+            <div className="p-6 mt-auto">
+                <div className="bg-white rounded-xl p-4 border-2 border-amber-100 shadow-sm">
+                    <p className="text-[10px] uppercase tracking-widest text-slate-400 font-black mb-1.5">System Status</p>
+                    <div className="flex items-center gap-3">
+                        <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+                        <span className="text-xs font-bold text-slate-700">Online & Secure</span>
                     </div>
                 </div>
+
+                <p className="mt-5 text-[10px] text-center text-slate-400 font-serif italic font-medium leading-relaxed">
+                    "The path to wisdom is <br /> illuminated by your grace."
+                </p>
             </div>
         </div>
     );

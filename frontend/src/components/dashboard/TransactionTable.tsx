@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, ArrowUpRight, ArrowDownLeft, History } from 'lucide-react';
 
 interface Transaction {
     _id: string;
@@ -18,54 +18,90 @@ interface TransactionTableProps {
 
 const TransactionTable = ({ transactions, onEdit, onDelete }: TransactionTableProps) => {
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <table className="w-full text-left">
-                <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm font-semibold uppercase tracking-wider">
+        <div className="bg-white rounded-xl shadow-md border-2 border-slate-200 overflow-hidden">
+            <table className="w-full text-left border-collapse">
+                {/* High Contrast Header: Dark slate with bold white/gray text */}
+                <thead className="bg-slate-900 text-slate-100 text-sm font-bold uppercase tracking-wide">
                     <tr>
-                        <th className="p-4">Date</th>
-                        <th className="p-4">Description</th>
-                        <th className="p-4">Category</th>
-                        <th className="p-4 text-right">Amount</th>
-                        <th className="p-4 text-center">Actions</th>
+                        <th className="p-6 border-b-2 border-slate-800">Date</th>
+                        <th className="p-6 border-b-2 border-slate-800">Description</th>
+                        <th className="p-6 border-b-2 border-slate-800">Category</th>
+                        <th className="p-6 border-b-2 border-slate-800 text-right">Amount</th>
+                        <th className="p-6 border-b-2 border-slate-800 text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y-2 divide-slate-100">
                     {transactions.length === 0 ? (
                         <tr>
-                            <td colSpan={5} className="p-8 text-center text-gray-400 italic">
-                                No transactions found.
+                            <td colSpan={5} className="p-20 text-center">
+                                <div className="flex flex-col items-center gap-4 text-slate-400">
+                                    <History size={48} strokeWidth={1.5} className="opacity-20" />
+                                    <p className="text-xl font-medium italic font-serif text-slate-500">
+                                        The ledger is currently empty.
+                                    </p>
+                                </div>
                             </td>
                         </tr>
                     ) : (
                         transactions.map((t) => (
-                            <tr key={t._id} className="hover:bg-gray-50 transition-colors group">
-                                <td className="p-4 text-sm text-gray-500">
-                                    {new Date(t.date).toLocaleDateString()}
+                            <tr key={t._id} className="hover:bg-slate-50 transition-colors">
+                                {/* Date: Increased size and switched to high-contrast black */}
+                                <td className="p-6">
+                                    <span className="text-base font-bold text-slate-900">
+                                        {new Date(t.date).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'long',
+                                            year: 'numeric'
+                                        })}
+                                    </span>
                                 </td>
-                                <td className="p-4 font-medium text-gray-900">{t.description}</td>
-                                <td className="p-4">
-                                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600 uppercase">
+
+                                {/* Description with Visual Indicator */}
+                                <td className="p-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`p-2.5 rounded-full border-2 ${t.type === 'donation'
+                                                ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                                                : 'bg-red-50 border-red-200 text-red-700'
+                                            }`}>
+                                            {t.type === 'donation' ? <ArrowUpRight size={20} /> : <ArrowDownLeft size={20} />}
+                                        </div>
+                                        <span className="text-lg font-bold text-slate-900 font-serif">
+                                            {t.description}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                {/* Category: Clearer, high-contrast badges */}
+                                <td className="p-6">
+                                    <span className="px-4 py-1.5 text-xs font-black rounded-full bg-slate-100 text-slate-700 border-2 border-slate-200 uppercase tracking-wider">
                                         {t.category}
                                     </span>
                                 </td>
-                                <td className={`p-4 text-right font-bold ${t.type === 'donation' ? 'text-green-600' : 'text-red-600'}`}>
+
+                                {/* Amount: Very large and bold for poor eyesight */}
+                                <td className={`p-6 text-right font-black text-2xl tracking-tight ${t.type === 'donation' ? 'text-emerald-600' : 'text-red-600'
+                                    }`}>
                                     {t.type === 'donation' ? '+' : '-'} ₱{t.amount.toLocaleString()}
                                 </td>
-                                <td className="p-4 text-center">
-                                    <div className="flex justify-center gap-2">
+
+                                {/* Actions: Persistent buttons (no more hover dependency) */}
+                                <td className="p-6">
+                                    <div className="flex justify-center gap-4">
                                         <button
                                             onClick={() => onEdit(t)}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="Edit Transaction"
+                                            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-900 border-2 border-slate-200 rounded-lg hover:bg-white hover:border-amber-500 transition-all font-bold text-sm"
+                                            aria-label="Edit Entry"
                                         >
                                             <Edit2 size={18} />
+                                            <span>Edit</span>
                                         </button>
                                         <button
                                             onClick={() => onDelete(t._id)}
-                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete Transaction"
+                                            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border-2 border-red-100 rounded-lg hover:bg-red-600 hover:text-white transition-all font-bold text-sm"
+                                            aria-label="Delete Entry"
                                         >
                                             <Trash2 size={18} />
+                                            <span>Delete</span>
                                         </button>
                                     </div>
                                 </td>
@@ -74,6 +110,19 @@ const TransactionTable = ({ transactions, onEdit, onDelete }: TransactionTablePr
                     )}
                 </tbody>
             </table>
+
+            {/* Accessible Footer */}
+            <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                    <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                        upVIS
+                    </p>
+                </div>
+                <p className="text-xs text-slate-400 italic font-serif">
+                    "Behold the light that leads the way."
+                </p>
+            </div>
         </div>
     );
 };
