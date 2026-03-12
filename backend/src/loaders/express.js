@@ -8,6 +8,8 @@ const hpp = require("hpp");
 
 const transactionRoutes = require("../routes/transactionRoutes");
 const donorRoutes = require("../routes/donorRoutes");
+const scholarRoutes = require("../routes/scholarRoutes");
+
 module.exports = ({ app }) => {
   /**
    * Health Check endpoints
@@ -40,6 +42,7 @@ module.exports = ({ app }) => {
   // app.use(config.api.prefix, routes());
     transactionRoutes(app);
     donorRoutes(app);
+    scholarRoutes(app);
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
