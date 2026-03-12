@@ -63,7 +63,7 @@ const TransactionsPage = () => {
                         </div>
                         <div>
                             <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
-                                Financial Ledger
+                                Transaction History
                             </h1>
                             <p className="text-lg text-slate-500 font-medium font-serif italic">
                                 A permanent chronicle of all scholarship movements.
@@ -87,7 +87,7 @@ const TransactionsPage = () => {
                     </div>
                 ) : error ? (
                     <div className="p-8 bg-red-50 border-2 border-red-200 text-red-800 rounded-2xl text-xl font-bold">
-                        The ledger is currently unavailable: {(error as any).message}
+                        The transaction history is currently unavailable: {(error as any).message}
                     </div>
                 ) : (
                     /* Table rendered directly on the background without an extra nested container box */
@@ -104,7 +104,7 @@ const TransactionsPage = () => {
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={editingItem ? "Amend Ledger Entry" : "Record New Entry"}
+                    title={editingItem ? "Update Entry" : "Record New Entry"}
                 >
                     <form onSubmit={handleSubmit} className="p-2 space-y-6">
                         <div>
@@ -158,7 +158,7 @@ const TransactionsPage = () => {
                             disabled={saveMutation.isPending}
                             className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
                         >
-                            {saveMutation.isPending ? 'Updating the Chronicle...' : (editingItem ? 'Amend Entry' : 'Commit Entry')}
+                            {saveMutation.isPending ? 'Updating the Chronicle...' : (editingItem ? 'Amend Entry' : 'Add Entry')}
                         </button>
                     </form>
                 </Modal>

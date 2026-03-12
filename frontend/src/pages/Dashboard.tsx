@@ -54,7 +54,7 @@ const Dashboard = () => {
         <div className="flex h-screen items-center justify-center bg-[#FAF9F6] ml-72">
             <div className="flex flex-col items-center gap-4">
                 <Sun className="text-amber-500 animate-spin" size={48} />
-                <div className="text-2xl font-serif font-bold text-slate-700">Updating the Ledger...</div>
+                <div className="text-2xl font-serif font-bold text-slate-700">Updating the Transaction History...</div>
             </div>
         </div>
     );
@@ -94,12 +94,12 @@ const Dashboard = () => {
                 {/* Summaries Section */}
                 <SummaryCards summary={summary} />
 
-                {/* Ledger Section */}
+                {/* Transaction Section */}
                 <div className="mt-16">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="h-8 w-1.5 bg-amber-500 rounded-full"></div>
                         <h2 className="text-2xl font-serif font-black text-slate-900 uppercase tracking-wide">
-                            Recent Ledger Entries
+                            Recent Transaction Entries
                         </h2>
                     </div>
 
@@ -116,7 +116,7 @@ const Dashboard = () => {
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={editingItem ? "Amend Entry" : "Record New Grace"}
+                    title={editingItem ? "Amend Entry" : "Record New Transaction"}
                 >
                     <form onSubmit={handleSubmit} className="p-2 space-y-6">
                         <div>
@@ -169,7 +169,7 @@ const Dashboard = () => {
                             disabled={saveMutation.isPending}
                             className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
                         >
-                            {saveMutation.isPending ? 'Committing to Ledger...' : (editingItem ? 'Update Ledger' : 'Record Transaction')}
+                            {saveMutation.isPending ? 'Loading...' : (editingItem ? 'Update Transaction' : 'Record Transaction')}
                         </button>
                     </form>
                 </Modal>

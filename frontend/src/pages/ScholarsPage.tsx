@@ -185,7 +185,7 @@ const ScholarsPage = () => {
                             disabled={saveMutation.isPending}
                             className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl mt-4"
                         >
-                            {saveMutation.isPending ? 'Updating the Records...' : 'Commit Profile to Registry'}
+                            {saveMutation.isPending ? 'Updating the Records...' : ' Register'}
                         </button>
                     </form>
                 </Modal>

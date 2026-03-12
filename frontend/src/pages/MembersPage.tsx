@@ -156,7 +156,7 @@ const MembersPage = () => {
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={editingMember ? "Amend Member Profile" : "Register New Personnel"}
+                    title={editingMember ? "Amend Member Profile" : "Register New Member"}
                 >
                     <form onSubmit={handleSubmit} className="p-2 space-y-6">
                         <div>
@@ -177,7 +177,7 @@ const MembersPage = () => {
                             <div>
                                 <label className="block text-sm font-black uppercase tracking-widest text-slate-500 mb-2">Access Status</label>
                                 <select name="status" defaultValue={editingMember?.status || 'active'} className="w-full border-2 border-slate-100 rounded-xl p-4 text-xl font-bold bg-slate-50 cursor-pointer appearance-none focus:border-amber-500">
-                                    <option value="active">Active Personnel</option>
+                                    <option value="active">Active Member</option>
                                     <option value="inactive">Inactive / Archived</option>
                                 </select>
                             </div>
@@ -197,7 +197,7 @@ const MembersPage = () => {
                             className="w-full bg-slate-900 text-white py-5 rounded-2xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl flex justify-center items-center gap-3 mt-4"
                         >
                             {saveMutation.isPending && <Loader2 size={24} className="animate-spin" />}
-                            {editingMember ? "Commit Amendments" : "Confirm Registration"}
+                            {editingMember ? "Confirm Update" : "Confirm Registration"}
                         </button>
                     </form>
                 </Modal>

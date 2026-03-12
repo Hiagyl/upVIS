@@ -63,7 +63,7 @@ const DonorsPage = () => {
                         className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
                     >
                         <UserPlus size={24} strokeWidth={3} />
-                        Add New Patron
+                        Add New Donor
                     </button>
                 </header>
 
@@ -82,7 +82,7 @@ const DonorsPage = () => {
                         <table className="w-full text-left border-collapse">
                             <thead className="bg-slate-900 text-slate-100 text-sm font-black uppercase tracking-widest">
                                 <tr>
-                                    <th className="p-6 border-b-2 border-slate-800">Patron Name</th>
+                                    <th className="p-6 border-b-2 border-slate-800">Donor Name</th>
                                     <th className="p-6 border-b-2 border-slate-800">Contact Information</th>
                                     <th className="p-6 border-b-2 border-slate-800 text-center">Actions</th>
                                 </tr>
@@ -150,7 +150,7 @@ const DonorsPage = () => {
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={editingDonor ? "Amend Patron Profile" : "Register New Patron"}
+                    title={editingDonor ? "Update Profile" : "Register New Donor"}
                 >
                     <form onSubmit={handleSubmit} className="p-2 space-y-6">
                         <div>
@@ -188,7 +188,7 @@ const DonorsPage = () => {
                             disabled={saveMutation.isPending}
                             className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
                         >
-                            {saveMutation.isPending ? 'Committing to Registry...' : (editingDonor ? 'Update Profile' : 'Register Patron')}
+                            {saveMutation.isPending ? 'Loading...' : (editingDonor ? 'Update Profile' : 'Register Donor')}
                         </button>
                     </form>
                 </Modal>
