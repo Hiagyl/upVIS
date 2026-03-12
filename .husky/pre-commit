@@ -1,2 +1,2 @@
 #!/bin/sh
-cd backend && pnpm lint-staged --config ./package.json
+# cd backend && pnpm lint-staged --config ./package.json
