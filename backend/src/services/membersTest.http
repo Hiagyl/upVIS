@@ -1,0 +1,56 @@
+### Variables
+@baseUrl = http://localhost:5000/api
+@mID = MEM-2026-001
+
+### 1. Create a New Member
+# @name createMember
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+    "memberID": "{{mID}}",
+    "fullname": "Juan Dela Cruz",
+    "contactNo": "09123456789",
+    "joinDate": "2026-03-12",
+    "status": "active"
+}
+
+###
+
+### 2. Get All Members
+GET {{baseUrl}}/members
+Accept: application/json
+
+###
+
+### 3. Get Member by ID
+GET {{baseUrl}}/members/{{mID}}
+Accept: application/json
+
+###
+
+### 4. Update Member (Set to Inactive)
+PUT {{baseUrl}}/members/{{mID}}
+Content-Type: application/json
+
+{
+    "status": "inactive",
+    "contactNo": "09998887766"
+}
+
+###
+
+### 5. Test Validation: Duplicate ID (Should fail with 400)
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+    "memberID": "{{mID}}",
+    "fullname": "Duplicate User",
+    "contactNo": "0000000000"
+}
+
+###
+
+### 6. Delete Member
+DELETE {{baseUrl}}/members/{{mID}}
