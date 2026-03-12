@@ -17,3 +17,10 @@ export const donorService = {
     update: (id: string, data: any) => api.put(`donors/${id}`, { json: data }).json(),
     delete: (id: string) => api.delete(`donors/${id}`).json(),
 };
+
+export const scholarService = {
+    getAll: () => api.get('scholars').json<any>(),
+    create: (data: any) => api.post('scholars', { json: data }).json(),
+    update: (id: string, data: any) => api.put(`scholars/${id}`, { json: data }).json(),
+    delete: (id: string) => api.delete(`scholars/${id}`).json(),
+};
