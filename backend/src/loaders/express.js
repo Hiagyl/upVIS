@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
+const transactionRoutes = require("./api/routes/transactionRoutes");
+
 module.exports = ({ app }) => {
   /**
    * Health Check endpoints
@@ -17,6 +19,7 @@ module.exports = ({ app }) => {
     res.status(200).end();
   });
 
+  transactionRoutes(app);
   // Useful if you're behind a reverse proxy (Nginx, AWS, etc)
   app.enable("trust proxy");
 
