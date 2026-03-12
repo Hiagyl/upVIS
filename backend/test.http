@@ -36,7 +36,7 @@ Content-Type: {{contentType}}
 GET {{host}}
 
 ### 4. Update a Transaction (Replace {{id}} with an actual ID from the GET request)
-@transactionId = 69b2a94013d826f5c9a02fba
+@transactionId = 69b2ac84ced12a2fdf43e321
 PUT {{host}}/{{transactionId}}
 Content-Type: {{contentType}}
 
@@ -50,3 +50,7 @@ DELETE {{host}}/{{transactionId}}
 
 ### 6. Test 404 / Not Found
 GET {{host}}/65f1234567890abcdef12345
+
+### 7. Final Summary Check
+# Balance should return to -1200 (only the expense remains)
+GET {{host}}
