@@ -8,6 +8,7 @@ const hpp = require("hpp");
 
 const transactionRoutes = require("../routes/transactionRoutes");
 const donorRoutes = require("../routes/donorRoutes");
+const memberRoutes = require("../routes/memberRoutes");
 const scholarRoutes = require("../routes/scholarRoutes");
 
 module.exports = ({ app }) => {
@@ -40,9 +41,10 @@ module.exports = ({ app }) => {
 
   // Load API routes
   // app.use(config.api.prefix, routes());
-    transactionRoutes(app);
-    donorRoutes(app);
-    scholarRoutes(app);
+  transactionRoutes(app);
+  donorRoutes(app);
+  memberRoutes(app); 
+  scholarRoutes(app);
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
