@@ -24,3 +24,10 @@ export const scholarService = {
     update: (id: string, data: any) => api.put(`scholars/${id}`, { json: data }).json(),
     delete: (id: string) => api.delete(`scholars/${id}`).json(),
 };
+export const memberService = {
+    getAll: () => api.get('members').json<any>(),
+    getOne: (id: string) => api.get(`members/${id}`).json<any>(),
+    create: (data: any) => api.post('members', { json: data }).json(),
+    update: (id: string, data: any) => api.put(`members/${id}`, { json: data }).json(),
+    delete: (id: string) => api.delete(`members/${id}`).json(),
+};

@@ -5,7 +5,8 @@ import {
     Receipt,
     Users,
     Wallet,
-    GraduationCap
+    GraduationCap,
+    ShieldCheck 
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -15,7 +16,8 @@ const Sidebar = () => {
         { name: 'Dashboard', icon: <LayoutDashboard size={20} />, href: '/' },
         { name: 'Transactions', icon: <Receipt size={20} />, href: '/transactions' },
         { name: 'Donors', icon: <Users size={20} />, href: '/donors' },
-        { name: 'Scholars', icon: <GraduationCap size={20} />, href: '/scholars' }, // New Item
+        { name: 'Scholars', icon: <GraduationCap size={20} />, href: '/scholars' },
+        { name: 'Members', icon: <ShieldCheck size={20} />, href: '/members' }, // New Item
     ];
 
     return (

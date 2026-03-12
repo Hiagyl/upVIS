@@ -1,35 +1,29 @@
-const Member = require("../models/Members");
+const Member = require('../models/Members');
 
 const memberService = {
-  getAll: async () => {
-    return await Member.find();
-  },
+    getAll: async () => {
+        return await Member.find().sort({ joinDate: -1 });
+    },
 
-  getById: async (memberID) => {
-    return await Member.findOne({ memberID });
-  },
+    getById: async (id) => {
+        return await Member.findById(id);
+    },
 
-  create: async (data) => {
-    // Business logic: check for existing ID
-    const existing = await Member.findOne({ memberID: data.memberID });
-    if (existing) {
-      throw new Error("Member ID already exists");
+    create: async (data) => {
+        const member = new Member(data);
+        return await member.save();
+    },
+
+    update: async (id, data) => {
+        return await Member.findByIdAndUpdate(id, data, {
+            new: true, // returns the updated document
+            runValidators: true // ensures enum/required checks run on update
+        });
+    },
+
+    delete: async (id) => {
+        return await Member.findByIdAndDelete(id);
     }
-
-    const newMember = new Member(data);
-    return await newMember.save();
-  },
-
-  update: async (memberID, updateData) => {
-    return await Member.findOneAndUpdate({ memberID }, updateData, {
-      new: true,
-      runValidators: true,
-    });
-  },
-
-  delete: async (memberID) => {
-    return await Member.findOneAndDelete({ memberID });
-  },
 };
 
 module.exports = memberService;
