@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
-const transactionRoutes = require("./api/routes/transactionRoutes");
+const transactionRoutes = require("../routes/transactionRoutes");
 
 module.exports = ({ app }) => {
   /**
@@ -19,12 +19,11 @@ module.exports = ({ app }) => {
     res.status(200).end();
   });
 
-  transactionRoutes(app);
   // Useful if you're behind a reverse proxy (Nginx, AWS, etc)
   app.enable("trust proxy");
 
   // The Magic Middlewares
-  app.use(helmet()); // Security headers
+  // app.use(helmet()); // Security headers
   app.use(cors()); // Enable CORS
   app.use(compression()); // Compress responses
   app.use(morgan("dev")); // HTTP request logger
@@ -34,11 +33,12 @@ module.exports = ({ app }) => {
   app.use(express.urlencoded({ extended: false }));
 
   // Security: Prevent NoSQL injection & HTTP Parameter Pollution
-  app.use(mongoSanitize());
-  app.use(hpp());
+  // app.use(mongoSanitize());
+  // app.use(hpp());
 
   // Load API routes
   // app.use(config.api.prefix, routes());
+  transactionRoutes(app);
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {

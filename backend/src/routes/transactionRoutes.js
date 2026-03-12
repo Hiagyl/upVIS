@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const TransactionController = require("../../controllers/TransactionController");
+const TransactionController = require("../controllers/transactionController");
 
 const route = Router();
 

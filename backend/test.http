@@ -1,0 +1,52 @@
+### Variables
+@hostname = localhost
+@port = 5000
+@host = http://{{hostname}}:{{port}}/api/transactions
+@contentType = application/json
+
+### 1. Create a New Donation
+POST {{host}}
+Content-Type: {{contentType}}
+
+{
+    "amount": 5000,
+    "type": "donation",
+    "category": "Charity",
+    "description": "Monthly community fund contribution",
+    "donorInfo": {
+        "name": "John Doe",
+        "email": "john@example.com"
+    }
+}
+
+### 2. Create a New Expense
+POST {{host}}
+Content-Type: {{contentType}}
+
+{
+    "amount": 1200,
+    "type": "expense",
+    "category": "Logistics",
+    "description": "Office supplies and paper",
+    "attachmentUrl": "https://example.com/receipts/001.jpg"
+}
+
+### 3. Get All Transactions
+# This should return both the donation and the expense created above
+GET {{host}}
+
+### 4. Update a Transaction (Replace {{id}} with an actual ID from the GET request)
+@transactionId = 69b2a94013d826f5c9a02fba
+PUT {{host}}/{{transactionId}}
+Content-Type: {{contentType}}
+
+{
+    "amount": 5500,
+    "description": "Updated contribution amount"
+}
+
+### 5. Delete a Transaction (Replace {{id}} with an actual ID)
+DELETE {{host}}/{{transactionId}}
+
+### 6. Test 404 / Not Found
+GET {{host}}/65f1234567890abcdef12345
