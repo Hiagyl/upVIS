@@ -7,7 +7,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
 const transactionRoutes = require("../routes/transactionRoutes");
-
+const donorRoutes = require("../routes/donorRoutes");
 module.exports = ({ app }) => {
   /**
    * Health Check endpoints
@@ -38,7 +38,8 @@ module.exports = ({ app }) => {
 
   // Load API routes
   // app.use(config.api.prefix, routes());
-  transactionRoutes(app);
+    transactionRoutes(app);
+    donorRoutes(app);
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
