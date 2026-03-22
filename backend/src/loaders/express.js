@@ -6,10 +6,17 @@ const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
-const transactionRoutes = require("../routes/transactionRoutes");
-const donorRoutes = require("../routes/donorRoutes");
-const memberRoutes = require("../routes/memberRoutes");
-const scholarRoutes = require("../routes/scholarRoutes");
+// V1 Routes
+const v1TransactionRoutes = require("../routes/v1/transactionRoutes");
+const v1DonorRoutes = require("../routes/v1/donorRoutes");
+const v1MemberRoutes = require("../routes/v1/memberRoutes");
+const v1ScholarRoutes = require("../routes/v1/scholarRoutes");
+
+// V2 Routes
+const v2TransactionRoutes = require("../routes/v2/transactionRoutes");
+const v2DonorRoutes = require("../routes/v2/donorRoutes");
+const v2MemberRoutes = require("../routes/v2/memberRoutes");
+const v2ScholarRoutes = require("../routes/v2/scholarRoutes");
 
 module.exports = ({ app }) => {
     /**
@@ -41,10 +48,23 @@ module.exports = ({ app }) => {
 
     // Load API routes
     // app.use(config.api.prefix, routes());
-    transactionRoutes(app);
-    donorRoutes(app);
-    memberRoutes(app);
-    scholarRoutes(app);
+    // V1 Router
+    const v1Router = express.Router();
+    v1TransactionRoutes(v1Router);
+    v1DonorRoutes(v1Router);
+    v1MemberRoutes(v1Router);
+    v1ScholarRoutes(v1Router);
+    app.use("/api/v1", v1Router);
+
+    // V2 Router
+    const v2Router = express.Router();
+    v2TransactionRoutes(v2Router);
+    v2DonorRoutes(v2Router);
+    v2MemberRoutes(v2Router);
+    v2ScholarRoutes(v2Router);
+    app.use("/api/v2", v2Router);
+
+
 
     /// catch 404 and forward to error handler
     app.use((req, res, next) => {

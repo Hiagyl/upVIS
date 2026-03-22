@@ -1,10 +1,10 @@
 
 const { Router } = require("express");
-const scholarController = require('../controllers/scholarController');
+const scholarController = require('../../controllers/scholarController');
 
 const route = Router();
 module.exports = (app) => {
-    app.use("/api/scholars", route);
+    app.use("/scholars", route);
 
     route.get('/', scholarController.getScholars);
     route.post('/', scholarController.createScholar);

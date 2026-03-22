@@ -1,10 +1,10 @@
 const { Router } = require("express");
-const DonorController = require("../controllers/donorController");
+const DonorController = require("../../controllers/donorController");
 
 const route = Router();
 
 module.exports = (app) => {
-    app.use("/api/donors", route);
+    app.use("/donors", route);
 
     route.get("/", DonorController.getDonors);
     route.get("/:id", DonorController.getDonor);

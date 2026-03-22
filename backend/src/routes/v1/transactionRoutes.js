@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const TransactionController = require("../controllers/transactionController");
+const TransactionController = require("../../controllers/transactionController");
 
 const route = Router();
 
 module.exports = (app) => {
   // Attach to main app
-  app.use("/api/transactions", route);
+  app.use("/transactions", route);
 
   // Define endpoints
   route.get("/", TransactionController.getTransactions);
