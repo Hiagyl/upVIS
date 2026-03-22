@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const scholarController = require('../../controllers/scholarController');
+const scholarController = require("../../controllers/v1/scholarController");
 
 const route = Router();
 module.exports = (app) => {

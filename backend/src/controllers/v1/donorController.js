@@ -1,4 +1,4 @@
-const DonorService = require("../services/donorService");
+const DonorService = require("../../services/v1/donorService");
 
 class DonorController {
     async getDonors(req, res, next) {

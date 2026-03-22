@@ -1,4 +1,4 @@
-const scholarService = require('../services/scholarService');
+const scholarService = require('../../services/v1/scholarService');
 
 const scholarController = {
     getScholars: async (req, res) => {
