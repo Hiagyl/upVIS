@@ -54,9 +54,7 @@ const TransactionsPage = () => {
     saveMutation.mutate(payload);
   };
 
-  const [entryType, setEntryType] = useState<string>(
-    editingItem?.type || "donation",
-  );
+  const [entryType, setEntryType] = useState(editingItem?.type || "donation");
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEntryType(e.target.value);
@@ -189,7 +187,8 @@ const TransactionsPage = () => {
                 </label>
                 <select
                   name="type"
-                  defaultValue={editingItem?.type || "donation"}
+                  value={entryType}
+                  onChange={(e) => setEntryType(e.target.value)}
                   className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-white cursor-pointer hover:border-amber-500 transition-colors"
                 >
                   <option value="donation">Donation (Increase)</option>
@@ -199,32 +198,22 @@ const TransactionsPage = () => {
             </div>
 
             {entryType === "donation" && (
-              <div className="relative">
+              <div>
                 <label className="block text-lg font-bold text-slate-800 mb-2">
-                  Donor
+                  Donor Name
                 </label>
                 <input
-                  type="text"
-                  value={donorInput}
-                  onChange={handleDonorChange}
-                  placeholder="Type to search donors..."
-                  required
+                  list="donors"
+                  name="donor"
+                  defaultValue={editingItem?.donor?.name || ""}
                   className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                  placeholder="Start typing to search..."
                 />
-                {/* Suggestions dropdown */}
-                {donorInput && filteredDonors.length > 0 && (
-                  <ul className="absolute z-50 w-full bg-white border-2 border-slate-200 rounded-xl mt-1 max-h-60 overflow-y-auto shadow-lg">
-                    {filteredDonors.map((donor: any) => (
-                      <li
-                        key={donor._id}
-                        className="p-4 cursor-pointer hover:bg-amber-50"
-                        onClick={() => handleDonorSelect(donor)}
-                      >
-                        {donor.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <datalist id="donors">
+                  {donors.map((d: any) => (
+                    <option key={d._id} value={d.name} />
+                  ))}
+                </datalist>
               </div>
             )}
 
