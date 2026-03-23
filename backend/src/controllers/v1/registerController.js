@@ -9,6 +9,7 @@ const register = async (req, res) => {
             email,
             password,
         );
+        req.session.memberId = member._id;
         res.status(201).json({ message: "Member registered", member });
     } catch (err) {
         res.status(400).json({ message: err.message });

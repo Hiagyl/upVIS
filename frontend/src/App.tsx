@@ -6,17 +6,40 @@ import ScholarsPage from './pages/ScholarsPage';
 import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import { useEffect, useState } from "react";
+import { authService } from "./services/api.ts";
 
 
 // Redirects to /login if no token is found
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem("token");
-  return token ? <>{children}</> : <Navigate to="/login" replace />;
-};
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
+  useEffect(() => {
+    authService
+      .checkStatus()
+      .then(() => setIsAuth(true))
+      .catch(() => setIsAuth(false));
+  }, []);
+  if (isAuth === null)
+    return (
+      <div className="p-10 text-center font-serif">Verifying session...</div>
+    );
+
+  return isAuth ? <>{children}</> : <Navigate to="/login" replace />;
+};
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem("token");
-  return token ? <Navigate to="/" replace /> : <>{children}</>;
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    authService
+      .checkStatus()
+      .then(() => setIsAuth(true))
+      .catch(() => setIsAuth(false));
+  }, []);
+
+  if (isAuth === null) return null; // Wait for check
+
+  return isAuth ? <Navigate to="/" replace /> : <>{children}</>;
 };
 
 function App() {

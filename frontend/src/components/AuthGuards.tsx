@@ -1,19 +1,47 @@
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { authService } from "../services/api";
 
-// 1. Protects private pages (Dashboard, Members, etc.)
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
+
+  useEffect(() => {
+     authService
+      .checkStatus()
+      .then(() => setIsAuth(true))
+      .catch(() => setIsAuth(false));
+  }, []);
+
+  if (isAuth === null) {
+    return (
+      <div className="flex h-screen items-center justify-center font-medium">
+        Verifying session...
+      </div>
+    );
   }
-  return <>{children}</>;
+
+  return isAuth ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
-// 2. Protects guest pages (Login, Register)
+// 2. Protects guest pages (Login, Register) - Prevents logged-in users from seeing Login
 export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    return <Navigate to="/" replace />;
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    authService
+      .checkStatus()
+      .then(() => setIsAuth(true))
+      .catch(() => setIsAuth(false));
+  }, []);
+
+  if (isAuth === null) {
+    return (
+      <div className="flex h-screen items-center justify-center font-medium">
+        Checking status...
+      </div>
+    );
   }
-  return <>{children}</>;
+
+  // If already logged in, send them to the home page/dashboard
+  return isAuth ? <Navigate to="/" replace /> : <>{children}</>;
 };

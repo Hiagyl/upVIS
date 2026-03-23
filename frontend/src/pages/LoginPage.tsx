@@ -16,9 +16,6 @@ const LoginPage = () => {
 
         try {
             const data = await authService.login({ email, password });
-            localStorage.setItem("token", data.token);
-            console.log("Logged in member:", data.member);
-
             navigate("/", { replace: true });
         } catch (err: any) {
             // Error handling removed as requested

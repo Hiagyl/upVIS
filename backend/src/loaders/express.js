@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
+const MongoStore = require("connect-mongo").default;
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
@@ -36,13 +38,36 @@ module.exports = ({ app }) => {
 
     // The Magic Middlewares
     // app.use(helmet()); // Security headers
-    app.use(cors()); // Enable CORS
+    app.use(
+        cors({
+            origin: "http://localhost:5173",
+            credentials: true, // for cookies!
+        }),
+    );
     app.use(compression()); // Compress responses
     app.use(morgan("dev")); // HTTP request logger
 
     // Body parsers
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
+
+    app.use(
+        session({
+            name: "upvis_sid", // Cookie name
+            secret: process.env.SESSION_SECRET || "your_secret_key", // Use env var!
+            resave: false,
+            saveUninitialized: false,
+            store: MongoStore.create({
+                mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/upvis",
+            }),
+            cookie: {
+                httpOnly: true,
+                secure: false, // Set to true only if using HTTPS
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60 * 24, // 24 hours
+            },
+        }),
+    );
 
     // Security: Prevent NoSQL injection & HTTP Parameter Pollution
     // app.use(mongoSanitize());

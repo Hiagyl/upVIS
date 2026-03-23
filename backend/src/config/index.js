@@ -8,7 +8,7 @@ if (result.error) {
 }
 
 // Validate required variables
-const requiredEnvVars = ["MONGODB_URI", "JWT_SECRET"];
+const requiredEnvVars = ["MONGODB_URI", "SESSION_SECRET"];
 
 requiredEnvVars.forEach((key) => {
   if (!process.env[key]) {
@@ -18,15 +18,15 @@ requiredEnvVars.forEach((key) => {
 
 module.exports = {
   env: process.env.NODE_ENV || "development",
-  port: parseInt(process.env.PORT, 10) || 5000,
+  port: parseInt(process.env.PORT, 10) || 5001,
 
   databaseURL: process.env.MONGODB_URI,
 
-  jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: "1d",
+  session: {
+    secret: process.env.SESSION_SECRET,
+    name: "upvis_sid",
   },
-
+  
   logs: {
     level: process.env.LOG_LEVEL || "silly",
   },

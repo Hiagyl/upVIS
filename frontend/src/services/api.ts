@@ -1,7 +1,8 @@
 import ky from 'ky';
 
 const api = ky.create({
-    prefixUrl: 'http://localhost:5001/api/v1',
+  prefixUrl: "http://localhost:5001/api/v1",
+  credentials: "include",
 });
 
 export const transactionService = {
@@ -37,4 +38,7 @@ export const authService = {
 
   register: (userData: any) =>
     api.post("register", { json: userData }).json<any>(),
+
+  checkStatus: () => api.get("login/me").json<any>(),
+  logout: () => api.post("login/logout").json<any>(),
 };
