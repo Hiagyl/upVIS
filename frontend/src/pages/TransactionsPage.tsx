@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionService } from "../services/api";
+import { donorService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Modal from "../components/shared/Modal";
@@ -14,6 +15,11 @@ const TransactionsPage = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["transactions"],
     queryFn: transactionService.getAll,
+  });
+
+  const { data: donor } = useQuery({
+    queryKey: ["donors"],
+    queryFn: donorService.getAll,
   });
 
   const deleteMutation = useMutation({
@@ -48,6 +54,34 @@ const TransactionsPage = () => {
     saveMutation.mutate(payload);
   };
 
+  const [entryType, setEntryType] = useState<string>(
+    editingItem?.type || "donation",
+  );
+
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEntryType(e.target.value);
+  };
+
+  const [donorInput, setDonorInput] = useState(editingItem?.donorName || "");
+  const [filteredDonors, setFilteredDonors] = useState<any[]>([]);
+
+  const handleDonorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDonorInput(value);
+    setFilteredDonors(
+      donors.filter((d: any) =>
+        d.name.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
+  };
+
+  const handleDonorSelect = (donor: any) => {
+    setDonorInput(donor.name);
+    setEditingItem((prev: any) => ({ ...prev, donorId: donor._id }));
+    setFilteredDonors([]);
+  };
+
+  const donors = donor?.data || [];
   const transactions = data?.data || [];
 
   return (
@@ -163,6 +197,36 @@ const TransactionsPage = () => {
                 </select>
               </div>
             </div>
+
+            {entryType === "donation" && (
+              <div className="relative">
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Donor
+                </label>
+                <input
+                  type="text"
+                  value={donorInput}
+                  onChange={handleDonorChange}
+                  placeholder="Type to search donors..."
+                  required
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                />
+                {/* Suggestions dropdown */}
+                {donorInput && filteredDonors.length > 0 && (
+                  <ul className="absolute z-50 w-full bg-white border-2 border-slate-200 rounded-xl mt-1 max-h-60 overflow-y-auto shadow-lg">
+                    {filteredDonors.map((donor: any) => (
+                      <li
+                        key={donor._id}
+                        className="p-4 cursor-pointer hover:bg-amber-50"
+                        onClick={() => handleDonorSelect(donor)}
+                      >
+                        {donor.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
 
             <div>
               <label className="block text-lg font-bold text-slate-800 mb-2">

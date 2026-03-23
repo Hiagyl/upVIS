@@ -13,6 +13,7 @@ import {
   History,
   Users,
   Plus,
+  Receipt,
 } from "lucide-react";
 
 const DonorsPage = () => {
@@ -85,6 +86,10 @@ const DonorsPage = () => {
           >
             <UserPlus size={24} strokeWidth={3} />
             Add Donor
+          </button>
+          <button className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95">
+            <Receipt size={24} strokeWidth={3} />
+            Add Donation
           </button>
         </header>
 
