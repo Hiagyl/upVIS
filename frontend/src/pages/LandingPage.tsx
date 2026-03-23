@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import photo1 from '../assets/photo1.jpg';
+import photo6 from '../assets/photo6.jpg';
+import photo7 from '../assets/photo7.jpg';
 import { useNavigate } from "react-router-dom";
 
 const sections = ["home", "about", "help", "scholars", "contact"];
@@ -138,7 +141,12 @@ const LandingPage = () => {
         </div>
 
         <div className="relative">
-          <div className="w-full h-[400px] bg-white border-2 border-amber-100 rounded-3xl shadow-sm"></div>
+          <div className="w-full h-[400px] bg-white border-2 border-amber-100 rounded-3xl shadow-sm">
+            <img src={photo6} alt='picture of upVIS' className="w-full h-full object-cover rounded-3xl"></img>
+            <p className="mt-2 text-sm text-slate-500 italic text-center">
+        Photo credit: https://www.facebook.com/profile.php?id=61554691509677
+      </p>
+          </div>
         </div>
 
       </section>
@@ -177,7 +185,10 @@ const LandingPage = () => {
       {/* ABOUT */}
       <section id="about" className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-28 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
 
-        <div className="bg-white border-2 border-amber-100 h-[350px] rounded-3xl shadow-sm"></div>
+        <div className="bg-white border-2 border-amber-100 h-[350px] rounded-3xl shadow-sm">
+          <img src={photo7} alt="Photo of Students accepting donations" className="w-full h-full object-cover rounded-3xl"></img>
+          <p>Photo credit: https://www.facebook.com/profile.php?id=61554691509677</p>
+        </div>
 
         <div>
           <h2 className="text-4xl font-serif font-black mb-6">
@@ -257,7 +268,8 @@ const LandingPage = () => {
       {/* SCHOLARS */}
       <section id="scholars" className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-24 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
 
-        <div className="bg-white border-2 border-amber-100 h-[350px] rounded-3xl shadow-sm"></div>
+        <div className="bg-white border-2 border-amber-100 h-[350px] rounded-3xl shadow-sm"><img src={photo1} alt="Photo of Students accepting donations" className="w-full h-full object-cover rounded-3xl"></img>
+          <p>Photo credit: https://www.facebook.com/profile.php?id=61554691509677</p></div>
 
         <div>
           <h2 className="text-3xl font-serif font-black mb-4">
