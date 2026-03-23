@@ -1,14 +1,18 @@
-import { Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import TransactionsPage from "./pages/TransactionsPage";
-import DonorsPage from "./pages/DonorsPage";
-import ScholarsPage from "./pages/ScholarsPage";
-import MembersPage from "./pages/MembersPage";
+import { Routes, Route } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import TransactionsPage from './pages/TransactionsPage';
+import DonorsPage from './pages/DonorsPage';
+import ScholarsPage from './pages/ScholarsPage';
+import MembersPage from './pages/MembersPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/transactions" element={<TransactionsPage />} />
       <Route path="/donors" element={<DonorsPage />} />
       <Route path="/scholars" element={<ScholarsPage />} />
