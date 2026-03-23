@@ -1,7 +1,7 @@
 import ky from 'ky';
 
 const api = ky.create({
-    prefixUrl: 'http://localhost:5000/api/v1',
+    prefixUrl: 'http://localhost:5001/api/v1',
 });
 
 export const transactionService = {
@@ -30,4 +30,11 @@ export const memberService = {
     create: (data: any) => api.post('members', { json: data }).json(),
     update: (id: string, data: any) => api.put(`members/${id}`, { json: data }).json(),
     delete: (id: string) => api.delete(`members/${id}`).json(),
+};
+export const authService = {
+  login: (credentials: any) =>
+    api.post("login", { json: credentials }).json<any>(),
+
+  register: (userData: any) =>
+    api.post("register", { json: userData }).json<any>(),
 };
