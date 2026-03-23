@@ -1,4 +1,4 @@
-const Member = require('../models/Members');
+const Member = require('../../models/v1/Members');
 
 const memberService = {
     getAll: async () => {

@@ -1,4 +1,4 @@
-const memberService = require('../services/memberService');
+const memberService = require('../../services/v1/memberService');
 
 const memberController = {
     // GET all members

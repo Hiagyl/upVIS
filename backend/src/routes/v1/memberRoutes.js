@@ -1,10 +1,10 @@
 const { Router } = require("express");
-const MemberController = require("../controllers/memberController");
+const MemberController = require("../../controllers/v1/memberController");
 
 const route = Router();
 
 module.exports = (app) => {
-    app.use("/api/members", route);
+    app.use("/members", route);
 
     route.get("/", MemberController.getMembers);
     route.get("/:id", MemberController.getMember);
