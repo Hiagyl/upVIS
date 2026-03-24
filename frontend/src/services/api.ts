@@ -1,7 +1,7 @@
 import ky from 'ky';
 
 const api = ky.create({
-  prefixUrl: "http://localhost:5001/api/v1",
+  prefixUrl: "http://localhost:5000/api/v1",
   credentials: "include",
 });
 
