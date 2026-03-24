@@ -6,6 +6,7 @@ import ScholarsPage from './pages/ScholarsPage';
 import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
 
@@ -39,12 +40,13 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (isAuth === null) return null; // Wait for check
 
-  return isAuth ? <Navigate to="/" replace /> : <>{children}</>;
+  return isAuth ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
 function App() {
     return (
         <Routes>
+          <Route path="/" element={<LandingPage />} />
 
             {/*Public-only Routes */}
             <Route path="/login" element={
@@ -61,7 +63,7 @@ function App() {
             />
 
             {/* Private Routes/needs to be logged in */}
-            <Route path="/" element={
+            <Route path="/dashboard" element={
                 <ProtectedRoute>
                     <Dashboard />
                 </ProtectedRoute>
@@ -97,5 +99,5 @@ function App() {
         </Routes>
   );
 }
-
+//comment
 export default App;
