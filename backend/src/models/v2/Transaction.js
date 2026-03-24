@@ -41,4 +41,4 @@ const TransactionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-module.exports = mongoose.model("TransactionV2", TransactionSchema);
+module.exports = mongoose.model("Transaction", TransactionSchema);

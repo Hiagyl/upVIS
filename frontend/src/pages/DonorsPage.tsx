@@ -79,7 +79,8 @@ const DonorsPage = () => {
           {/* Action Button */}
           <button
             onClick={() => {
-              /* open modal for new donor */
+              setEditingDonor(null);
+              setIsModalOpen(true);
             }}
             className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
           >
