@@ -1,7 +1,7 @@
 import ky from 'ky';
 
 const api = ky.create({
-    prefixUrl: 'http://localhost:5000/api',
+    prefixUrl: 'http://localhost:5000/api/v1',
 });
 
 export const transactionService = {

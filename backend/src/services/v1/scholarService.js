@@ -1,4 +1,4 @@
-const Scholar = require('../models/Scholar');
+const Scholar = require('../../models/v1/Scholar');
 
 const scholarService = {
     getAll: async () => {
