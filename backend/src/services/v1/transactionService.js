@@ -1,4 +1,4 @@
-const Transaction = require("../../models/v1/Transaction"); // Ensure this matches your filename
+const Transaction = require("../../models/v2/Transaction"); // Ensure this matches your filename
 
 class TransactionService {
   /**

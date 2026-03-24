@@ -112,6 +112,9 @@ const DonorsPage = () => {
                   <th className="p-6 border-b-2 border-slate-800">
                     Contact Information
                   </th>
+                  <th className="p-6 border-b-2 border-slate-800">
+                      Total Donations
+                  </th>
                   <th className="p-6 border-b-2 border-slate-800 text-center">
                     Actions
                   </th>
@@ -146,6 +149,11 @@ const DonorsPage = () => {
                           </span>
                         </div>
                       </div>
+                    </td>
+                    <td className="p-6">
+                        <span className="text-xl font-bold text-amber-600 font-serif">
+                            ₱{donor.totalDonations?.toLocaleString() ?? "0"}
+                        </span>
                     </td>
                     <td className="p-6">
                       <div className="flex justify-center gap-4">
