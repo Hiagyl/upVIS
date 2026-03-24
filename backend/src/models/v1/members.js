@@ -11,6 +11,16 @@ const memberSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     joinDate: {
         type: Date,
         required: true,
