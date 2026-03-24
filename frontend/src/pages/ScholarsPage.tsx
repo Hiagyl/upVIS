@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Edit2,
   Trash2,
+  Loader2,
   UserPlus,
   BookOpen,
   History,
@@ -164,11 +165,10 @@ const ScholarsPage = () => {
                       {/* Status */}
                       <td className="p-6">
                         <span
-                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wide border-2 ${
-                            scholar.status === "Student"
+                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wide border-2 ${scholar.status === "Student"
                               ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                               : "bg-amber-50 border-amber-200 text-amber-700"
-                          }`}
+                            }`}
                         >
                           {scholar.status}
                         </span>
@@ -236,7 +236,7 @@ const ScholarsPage = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={
-            editingScholar ? "Amend Scholar Profile" : "Register New Scholar"
+            editingScholar ? "Update Scholar Profile" : "Register New Scholar"
           }
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
@@ -312,8 +312,8 @@ const ScholarsPage = () => {
                   defaultValue={
                     editingScholar?.scholarshipStartDate
                       ? new Date(editingScholar.scholarshipStartDate)
-                          .toISOString()
-                          .split("T")[0]
+                        .toISOString()
+                        .split("T")[0]
                       : ""
                   }
                   required
@@ -326,7 +326,10 @@ const ScholarsPage = () => {
               disabled={saveMutation.isPending}
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl mt-4"
             >
-              {saveMutation.isPending ? "Updating the Records..." : " Register"}
+              {saveMutation.isPending && (
+                <Loader2 size={24} className="animate-spin" />
+              )}
+              {editingScholar ? "Confirm Update" : "Confirm Registration"}
             </button>
           </form>
         </Modal>
