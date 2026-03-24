@@ -1,21 +1,28 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { authService } from "../services/api";
 import { Sun, LogIn } from "lucide-react";
 
+
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        // simulate login request
-        setTimeout(() => {
+        try {
+            const data = await authService.login({ email, password });
+            navigate("/", { replace: true });
+        } catch (err: any) {
+            // Error handling removed as requested
+            console.error("Login failed:", err);
+        } finally {
             setLoading(false);
-            console.log({ email, password });
-        }, 1500);
+        }
     };
 
     return (

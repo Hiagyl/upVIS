@@ -14,7 +14,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/" },
+    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/dashboard" },
     {
       name: "Transactions",
       icon: <Receipt size={20} />,
