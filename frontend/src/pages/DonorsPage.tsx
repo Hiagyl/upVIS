@@ -117,6 +117,9 @@ const DonorsPage = () => {
                   <th className="p-6 border-b-2 border-slate-800">
                     Contact Information
                   </th>
+                  <th className="p-6 border-b-2 border-slate-800">
+                    Total Donations
+                  </th>
                   <th className="p-6 border-b-2 border-slate-800 text-center">
                     Actions
                   </th>

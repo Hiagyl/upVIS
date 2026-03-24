@@ -14,6 +14,7 @@ interface Transaction {
   category: string;
   type: "donation" | "expense";
   amount: number;
+  donor?: string;
 }
 
 interface TransactionTableProps {
@@ -36,6 +37,7 @@ const TransactionTable = ({
             <th className="p-6 border-b-2 border-slate-800">Date</th>
             <th className="p-6 border-b-2 border-slate-800">Description</th>
             <th className="p-6 border-b-2 border-slate-800">Category</th>
+            <th className="p-6 border-b-2 border-slate-800">Donor</th>
             <th className="p-6 border-b-2 border-slate-800 text-right">
               Amount
             </th>
@@ -98,6 +100,13 @@ const TransactionTable = ({
                     {t.category}
                   </span>
                 </td>
+
+                  {/* Donor: Conditional */}
+  <td className="p-6 text-center">
+    <span className="text-slate-700 font-semibold">
+      {t.type === "donation" ? t.donor || "" : "-"}
+    </span>
+  </td>
 
                 {/* Amount: Very large and bold for poor eyesight */}
                 <td

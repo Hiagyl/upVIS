@@ -44,13 +44,17 @@ const TransactionsPage = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const payload = {
+    const payload: any = {
       description: formData.get("description"),
       amount: Number(formData.get("amount")),
       category: formData.get("category"),
       type: formData.get("type"),
       date: editingItem?.date || new Date().toISOString(),
     };
+
+    if(formData.get("type") == "donation"){
+      payload.donor = formData.get("donor");
+    }
     saveMutation.mutate(payload);
   };
 
