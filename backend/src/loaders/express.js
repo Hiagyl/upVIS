@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
-const MongoStore = require("connect-mongo").default;
+const MongoStore = require("connect-mongo");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
@@ -53,18 +53,21 @@ module.exports = ({ app }) => {
 
     app.use(
         session({
-            name: "upvis_sid", // Cookie name
-            secret: process.env.SESSION_SECRET || "your_secret_key", // Use env var!
+            name: "upvis_sid",
+            secret: process.env.SESSION_SECRET || "your_secret_key",
             resave: false,
             saveUninitialized: false,
-            store: MongoStore.create({
-                mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/upvis",
+            // Use the conditional check to ensure connect-mongo is ready
+            store: (MongoStore.default ? MongoStore.default : MongoStore).create({
+                mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/upVIS",
+                dbName: 'upVIS',
+                autoRemove: 'native'
             }),
             cookie: {
                 httpOnly: true,
-                secure: false, // Set to true only if using HTTPS
+                secure: false,
                 sameSite: "lax",
-                maxAge: 1000 * 60 * 60 * 24, // 24 hours
+                maxAge: 1000 * 60 * 60 * 24,
             },
         }),
     );
