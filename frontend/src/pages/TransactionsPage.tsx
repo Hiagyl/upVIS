@@ -183,9 +183,9 @@ const TransactionsPage = () => {
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
-                ? "Updating the Chronicle..."
+                ? "Updating Transactions..."
                 : editingItem
-                  ? "Amend Entry"
+                  ? "Update Entry"
                   : "Add Entry"}
             </button>
           </form>

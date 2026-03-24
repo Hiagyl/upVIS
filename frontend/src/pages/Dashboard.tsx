@@ -147,7 +147,7 @@ const Dashboard = () => {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={editingItem ? "Amend Entry" : "Record New Transaction"}
+          title={editingItem ? "Update Transaction" : "Record New Transaction"}
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
