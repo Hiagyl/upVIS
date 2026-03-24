@@ -8,17 +8,18 @@ import {
   Trash2,
   UserPlus,
   Heart,
+  Search,
   Mail,
   Phone,
   History,
   Users,
-  Plus,
 } from "lucide-react";
 
 const DonorsPage = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonor, setEditingDonor] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["donors"],
@@ -53,19 +54,20 @@ const DonorsPage = () => {
 
   const donors = data?.data || [];
 
+  // FIXED: Changed m.fullname to m.name to match your data keys
+  const filteredDonors = donors?.filter((m: any) =>
+    m.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <Sidebar />
       <main className="flex-1 ml-72 p-12">
-        {/* Header: High Contrast with Warm Accents */}
-        {/* Donors Page Header: Consistent with MembersPage */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
           <div className="flex items-center gap-6">
-            {/* Icon container */}
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
-              <Users size={32} /> {/* or a donor-specific icon */}
+              <Users size={32} />
             </div>
-            {/* Title + Subtitle */}
             <div>
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Donors
@@ -76,17 +78,31 @@ const DonorsPage = () => {
             </div>
           </div>
 
-          {/* Action Button */}
-          <button
-            onClick={() => {
-              setEditingDonor(null);
-              setIsModalOpen(true);
-            }}
-            className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
-          >
-            <UserPlus size={24} strokeWidth={3} />
-            Add Donor
-          </button>
+          <div className="flex gap-4">
+            <div className="relative group">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Find a donor..."
+                className="pl-12 pr-6 py-4 border-2 border-slate-100 rounded-xl outline-none focus:border-amber-500 bg-[#FAF9F6] w-80 text-lg shadow-inner transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <button
+              onClick={() => {
+                setEditingDonor(null);
+                setIsModalOpen(true);
+              }}
+              className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+            >
+              <UserPlus size={24} strokeWidth={3} />
+              Add Donor
+            </button>
+          </div>
         </header>
 
         {isLoading ? (
@@ -107,22 +123,15 @@ const DonorsPage = () => {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-900 text-slate-100 text-sm font-black uppercase tracking-widest">
                 <tr>
-                  <th className="p-6 border-b-2 border-slate-800">
-                    Donor Name
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800">
-                    Contact Information
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800">
-                      Total Donations
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800 text-center">
-                    Actions
-                  </th>
+                  <th className="p-6 border-b-2 border-slate-800">Donor Name</th>
+                  <th className="p-6 border-b-2 border-slate-800">Contact Information</th>
+                  <th className="p-6 border-b-2 border-slate-800">Total Donations</th>
+                  <th className="p-6 border-b-2 border-slate-800 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-slate-100">
-                {donors.map((donor: any) => (
+                {/* CHANGED: Mapping over filteredDonors instead of donors */}
+                {filteredDonors.map((donor: any) => (
                   <tr
                     key={donor._id}
                     className="hover:bg-amber-50/30 transition-colors"
@@ -152,9 +161,9 @@ const DonorsPage = () => {
                       </div>
                     </td>
                     <td className="p-6">
-                        <span className="text-xl font-bold text-amber-600 font-serif">
-                            ₱{donor.totalDonations?.toLocaleString() ?? "0"}
-                        </span>
+                      <span className="text-xl font-bold text-amber-600 font-serif">
+                        ₱{donor.totalDonations?.toLocaleString() ?? "0"}
+                      </span>
                     </td>
                     <td className="p-6">
                       <div className="flex justify-center gap-4">
@@ -170,11 +179,7 @@ const DonorsPage = () => {
                         </button>
                         <button
                           onClick={() => {
-                            if (
-                              window.confirm(
-                                `Permanently remove ${donor.name}?`,
-                              )
-                            )
+                            if (window.confirm(`Permanently remove ${donor.name}?`))
                               deleteMutation.mutate(donor._id);
                           }}
                           className="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-700 border-2 border-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold"
@@ -186,33 +191,30 @@ const DonorsPage = () => {
                     </td>
                   </tr>
                 ))}
-                {donors.length === 0 && (
+
+                {/* Updated the check to use filteredDonors.length */}
+                {filteredDonors.length === 0 && (
                   <tr>
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
-                        <History
-                          size={48}
-                          strokeWidth={1.5}
-                          className="opacity-20"
-                        />
+                        <History size={48} strokeWidth={1.5} className="opacity-20" />
                         <p className="text-xl font-medium italic font-serif text-slate-500">
-                          The donor directory is currently empty.
+                          {searchTerm
+                            ? `No results found for "${searchTerm}"`
+                            : "The donor directory is currently empty."}
                         </p>
                       </div>
                     </td>
                   </tr>
                 )}
               </tbody>
-
               <tfoot>
                 <tr>
                   <td colSpan={4}>
                     <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
-                          upVIS
-                        </p>
+                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">upVIS</p>
                       </div>
                       <p className="text-xs text-slate-400 italic font-serif">
                         "Behold the light that leads the way."
@@ -225,7 +227,6 @@ const DonorsPage = () => {
           </div>
         )}
 
-        {/* --- REGISTRATION MODAL --- */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -233,9 +234,7 @@ const DonorsPage = () => {
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">
-                Full Name
-              </label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">Full Name</label>
               <input
                 name="name"
                 defaultValue={editingDonor?.name}
@@ -245,9 +244,7 @@ const DonorsPage = () => {
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">
-                Email Address
-              </label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">Email Address</label>
               <input
                 name="email"
                 type="email"
@@ -258,9 +255,7 @@ const DonorsPage = () => {
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">
-                Phone Number
-              </label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">Phone Number</label>
               <input
                 name="phone"
                 defaultValue={editingDonor?.phone}
@@ -273,11 +268,7 @@ const DonorsPage = () => {
               disabled={saveMutation.isPending}
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
-              {saveMutation.isPending
-                ? "Loading..."
-                : editingDonor
-                  ? "Update Profile"
-                  : "Register Donor"}
+              {saveMutation.isPending ? "Loading..." : editingDonor ? "Update Profile" : "Register Donor"}
             </button>
           </form>
         </Modal>
