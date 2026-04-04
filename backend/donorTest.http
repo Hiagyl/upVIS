@@ -1,0 +1,51 @@
+### Variables
+@hostname = localhost
+@port = 5000
+@host = http://{{hostname}}:{{port}}/api/donors
+@contentType = application/json
+
+### 1. Create a New Individual Donor
+# @name createDonor
+POST {{host}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Maria Clara",
+    "email": "maria.clara@example.com",
+    "phone": "09123456789",
+    "address": "Iloilo City, Philippines",
+    "donorType": "individual",
+    "notes": "Interested in educational tech projects."
+}
+
+### 2. Create a Corporate Donor
+POST {{host}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Tech Corp Solutions",
+    "email": "contact@techcorp.com",
+    "phone": "02-888-1234",
+    "donorType": "corporate",
+    "notes": "Annual CSR partner."
+}
+
+### 3. Get All Donors
+GET {{host}}
+
+### 4. Get Single Donor by ID
+# Uses the ID from the Maria Clara request above
+@donorId = {{createDonor.response.body.data._id}}
+GET {{host}}/{{donorId}}
+
+### 5. Update Donor Information
+PUT {{host}}/{{donorId}}
+Content-Type: {{contentType}}
+
+{
+    "phone": "09998887766",
+    "notes": "Updated: Prefers email contact over phone."
+}
+
+### 6. Delete a Donor
+DELETE {{host}}/{{donorId}}
