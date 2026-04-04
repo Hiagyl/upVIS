@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionService } from "../services/api";
+import { donorService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Modal from "../components/shared/Modal";
@@ -14,6 +15,11 @@ const TransactionsPage = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["transactions"],
     queryFn: transactionService.getAll,
+  });
+
+  const { data: donor } = useQuery({
+    queryKey: ["donors"],
+    queryFn: donorService.getAll,
   });
 
   const deleteMutation = useMutation({
@@ -35,19 +41,59 @@ const TransactionsPage = () => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = {
-      description: formData.get("description"),
-      amount: Number(formData.get("amount")),
-      category: formData.get("category"),
-      type: formData.get("type"),
-      date: editingItem?.date || new Date().toISOString(),
-    };
-    saveMutation.mutate(payload);
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const formData = new FormData(e.currentTarget);
+  
+  const payload: any = {
+    description: formData.get("description"),
+    amount: Number(formData.get("amount")),
+    category: formData.get("category"),
+    type: formData.get("type"),
+    date: editingItem?.date || new Date().toISOString(),
   };
 
+  if (formData.get("type") === "donation") {
+    const donorName = formData.get("donor") as string;
+    // Find the matching donor from the donors list
+    const matchedDonor = donors.find(
+      (d: any) => d.name.toLowerCase() === donorName.toLowerCase()
+    );
+
+    payload.donorInfo = {
+      name: matchedDonor?.name || donorName,
+      email: matchedDonor?.email || "",
+    };
+  }
+
+  saveMutation.mutate(payload);
+};
+  const [entryType, setEntryType] = useState(editingItem?.type || "donation");
+
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEntryType(e.target.value);
+  };
+
+  const [donorInput, setDonorInput] = useState(editingItem?.donorName || "");
+  const [filteredDonors, setFilteredDonors] = useState<any[]>([]);
+
+  const handleDonorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDonorInput(value);
+    setFilteredDonors(
+      donors.filter((d: any) =>
+        d.name.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
+  };
+
+  const handleDonorSelect = (donor: any) => {
+    setDonorInput(donor.name);
+    setEditingItem((prev: any) => ({ ...prev, donorId: donor._id }));
+    setFilteredDonors([]);
+  };
+
+  const donors = donor?.data || [];
   const transactions = data?.data || [];
 
   return (
@@ -155,7 +201,8 @@ const TransactionsPage = () => {
                 </label>
                 <select
                   name="type"
-                  defaultValue={editingItem?.type || "donation"}
+                  value={entryType}
+                  onChange={(e) => setEntryType(e.target.value)}
                   className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-white cursor-pointer hover:border-amber-500 transition-colors"
                 >
                   <option value="donation">Donation (Increase)</option>
@@ -163,6 +210,26 @@ const TransactionsPage = () => {
                 </select>
               </div>
             </div>
+
+            {entryType === "donation" && (
+              <div>
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Donor Name
+                </label>
+                <input
+                  list="donors"
+                  name="donor"
+                  defaultValue={editingItem?.donor?.name || ""}
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                  placeholder="Start typing to search..."
+                />
+                <datalist id="donors">
+                  {donors.map((d: any) => (
+                    <option key={d._id} value={d.name} />
+                  ))}
+                </datalist>
+              </div>
+            )}
 
             <div>
               <label className="block text-lg font-bold text-slate-800 mb-2">
@@ -183,9 +250,9 @@ const TransactionsPage = () => {
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
-                ? "Updating Transactions..."
+                ? "Updating the Chronicle..."
                 : editingItem
-                  ? "Update Entry"
+                  ? "Amend Entry"
                   : "Add Entry"}
             </button>
           </form>

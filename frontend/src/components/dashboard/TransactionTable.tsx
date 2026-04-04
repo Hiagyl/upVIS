@@ -14,6 +14,12 @@ interface Transaction {
   category: string;
   type: "donation" | "expense";
   amount: number;
+  attachmentUrl?: string;
+  donorInfo?: {
+    donorId: string;
+    name: string;
+    email: string;
+  };
 }
 
 interface TransactionTableProps {
@@ -36,6 +42,7 @@ const TransactionTable = ({
             <th className="p-6 border-b-2 border-slate-800">Date</th>
             <th className="p-6 border-b-2 border-slate-800">Description</th>
             <th className="p-6 border-b-2 border-slate-800">Category</th>
+            <th className="p-6 border-b-2 border-slate-800">Donor</th>
             <th className="p-6 border-b-2 border-slate-800 text-right">
               Amount
             </th>
@@ -47,7 +54,7 @@ const TransactionTable = ({
         <tbody className="divide-y-2 divide-slate-100">
           {transactions.length === 0 ? (
             <tr>
-              <td colSpan={5} className="p-20 text-center">
+              <td colSpan={6} className="p-20 text-center">
                 <div className="flex flex-col items-center gap-4 text-slate-400">
                   <History size={48} strokeWidth={1.5} className="opacity-20" />
                   <p className="text-xl font-medium italic font-serif text-slate-500">
@@ -99,6 +106,11 @@ const TransactionTable = ({
                   </span>
                 </td>
 
+<td className="p-6 text-center">
+  <span className="text-slate-700 font-semibold">
+    {t.type === "donation" ? t.donorInfo?.name || "Anonymous" : "-"}
+  </span>
+</td>
                 {/* Amount: Very large and bold for poor eyesight */}
                 <td
                   className={`p-6 text-right font-black text-2xl tracking-tight ${

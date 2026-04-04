@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { donorService } from "../services/api";
+import { donorService, transactionService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import Modal from "../components/shared/Modal";
 import {
@@ -8,18 +8,22 @@ import {
   Trash2,
   UserPlus,
   Heart,
-  Search,
   Mail,
   Phone,
   History,
   Users,
+  Receipt,
 } from "lucide-react";
 
 const DonorsPage = () => {
   const queryClient = useQueryClient();
+
+  // Donor modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonor, setEditingDonor] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+
+  // Donation modal state
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["donors"],
@@ -45,6 +49,15 @@ const DonorsPage = () => {
     },
   });
 
+  const donationMutation = useMutation({
+    mutationFn: (formData: any) => transactionService.create(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["donors"] });
+      setIsDonationModalOpen(false);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -52,12 +65,30 @@ const DonorsPage = () => {
     saveMutation.mutate(payload);
   };
 
-  const donors = data?.data || [];
+  const handleDonationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const donorName = formData.get("donor") as string;
+    const matchedDonor = donors.find(
+      (d: any) => d.name.toLowerCase() === donorName.toLowerCase()
+    );
 
-  // FIXED: Changed m.fullname to m.name to match your data keys
-  const filteredDonors = donors?.filter((m: any) =>
-    m.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const payload = {
+      description: formData.get("description"),
+      amount: Number(formData.get("amount")),
+      category: formData.get("category"),
+      type: "donation",
+      date: new Date().toISOString(),
+      donorInfo: {
+        name: matchedDonor?.name || donorName,
+        email: matchedDonor?.email || "",
+      },
+    };
+
+    donationMutation.mutate(payload);
+  };
+
+  const donors = data?.data || [];
 
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
@@ -78,20 +109,7 @@ const DonorsPage = () => {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <div className="relative group">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors"
-                size={20}
-              />
-              <input
-                type="text"
-                placeholder="Find a donor..."
-                className="pl-12 pr-6 py-4 border-2 border-slate-100 rounded-xl outline-none focus:border-amber-500 bg-[#FAF9F6] w-80 text-lg shadow-inner transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+          <div className="flex items-center gap-4">
             <button
               onClick={() => {
                 setEditingDonor(null);
@@ -101,6 +119,13 @@ const DonorsPage = () => {
             >
               <UserPlus size={24} strokeWidth={3} />
               Add Donor
+            </button>
+            <button
+              onClick={() => setIsDonationModalOpen(true)}
+              className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+            >
+              <Receipt size={24} strokeWidth={3} />
+              Add Donation
             </button>
           </div>
         </header>
@@ -130,12 +155,8 @@ const DonorsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-slate-100">
-                {/* CHANGED: Mapping over filteredDonors instead of donors */}
-                {filteredDonors.map((donor: any) => (
-                  <tr
-                    key={donor._id}
-                    className="hover:bg-amber-50/30 transition-colors"
-                  >
+                {donors.map((donor: any) => (
+                  <tr key={donor._id} className="hover:bg-amber-50/30 transition-colors">
                     <td className="p-6">
                       <div className="flex items-center gap-4">
                         <div className="p-3 bg-amber-100 rounded-full text-amber-700">
@@ -161,8 +182,8 @@ const DonorsPage = () => {
                       </div>
                     </td>
                     <td className="p-6">
-                      <span className="text-xl font-bold text-amber-600 font-serif">
-                        ₱{donor.totalDonations?.toLocaleString() ?? "0"}
+                      <span className="text-xl font-bold text-slate-900">
+                        ₱{donor.totalDonations?.toLocaleString() ?? 0}
                       </span>
                     </td>
                     <td className="p-6">
@@ -191,17 +212,13 @@ const DonorsPage = () => {
                     </td>
                   </tr>
                 ))}
-
-                {/* Updated the check to use filteredDonors.length */}
-                {filteredDonors.length === 0 && (
+                {donors.length === 0 && (
                   <tr>
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
                         <History size={48} strokeWidth={1.5} className="opacity-20" />
                         <p className="text-xl font-medium italic font-serif text-slate-500">
-                          {searchTerm
-                            ? `No results found for "${searchTerm}"`
-                            : "The donor directory is currently empty."}
+                          The donor directory is currently empty.
                         </p>
                       </div>
                     </td>
@@ -214,7 +231,9 @@ const DonorsPage = () => {
                     <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">upVIS</p>
+                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                          upVIS
+                        </p>
                       </div>
                       <p className="text-xs text-slate-400 italic font-serif">
                         "Behold the light that leads the way."
@@ -227,6 +246,7 @@ const DonorsPage = () => {
           </div>
         )}
 
+        {/* --- DONOR REGISTRATION MODAL --- */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -234,7 +254,9 @@ const DonorsPage = () => {
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">Full Name</label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Full Name
+              </label>
               <input
                 name="name"
                 defaultValue={editingDonor?.name}
@@ -244,7 +266,9 @@ const DonorsPage = () => {
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">Email Address</label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Email Address
+              </label>
               <input
                 name="email"
                 type="email"
@@ -255,7 +279,9 @@ const DonorsPage = () => {
               />
             </div>
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">Phone Number</label>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Phone Number
+              </label>
               <input
                 name="phone"
                 defaultValue={editingDonor?.phone}
@@ -268,7 +294,92 @@ const DonorsPage = () => {
               disabled={saveMutation.isPending}
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
-              {saveMutation.isPending ? "Loading..." : editingDonor ? "Update Profile" : "Register Donor"}
+              {saveMutation.isPending
+                ? "Loading..."
+                : editingDonor
+                  ? "Update Profile"
+                  : "Register Donor"}
+            </button>
+          </form>
+        </Modal>
+
+        {/* --- ADD DONATION MODAL --- */}
+        <Modal
+          isOpen={isDonationModalOpen}
+          onClose={() => setIsDonationModalOpen(false)}
+          title="Record New Donation"
+        >
+          <form onSubmit={handleDonationSubmit} className="p-2 space-y-6">
+            <div>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Description of Event
+              </label>
+              <input
+                name="description"
+                required
+                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl focus:border-amber-500 outline-none transition-colors"
+                placeholder="e.g., Semester Tuition Grant"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Amount (₱)
+                </label>
+                <input
+                  name="amount"
+                  type="number"
+                  required
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Entry Type
+                </label>
+                {/* Grayed out, locked to Donation */}
+                <div className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-slate-100 text-slate-400 cursor-not-allowed select-none">
+                  Donation (Increase)
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Donor Name
+              </label>
+              <input
+                list="donors-list"
+                name="donor"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                placeholder="Start typing to search..."
+              />
+              <datalist id="donors-list">
+                {donors.map((d: any) => (
+                  <option key={d._id} value={d.name} />
+                ))}
+              </datalist>
+            </div>
+
+            <div>
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Allocation Category
+              </label>
+              <input
+                name="category"
+                required
+                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                placeholder="e.g., Medical Assistance"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={donationMutation.isPending}
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
+            >
+              {donationMutation.isPending ? "Recording..." : "Add Donation"}
             </button>
           </form>
         </Modal>
