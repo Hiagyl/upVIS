@@ -10,15 +10,18 @@ const RegisterPage = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        role: "scholar",
     });
 
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({
-          ...form,
-          [e.target.name]: e.target.value,
-        });
+    const handleChange = (
+      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
+      setForm({
+        ...form,
+        [e.target.name]: e.target.value,
+      });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -39,6 +42,7 @@ const RegisterPage = () => {
                 email: form.email,
                 password: form.password,
                 contactNo: 0, // Placeholder if you haven't added a field for it yet
+                role: form.role,
             });
 
             console.log("Registration successful");
@@ -106,6 +110,24 @@ const RegisterPage = () => {
               className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
               placeholder="you@example.com"
             />
+          </div>
+
+          {/* Role Selection */}
+          <div>
+            <label className="block text-sm font-bold text-slate-800 mb-2">
+              Register as
+            </label>
+
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
+            >
+              <option value="scholar">Scholar</option>
+              <option value="donor">Donor</option>
+              <option value="admin">Admin</option> 
+            </select>
           </div>
 
           {/* Password */}

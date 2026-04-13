@@ -4,21 +4,37 @@ import { authService } from "../services/api";
 import { Sun, LogIn } from "lucide-react";
 
 
-const LoginPage = () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const LoginPage = () => {
+        const navigate = useNavigate();
+        const [email, setEmail] = useState("");
+        const [password, setPassword] = useState("");
+        const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+        const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
             const data = await authService.login({ email, password });
-            navigate("/", { replace: true });
+
+            const role = data.user.role;
+
+            // Optional: store auth
+            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("token", data.token);
+
+            // ROUTING LOGIC
+            if (role === "admin") {
+                navigate("/dashboard", { replace: true });
+            } else if (role === "student") {
+                navigate("/student-polls", { replace: true });
+            } else if (role === "donor") {
+                navigate("/donor-landing", { replace: true });
+            } else {
+                navigate("/", { replace: true });
+            }
+
         } catch (err: any) {
-            // Error handling removed as requested
             console.error("Login failed:", err);
         } finally {
             setLoading(false);
