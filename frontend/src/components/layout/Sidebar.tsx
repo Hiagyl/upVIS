@@ -5,6 +5,7 @@ import {
   Users,
   GraduationCap,
   ShieldCheck,
+  ClipboardCheck,
   Compass,
   Circle,
 } from "lucide-react";
@@ -22,6 +23,11 @@ const Sidebar = () => {
     { name: "Donors", icon: <Users size={20} />, href: "/donors" },
     { name: "Scholars", icon: <GraduationCap size={20} />, href: "/scholars" },
     { name: "Members", icon: <ShieldCheck size={20} />, href: "/members" },
+    {
+      name: "Applications Review",
+      icon: <ClipboardCheck size={20} />,
+      href: "/admin/applications",
+    },
   ];
 
   return (

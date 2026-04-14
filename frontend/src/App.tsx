@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
 import ApplyPage from './pages/ApplyPage';
+import ApplicationsReviewPage from './pages/ApplicationsReviewPage';
 import LogoutTestPage from './pages/LogoutTestPage';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
@@ -85,6 +86,7 @@ function App() {
                 }
             />
             <Route path="/apply" element={<ApplyPage />} />
+            <Route path="/admin/applications" element={<ApplicationsReviewPage />} />
 
             {/* Private Routes/needs to be logged in */}
             <Route path="/dashboard" element={
