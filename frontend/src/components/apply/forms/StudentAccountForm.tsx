@@ -1,6 +1,10 @@
 import { useState } from "react";
 import ApplicationSuccessState from "../shared/ApplicationSuccessState";
 import {
+  applicationService,
+  getApiErrorMessage,
+} from "../../../services/api";
+import {
   validateContactNumber,
   validateMinLength,
   validateUpMail,
@@ -35,6 +39,7 @@ const StudentAccountForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -50,6 +55,7 @@ const StudentAccountForm = () => {
       delete nextErrors[name];
       return nextErrors;
     });
+    setSubmitError("");
   };
 
   const validateForm = () => {
@@ -91,10 +97,28 @@ const StudentAccountForm = () => {
     }
 
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1400));
-    setReferenceNumber(`STU-${Date.now().toString().slice(-6)}`);
-    setSubmitSuccess(true);
-    setIsSubmitting(false);
+    setSubmitError("");
+
+    try {
+      const response = await applicationService.create({
+        type: "student_account",
+        fullName: formData.fullName,
+        email: formData.upMail,
+        contactNo: formData.contactNo,
+        details: {
+          studentNumber: formData.studentNumber,
+          program: formData.program,
+          reasonForAccount: formData.reasonForRequestingAccount,
+        },
+      });
+
+      setReferenceNumber(response?.data?._id || `STU-${Date.now().toString().slice(-6)}`);
+      setSubmitSuccess(true);
+    } catch (error) {
+      setSubmitError(await getApiErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReturn = () => {
@@ -103,6 +127,7 @@ const StudentAccountForm = () => {
     setReferenceNumber("");
     setSubmitSuccess(false);
     setIsSubmitting(false);
+    setSubmitError("");
   };
 
   if (submitSuccess) {
@@ -223,6 +248,12 @@ const StudentAccountForm = () => {
           </div>
         </div>
       </div>
+
+      {submitError && (
+        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {submitError}
+        </div>
+      )}
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-500">

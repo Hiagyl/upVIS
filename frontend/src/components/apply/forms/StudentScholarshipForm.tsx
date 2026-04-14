@@ -1,6 +1,10 @@
 import { useState } from "react";
 import ApplicationSuccessState from "../shared/ApplicationSuccessState";
 import {
+  applicationService,
+  getApiErrorMessage,
+} from "../../../services/api";
+import {
   validateContactNumber,
   validateMinLength,
   validateUpMail,
@@ -39,6 +43,7 @@ const StudentScholarshipForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -54,6 +59,7 @@ const StudentScholarshipForm = () => {
       delete nextErrors[name];
       return nextErrors;
     });
+    setSubmitError("");
   };
 
   const validateForm = () => {
@@ -95,10 +101,30 @@ const StudentScholarshipForm = () => {
     }
 
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    setReferenceNumber(`SCH-${Date.now().toString().slice(-6)}`);
-    setSubmitSuccess(true);
-    setIsSubmitting(false);
+    setSubmitError("");
+
+    try {
+      const response = await applicationService.create({
+        type: "student_scholarship",
+        fullName: formData.fullName,
+        email: formData.upMail,
+        contactNo: formData.contactNo,
+        details: {
+          studentNumber: formData.studentNumber,
+          program: formData.program,
+          yearLevel: formData.yearLevel,
+          reasonForApplying: formData.reasonForApplying,
+          supportingNotes: formData.supportingNotes,
+        },
+      });
+
+      setReferenceNumber(response?.data?._id || `SCH-${Date.now().toString().slice(-6)}`);
+      setSubmitSuccess(true);
+    } catch (error) {
+      setSubmitError(await getApiErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReturn = () => {
@@ -107,6 +133,7 @@ const StudentScholarshipForm = () => {
     setReferenceNumber("");
     setSubmitSuccess(false);
     setIsSubmitting(false);
+    setSubmitError("");
   };
 
   if (submitSuccess) {
@@ -262,6 +289,12 @@ const StudentScholarshipForm = () => {
           />
         </div>
       </div>
+
+      {submitError && (
+        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {submitError}
+        </div>
+      )}
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-500">

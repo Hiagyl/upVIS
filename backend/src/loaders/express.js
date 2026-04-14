@@ -15,6 +15,7 @@ const v1MemberRoutes = require("../routes/v1/memberRoutes");
 const v1ScholarRoutes = require("../routes/v1/scholarRoutes");
 const v1RegisterRoutes = require("../routes/v1/registerRoutes");
 const v1LoginRoutes = require("../routes/v1/loginRoutes");
+const v1ApplicationRoutes = require("../routes/v1/applicationRoutes");
 
 // V2 Routes
 const v2TransactionRoutes = require("../routes/v2/transactionRoutes");
@@ -86,6 +87,7 @@ module.exports = ({ app }) => {
     v1ScholarRoutes(v1Router);
     v1RegisterRoutes(v1Router);
     v1LoginRoutes(v1Router);
+    v1ApplicationRoutes(v1Router);
     app.use("/api/v1", v1Router);
 
     // V2 Router
