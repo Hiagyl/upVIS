@@ -1,14 +1,7 @@
-const {
-  login,
-  checkStatus,
-  logout,
-} = require("../../controllers/v1/loginController");
+const { loginScholar, checkStatus, logoutScholar } = require("../../controllers/v1/loginController");
 
 module.exports = (router) => {
-
-  router.post("/login", login);
-
-  router.get("/login/me", checkStatus);
-
-  router.post("/login/logout", logout);
+    router.post("/login", loginScholar);
+    router.get("/login/me", checkStatus);
+    router.post("/login/logout", logoutScholar);
 };

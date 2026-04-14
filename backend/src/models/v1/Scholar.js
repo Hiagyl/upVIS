@@ -25,6 +25,15 @@ const scholarSchema = new mongoose.Schema({
         trim: true,
         match: [/^\w+([\.-]?\w+)*@up.edu.ph$/, 'Please use a valid @up.edu.ph email']
     },
+    contactNo: {
+        type: String,
+        required: [true, 'Contact number is required'],
+        trim: true
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required']
+    },
     scholarshipStartDate: {
         type: Date,
         required: [true, 'Start date is required']

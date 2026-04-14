@@ -59,7 +59,7 @@ module.exports = ({ app }) => {
             saveUninitialized: false,
             // Use the conditional check to ensure connect-mongo is ready
             store: (MongoStore.default ? MongoStore.default : MongoStore).create({
-                mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/upVIS",
+                mongoUrl: process.env.MONGODB_URI,
                 dbName: 'upVIS',
                 autoRemove: 'native'
             }),

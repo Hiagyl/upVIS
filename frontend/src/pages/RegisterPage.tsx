@@ -10,8 +10,8 @@ const RegisterPage = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        contactNo: "",  // add this
     });
-
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +38,7 @@ const RegisterPage = () => {
                 fullname: form.name,
                 email: form.email,
                 password: form.password,
-                contactNo: 0, // Placeholder if you haven't added a field for it yet
+                contactNo: form.contactNo,  // replace the hardcoded 0
             });
 
             console.log("Registration successful");
@@ -106,6 +106,21 @@ const RegisterPage = () => {
               className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
               placeholder="you@example.com"
             />
+          </div>
+
+          <div>
+              <label className="block text-sm font-bold text-slate-800 mb-2">
+                  Contact Number
+              </label>
+              <input
+                  name="contactNo"
+                  type="text"
+                  required
+                  value={form.contactNo}
+                  onChange={handleChange}
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
+                  placeholder="+63 9XX XXX XXXX"
+              />
           </div>
 
           {/* Password */}
