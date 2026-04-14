@@ -13,3 +13,7 @@ export const validateContactNumber = (phone: string): boolean => {
 export const validateMinLength = (text: string, min: number): boolean => {
   return text.trim().length >= min;
 };
+
+export const validateStudentNumber = (studentNumber: string): boolean => {
+  return /^\d{9}$/.test(studentNumber.trim());
+};

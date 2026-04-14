@@ -122,29 +122,23 @@ applicationSchema.methods.toJSON = function toJSON() {
   };
 };
 
-applicationSchema.pre("save", function resetPendingReviewFields(next) {
+applicationSchema.pre("save", function resetPendingReviewFields() {
   if (this.status === "pending") {
     this.reviewedBy = null;
     this.reviewedAt = null;
     this.reviewNotes = "";
     this.rejectionReason = "";
   }
-
-  next();
 });
 
-applicationSchema.pre("save", function validateReviewedApplication(next) {
+applicationSchema.pre("save", function validateReviewedApplication() {
   if (this.status === "rejected" && !this.rejectionReason.trim()) {
-    return next(
-      new Error("Rejection reason required when rejecting application"),
-    );
+    throw new Error("Rejection reason required when rejecting application");
   }
 
   if (this.status !== "pending" && !this.reviewedAt) {
     this.reviewedAt = new Date();
   }
-
-  return next();
 });
 
 module.exports =

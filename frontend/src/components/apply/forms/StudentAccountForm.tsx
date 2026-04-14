@@ -7,6 +7,7 @@ import {
 import {
   validateContactNumber,
   validateMinLength,
+  validateStudentNumber,
   validateUpMail,
 } from "../../../utils/formValidation";
 
@@ -74,6 +75,9 @@ const StudentAccountForm = () => {
     }
     if (!formData.studentNumber.trim()) {
       nextErrors.studentNumber = "Student Number is required.";
+    } else if (!validateStudentNumber(formData.studentNumber)) {
+      nextErrors.studentNumber =
+        "Student Number must be 9 digits, like 202612345.";
     }
     if (!formData.program.trim()) nextErrors.program = "Program is required.";
     if (!formData.reasonForRequestingAccount.trim()) {
@@ -203,6 +207,7 @@ const StudentAccountForm = () => {
             value={formData.studentNumber}
             onChange={handleChange}
             className={inputClassName}
+            placeholder="202612345"
           />
           {errors.studentNumber && (
             <p className={errorClassName}>{errors.studentNumber}</p>

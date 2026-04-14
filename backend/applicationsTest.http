@@ -8,7 +8,7 @@ Content-Type: application/json
   "email": "juan@up.edu.ph",
   "contactNo": "09171234567",
   "details": {
-    "studentNumber": "2023-12345",
+    "studentNumber": "202612345",
     "program": "BS Computer Science",
     "yearLevel": "3rd",
     "reasonForApplying": "I need financial assistance to complete my studies at UP and sustain my daily academic needs.",
@@ -26,7 +26,7 @@ Content-Type: application/json
   "email": "maria@up.edu.ph",
   "contactNo": "09181234567",
   "details": {
-    "studentNumber": "2023-54321",
+    "studentNumber": "202654321",
     "program": "BS Engineering",
     "reasonForAccount": "I want to access the platform for my coursework and scholarship-related coordination."
   }

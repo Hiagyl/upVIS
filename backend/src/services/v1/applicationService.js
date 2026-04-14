@@ -11,7 +11,7 @@ const VALID_REVIEW_STATUSES = ["approved", "rejected"];
 
 class ApplicationService {
   validateCreateData(applicationData) {
-    const { type, fullName, email, contactNo } = applicationData;
+    const { type, fullName, email, contactNo, details = {} } = applicationData;
 
     if (!type || !fullName || !email || !contactNo) {
       throw new Error("Missing required fields");
@@ -28,12 +28,19 @@ class ApplicationService {
     if (!/^09\d{9}$/.test(String(contactNo).replace(/\D/g, ""))) {
       throw new Error("Invalid contact number format");
     }
+
+    if (
+      ["student_scholarship", "student_account"].includes(type) &&
+      !/^\d{9}$/.test(String(details.studentNumber || "").trim())
+    ) {
+      throw new Error("Student Number must be 9 digits, like 202612345");
+    }
   }
 
   async create(applicationData) {
     const { type, fullName, email, contactNo, details = {} } = applicationData;
 
-    this.validateCreateData({ type, fullName, email, contactNo });
+    this.validateCreateData({ type, fullName, email, contactNo, details });
 
     const normalizedEmail = String(email).trim().toLowerCase();
     const normalizedContactNo = String(contactNo).trim();
