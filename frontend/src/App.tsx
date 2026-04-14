@@ -7,8 +7,10 @@ import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
+import LogoutTestPage from './pages/LogoutTestPage';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
+
 
 
 // Redirects to /login if no token is found
@@ -43,10 +45,30 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return isAuth ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
+const LandingRoute = ({ children }: { children: React.ReactNode }) => {
+    const [isAuth, setIsAuth] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        authService
+            .checkStatus()
+            .then(() => setIsAuth(true))
+            .catch(() => setIsAuth(false));
+    }, []);
+
+    if (isAuth === null) return null;
+
+    return isAuth ? <Navigate to="/logout-test" replace /> : <>{children}</>;
+};
+
 function App() {
     return (
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={
+                <LandingRoute>
+                    <LandingPage />
+                </LandingRoute>
+                }
+            />
 
             {/*Public-only Routes */}
             <Route path="/login" element={
@@ -90,6 +112,13 @@ function App() {
             <Route path="/members" element={
                 <ProtectedRoute>
                    <MembersPage />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route path="/logout-test" element={
+                <ProtectedRoute>
+                    <LogoutTestPage />
                 </ProtectedRoute>
                 }
             />

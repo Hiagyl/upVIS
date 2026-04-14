@@ -1,30 +1,29 @@
 const bcrypt = require("bcryptjs");
-const Member = require("../../models/v1/Members");
+const Scholar = require("../../models/v1/Scholar");
 
-const registerMember = async (fullname, contactNo, email, password) => {
-  // check if email already exists
-  const existing = await Member.findOne({ email });
-  if (existing) throw new Error("Email already registered");
+const registerScholar = async (fullname, contactNo, email, password) => {
+    const existing = await Scholar.findOne({ upMail: email });
+    if (existing) throw new Error("Email already registered");
 
-  // hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  // create member
-  const member = await Member.create({
-    fullname,
-    contactNo,
-    email,
-    password: hashedPassword,
-  });
+    const scholar = await Scholar.create({
+        name: fullname,
+        contactNo,
+        upMail: email,
+        password: hashedPassword,
+        studentNumber: `STU-${Date.now()}`,
+        program: "Undeclared",
+        scholarshipStartDate: new Date()
+    });
 
-  // return member info (without password)
-  return {
-    id: member._id,
-    fullname: member.fullname,
-    contactNo: member.contactNo,
-    email: member.email,
-    status: member.status,
-  };
+    return {
+        id: scholar._id,
+        fullname: scholar.name,
+        contactNo: scholar.contactNo,
+        email: scholar.upMail,
+        status: scholar.status,
+    };
 };
 
-module.exports = { registerMember };
+module.exports = { registerScholar };

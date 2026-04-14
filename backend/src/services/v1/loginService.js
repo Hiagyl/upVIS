@@ -1,15 +1,14 @@
 const bcrypt = require("bcryptjs");
-const Member = require("../../models/v1/Members");
+const Scholar = require("../../models/v1/Scholar");
 
-const loginMember = async ({ email, password }) => {
-  const member = await Member.findOne({ email });
-  if (!member) throw new Error("Invalid credentials");
+const loginScholar = async ({ email, password }) => {
+    const scholar = await Scholar.findOne({ upMail: email });
+    if (!scholar) throw new Error("Invalid credentials");
 
-  const isMatch = await bcrypt.compare(password, member.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+    const isMatch = await bcrypt.compare(password, scholar.password);
+    if (!isMatch) throw new Error("Invalid credentials");
 
-  // Return the actual Mongoose document so the controller has the _id
-  return { member };
+    return { scholar };
 };
 
-module.exports = { loginMember };
+module.exports = { loginScholar };

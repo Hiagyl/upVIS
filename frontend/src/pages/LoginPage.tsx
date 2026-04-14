@@ -16,7 +16,7 @@ const LoginPage = () => {
 
         try {
             const data = await authService.login({ email, password });
-            navigate("/", { replace: true });
+            navigate("/logout-test", { replace: true });
         } catch (err: any) {
             // Error handling removed as requested
             console.error("Login failed:", err);
