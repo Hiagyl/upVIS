@@ -57,7 +57,7 @@ const LandingRoute = ({ children }: { children: React.ReactNode }) => {
 
     if (isAuth === null) return null;
 
-    return isAuth ? <Navigate to="/logout-test" replace /> : <>{children}</>;
+    return isAuth ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
 function App() {
