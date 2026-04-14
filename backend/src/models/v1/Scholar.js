@@ -52,4 +52,4 @@ const scholarSchema = new mongoose.Schema({
     timestamps: true // Automatically adds createdAt and updatedAt
 });
 
-module.exports = mongoose.model('Scholar', scholarSchema);
+module.exports = mongoose.models.Scholar || mongoose.model('Scholar', scholarSchema);

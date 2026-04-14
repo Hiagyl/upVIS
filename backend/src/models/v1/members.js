@@ -56,6 +56,6 @@ const memberSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Members = mongoose.model('Member', memberSchema);
+const Members = mongoose.models.Member || mongoose.model('Member', memberSchema);
 
 module.exports = Members;
