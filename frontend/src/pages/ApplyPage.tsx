@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApplyTabs from "../components/apply/ApplyTabs";
+import StudentScholarshipForm from "../components/apply/forms/StudentScholarshipForm";
+import StudentAccountForm from "../components/apply/forms/StudentAccountForm";
+import AdminAccountForm from "../components/apply/forms/AdminAccountForm";
 
 export type RoleTab = "student" | "admin";
 export type StudentSubtab = "scholarship" | "account";
@@ -10,6 +13,14 @@ const ApplyPage = () => {
   const [roleTab, setRoleTab] = useState<RoleTab>("student");
   const [studentSubtab, setStudentSubtab] =
     useState<StudentSubtab>("scholarship");
+  const activeForm =
+    roleTab === "student" && studentSubtab === "scholarship" ? (
+      <StudentScholarshipForm />
+    ) : roleTab === "student" && studentSubtab === "account" ? (
+      <StudentAccountForm />
+    ) : (
+      <AdminAccountForm />
+    );
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-slate-900">
@@ -69,7 +80,9 @@ const ApplyPage = () => {
               setRoleTab={setRoleTab}
               studentSubtab={studentSubtab}
               setStudentSubtab={setStudentSubtab}
-            />
+            >
+              {activeForm}
+            </ApplyTabs>
           </main>
         </div>
       </div>

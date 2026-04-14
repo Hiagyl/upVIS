@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import ApplyContent from "./ApplyContent";
 import type { RoleTab, StudentSubtab } from "../../pages/ApplyPage";
 
@@ -7,6 +7,7 @@ type ApplyTabsProps = {
   setRoleTab: Dispatch<SetStateAction<RoleTab>>;
   studentSubtab: StudentSubtab;
   setStudentSubtab: Dispatch<SetStateAction<StudentSubtab>>;
+  children: ReactNode;
 };
 
 const mainTabs: Array<{ key: RoleTab; label: string; description: string }> = [
@@ -32,6 +33,7 @@ const ApplyTabs = ({
   setRoleTab,
   studentSubtab,
   setStudentSubtab,
+  children,
 }: ApplyTabsProps) => {
   return (
     <section className="rounded-[2rem] border-2 border-amber-100 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
@@ -100,7 +102,9 @@ const ApplyTabs = ({
           )}
         </div>
 
-        <ApplyContent roleTab={roleTab} studentSubtab={studentSubtab} />
+        <ApplyContent roleTab={roleTab} studentSubtab={studentSubtab}>
+          {children}
+        </ApplyContent>
       </div>
     </section>
   );
