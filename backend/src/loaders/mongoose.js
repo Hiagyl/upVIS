@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("../config");
+require("../models/v1/Application");
 
 module.exports = async () => {
   // Mongoose 6+ and 7+ automatically handle connection pooling
