@@ -4,7 +4,7 @@ import { authService } from "../services/api";
 import { Sun, LogIn } from "lucide-react";
 
 
-const LoginPage = () => {
+const StudentLoginPage = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -38,7 +38,7 @@ const LoginPage = () => {
                     </div>
 
                     <h1 className="text-3xl font-serif font-black text-slate-900 tracking-tight">
-                        Sign in
+                        Sign in (Student)
                     </h1>
 
                     <p className="text-slate-500 mt-2 font-medium">
@@ -118,4 +118,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default StudentLoginPage;

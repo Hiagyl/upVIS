@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import LogoutButton from "../shared/LogoutButton";
 import {
   LayoutDashboard,
   Receipt,
@@ -85,8 +86,10 @@ const Sidebar = () => {
         })}
       </nav>
 
-      {/* Accessible Footer */}
-      <div className="p-6 mt-auto">
+      {/* Footer */}
+      <div className="p-6 mt-auto space-y-4">
+
+        {/* System Status */}
         <div className="bg-white rounded-xl p-4 border-2 border-amber-100 shadow-sm">
           <p className="text-[10px] uppercase tracking-widest text-slate-400 font-black mb-1.5">
             System Status
@@ -98,8 +101,9 @@ const Sidebar = () => {
             </span>
           </div>
         </div>
+        <LogoutButton />
 
-        <p className="mt-5 text-[10px] text-center text-slate-400 font-serif italic font-medium leading-relaxed">
+        <p className="text-[10px] text-center text-slate-400 font-serif italic font-medium leading-relaxed">
           "The path to wisdom is <br /> illuminated by your grace."
         </p>
       </div>

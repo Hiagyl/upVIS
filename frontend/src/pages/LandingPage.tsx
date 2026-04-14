@@ -124,7 +124,7 @@ const LandingPage = () => {
               onClick={() => navigate("/register")}
               className="bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition hover:scale-105"
             >
-              Donate Now
+              Apply as Scholar
             </button>
 
             <button
@@ -289,6 +289,54 @@ const LandingPage = () => {
           </button>
         </div>
 
+      </section>
+
+      {/* STUDENT ACCESS */}
+      <section className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-20 max-w-6xl mx-auto text-center">
+
+        <h2 className="text-3xl md:text-4xl font-serif font-black mb-4">
+          Are You a Student?
+        </h2>
+
+        <p className="text-slate-600 mb-10 max-w-2xl mx-auto">
+          Apply for scholarship support or log in to track your funding, updates, and opportunities.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-8">
+
+          {/* Login Card */}
+          <div className="bg-white border-2 border-amber-100 rounded-2xl p-8 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
+            <div className="text-4xl mb-4">🔐</div>
+            <h3 className="text-xl font-bold mb-2">Student Login</h3>
+            <p className="text-slate-500 text-sm mb-6">
+              Already a scholar? Access your dashboard and track your support.
+            </p>
+
+            <button
+              onClick={() => navigate("/student/login")}
+              className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-amber-600 transition"
+            >
+              Sign In
+            </button>
+          </div>
+
+          {/* Register Card */}
+          <div className="bg-white border-2 border-amber-100 rounded-2xl p-8 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
+            <div className="text-4xl mb-4">🎓</div>
+            <h3 className="text-xl font-bold mb-2">Apply as Scholar</h3>
+            <p className="text-slate-500 text-sm mb-6">
+              Need financial assistance? Register and become a verified UPVIS scholar.
+            </p>
+
+            <button
+              onClick={() => navigate("/student/register")}
+              className="bg-amber-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-amber-600 transition"
+            >
+              Register Now
+            </button>
+          </div>
+
+        </div>
       </section>
 
       {/* CONTACT */}

@@ -7,6 +7,8 @@ import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
+import StudentLoginPage from './pages/StudentLoginPage';
+import StudentRegisterPage from './pages/StudentRegisterPage';
 import LogoutTestPage from './pages/LogoutTestPage';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
@@ -82,6 +84,25 @@ function App() {
                     <RegisterPage />
                 </PublicRoute>
                 }
+            />
+
+            {/* Student Public Routes */}
+            <Route
+            path="/student/login"
+            element={
+                <PublicRoute>
+                <StudentLoginPage />
+                </PublicRoute>
+            }
+            />
+
+            <Route
+            path="/student/register"
+            element={
+                <PublicRoute>
+                <StudentRegisterPage />
+                </PublicRoute>
+            }
             />
 
             {/* Private Routes/needs to be logged in */}
