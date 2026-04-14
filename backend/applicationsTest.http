@@ -68,3 +68,30 @@ Content-Type: application/json
   "status": "approved",
   "reviewNotes": "Verified and ready for the next step."
 }
+
+### Approve scholarship application (triggers Scholar creation)
+PATCH http://localhost:5000/api/v1/applications/{{scholarshipApplicationId}}/review
+Content-Type: application/json
+
+{
+  "status": "approved",
+  "reviewNotes": "Applicant meets all criteria for scholarship."
+}
+
+### Approve student account application (triggers Member creation)
+PATCH http://localhost:5000/api/v1/applications/{{studentAccountApplicationId}}/review
+Content-Type: application/json
+
+{
+  "status": "approved",
+  "reviewNotes": "Student approved for platform access."
+}
+
+### Approve admin account application (triggers admin role grant)
+PATCH http://localhost:5000/api/v1/applications/{{adminAccountApplicationId}}/review
+Content-Type: application/json
+
+{
+  "status": "approved",
+  "reviewNotes": "Granted admin access for application review."
+}

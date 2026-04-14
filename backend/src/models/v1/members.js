@@ -15,11 +15,32 @@ const memberSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
     password: {
         type: String,
         required: true
+    },
+    studentNumber: {
+        type: String,
+        trim: true,
+        default: ""
+    },
+    program: {
+        type: String,
+        trim: true,
+        default: ""
+    },
+    role: {
+        type: String,
+        enum: ['member', 'admin'],
+        default: 'member'
+    },
+    applicationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Application',
+        default: null
     },
     joinDate: {
         type: Date,
@@ -31,6 +52,8 @@ const memberSchema = new mongoose.Schema({
         enum: ['active', 'inactive'],
         default: 'active'
     }
+}, {
+    timestamps: true
 });
 
 const Members = mongoose.model('Member', memberSchema);

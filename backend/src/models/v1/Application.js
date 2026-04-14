@@ -42,6 +42,21 @@ const applicationSchema = new Schema(
       type: Schema.Types.Mixed,
       default: {},
     },
+    linkedAccountId: {
+      type: Schema.Types.ObjectId,
+      ref: function linkedAccountRef() {
+        if (this.type === "student_scholarship") return "Scholar";
+        if (this.type === "student_account") return "Member";
+        if (this.type === "admin_account") return "Member";
+        return null;
+      },
+      default: null,
+    },
+    linkedAccountType: {
+      type: String,
+      enum: ["Scholar", "Member", "Admin"],
+      default: null,
+    },
     reviewNotes: {
       type: String,
       default: "",
@@ -95,6 +110,8 @@ applicationSchema.methods.toJSON = function toJSON() {
     email: this.email,
     contactNo: this.contactNo,
     details: this.details,
+    linkedAccountId: this.linkedAccountId,
+    linkedAccountType: this.linkedAccountType,
     reviewNotes: this.reviewNotes,
     reviewedBy: this.reviewedBy,
     rejectionReason: this.rejectionReason,

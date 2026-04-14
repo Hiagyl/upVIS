@@ -38,6 +38,11 @@ const scholarSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Start date is required']
     },
+    applicationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Application',
+        default: null
+    },
     status: {
         type: String,
         enum: ['Student', 'Graduated'],

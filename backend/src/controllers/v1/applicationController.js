@@ -1,4 +1,5 @@
 const applicationService = require("../../services/v1/applicationService");
+const approvalEffectsService = require("../../services/v1/approvalEffectsService");
 
 const VALID_TYPES = [
   "student_scholarship",
@@ -105,10 +106,26 @@ class ApplicationController {
         rejectionReason: rejectionReason || "",
       });
 
+      let createdAccount = null;
+      let warning = null;
+
+      if (status === "approved") {
+        try {
+          createdAccount =
+            await approvalEffectsService.executeApprovalEffect(application);
+        } catch (effectError) {
+          console.error("Error executing approval effects:", effectError);
+          warning =
+            "Application status updated, but account creation had issues";
+        }
+      }
+
       return res.status(200).json({
         success: true,
         message: `Application ${status}`,
         data: application,
+        createdAccount,
+        warning,
       });
     } catch (error) {
       return res.status(400).json({
