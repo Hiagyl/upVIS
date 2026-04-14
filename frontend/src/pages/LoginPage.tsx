@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
 import { Sun, LogIn } from "lucide-react";
@@ -15,7 +15,7 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
-            const data = await authService.login({ email, password });
+            await authService.login({ email, password });
             navigate("/logout-test", { replace: true });
         } catch (err: any) {
             // Error handling removed as requested

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { memberService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
@@ -11,7 +11,6 @@ import {
   ShieldAlert,
   Loader2,
   Search,
-  Users,
   History,
 } from "lucide-react";
 
@@ -24,7 +23,6 @@ const MembersPage = () => {
   const {
     data: members,
     isLoading,
-    error,
   } = useQuery({
     queryKey: ["members"],
     queryFn: memberService.getAll,

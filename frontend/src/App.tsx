@@ -7,6 +7,7 @@ import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
+import ApplyPage from './pages/ApplyPage';
 import LogoutTestPage from './pages/LogoutTestPage';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
@@ -83,6 +84,7 @@ function App() {
                 </PublicRoute>
                 }
             />
+            <Route path="/apply" element={<ApplyPage />} />
 
             {/* Private Routes/needs to be logged in */}
             <Route path="/dashboard" element={
