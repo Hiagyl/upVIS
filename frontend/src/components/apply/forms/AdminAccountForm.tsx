@@ -32,6 +32,7 @@ const inputClassName =
   "w-full rounded-xl border border-slate-300 px-3 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500";
 const labelClassName = "mb-2 block text-sm font-medium text-slate-700";
 const errorClassName = "mt-1 text-sm text-red-600";
+const requiredAsterisk = <span className="ml-1 text-red-600">*</span>;
 
 const AdminAccountForm = () => {
   const [formData, setFormData] = useState<AdminAccountFormData>(initialFormData);
@@ -148,7 +149,7 @@ const AdminAccountForm = () => {
       <div className="grid gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
           <label htmlFor="fullName" className={labelClassName}>
-            Full Name
+            Full Name{requiredAsterisk}
           </label>
           <input
             id="fullName"
@@ -162,7 +163,7 @@ const AdminAccountForm = () => {
 
         <div>
           <label htmlFor="email" className={labelClassName}>
-            Email
+            Email{requiredAsterisk}
           </label>
           <input
             id="email"
@@ -178,7 +179,7 @@ const AdminAccountForm = () => {
 
         <div>
           <label htmlFor="contactNo" className={labelClassName}>
-            Contact Number
+            Contact Number{requiredAsterisk}
           </label>
           <input
             id="contactNo"
@@ -193,7 +194,7 @@ const AdminAccountForm = () => {
 
         <div className="md:col-span-2">
           <label htmlFor="currentAffiliation" className={labelClassName}>
-            Current Affiliation
+            Current Affiliation{requiredAsterisk}
           </label>
           <input
             id="currentAffiliation"
@@ -210,7 +211,7 @@ const AdminAccountForm = () => {
 
         <div className="md:col-span-2">
           <label htmlFor="reasonForAdminAccess" className={labelClassName}>
-            Reason for Admin Access
+            Reason for Admin Access{requiredAsterisk}
           </label>
           <textarea
             id="reasonForAdminAccess"

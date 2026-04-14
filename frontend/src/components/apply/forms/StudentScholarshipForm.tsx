@@ -37,6 +37,7 @@ const inputClassName =
   "w-full rounded-xl border border-slate-300 px-3 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500";
 const labelClassName = "mb-2 block text-sm font-medium text-slate-700";
 const errorClassName = "mt-1 text-sm text-red-600";
+const requiredAsterisk = <span className="ml-1 text-red-600">*</span>;
 
 const StudentScholarshipForm = () => {
   const [formData, setFormData] = useState<ScholarshipFormData>(initialFormData);
@@ -160,7 +161,7 @@ const StudentScholarshipForm = () => {
       <div className="grid gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
           <label htmlFor="fullName" className={labelClassName}>
-            Full Name
+            Full Name{requiredAsterisk}
           </label>
           <input
             id="fullName"
@@ -174,7 +175,7 @@ const StudentScholarshipForm = () => {
 
         <div>
           <label htmlFor="upMail" className={labelClassName}>
-            UP Mail
+            UP Mail{requiredAsterisk}
           </label>
           <input
             id="upMail"
@@ -190,7 +191,7 @@ const StudentScholarshipForm = () => {
 
         <div>
           <label htmlFor="contactNo" className={labelClassName}>
-            Contact Number
+            Contact Number{requiredAsterisk}
           </label>
           <input
             id="contactNo"
@@ -205,7 +206,7 @@ const StudentScholarshipForm = () => {
 
         <div>
           <label htmlFor="studentNumber" className={labelClassName}>
-            Student Number
+            Student Number{requiredAsterisk}
           </label>
           <input
             id="studentNumber"
@@ -222,7 +223,7 @@ const StudentScholarshipForm = () => {
 
         <div>
           <label htmlFor="program" className={labelClassName}>
-            Program
+            Program{requiredAsterisk}
           </label>
           <input
             id="program"
@@ -237,7 +238,7 @@ const StudentScholarshipForm = () => {
 
         <div>
           <label htmlFor="yearLevel" className={labelClassName}>
-            Year Level
+            Year Level{requiredAsterisk}
           </label>
           <select
             id="yearLevel"
@@ -258,7 +259,7 @@ const StudentScholarshipForm = () => {
 
         <div className="md:col-span-2">
           <label htmlFor="reasonForApplying" className={labelClassName}>
-            Reason for Applying
+            Reason for Applying{requiredAsterisk}
           </label>
           <textarea
             id="reasonForApplying"
