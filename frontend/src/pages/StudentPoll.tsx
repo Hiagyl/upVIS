@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
-import { mockPolls, mockPollResults, mockVotes } from "../mockPolls";
+import { mockPolls } from "../mockPolls";
 import {
   Vote,
-  PlusCircle,
   Sun,
   BarChart3,
   CheckCircle2,
   Clock,
   XCircle,
-  ChevronRight,
   Lock,
-  Trash2,
-  Pencil,
-  X,
 } from "lucide-react";
 
 // ─── API helpers ────────────────────────────────────────────────────────────
@@ -25,40 +20,12 @@ const pollService = {
   getAll: async () => {
     const r = await fetch(`${BASE}/polls`);
     if (!r.ok) throw new Error("Failed to fetch polls");
-    return r.json(); // { success, count, data }
-  },
-  create: async (body: any) => {
-    const r = await fetch(`${BASE}/polls`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error("Failed to create poll");
-    return r.json();
-  },
-  update: async (id: string, body: any) => {
-    const r = await fetch(`${BASE}/polls/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error("Failed to update poll");
-    return r.json();
-  },
-  close: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}/close`, { method: "PATCH" });
-    if (!r.ok) throw new Error("Failed to close poll");
-    return r.json();
-  },
-  delete: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}`, { method: "DELETE" });
-    if (!r.ok) throw new Error("Failed to delete poll");
     return r.json();
   },
   getResults: async (id: string) => {
     const r = await fetch(`${BASE}/polls/${id}/results`);
     if (!r.ok) throw new Error("Failed to fetch results");
-    return r.json(); // { success, data: { poll, totalVotes, results } }
+    return r.json();
   },
 };
 
@@ -78,7 +45,7 @@ const voteService = {
   myVote: async (pollId: string) => {
     const r = await fetch(`${BASE}/votes/poll/${pollId}/my-vote`);
     if (!r.ok) throw new Error("Failed to fetch vote");
-    return r.json(); // { success, data: vote | null }
+    return r.json();
   },
 };
 
@@ -97,7 +64,6 @@ interface Poll {
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
-/** Amber accent pill */
 const StatusBadge = ({ poll }: { poll: Poll }) => {
   const now = new Date();
   const end = new Date(poll.endDate);
@@ -131,7 +97,6 @@ const StatusBadge = ({ poll }: { poll: Poll }) => {
   );
 };
 
-/** Results bar chart inside a modal */
 const ResultsView = ({
   pollId,
   onClose,
@@ -191,7 +156,6 @@ const ResultsView = ({
   );
 };
 
-/** Voting view inside modal */
 const VoteView = ({
   poll,
   onDone,
@@ -202,7 +166,6 @@ const VoteView = ({
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  // Check existing vote
   const { data: existingVoteData, isLoading: checkingVote } = useQuery({
     queryKey: ["my-vote", poll._id],
     queryFn: () => voteService.myVote(poll._id),
@@ -289,21 +252,14 @@ const VoteView = ({
   );
 };
 
-/** Single poll card */
 const PollCard = ({
   poll,
   onVote,
   onResults,
-  onEdit,
-  onClose,
-  onDelete,
 }: {
   poll: Poll;
   onVote: (p: Poll) => void;
   onResults: (p: Poll) => void;
-  onEdit: (p: Poll) => void;
-  onClose: (id: string) => void;
-  onDelete: (id: string) => void;
 }) => {
   const now = new Date();
   const isVotable =
@@ -320,11 +276,9 @@ const PollCard = ({
 
   return (
     <div className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-md hover:border-amber-300 transition-all overflow-hidden group">
-      {/* Card top accent */}
       <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
 
       <div className="p-6 space-y-4">
-        {/* Title row */}
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-serif font-black text-slate-900 text-xl leading-snug flex-1">
             {poll.title}
@@ -338,7 +292,6 @@ const PollCard = ({
           </p>
         )}
 
-        {/* Options preview */}
         <div className="flex flex-wrap gap-2">
           {poll.options.map((opt) => (
             <span
@@ -350,13 +303,11 @@ const PollCard = ({
           ))}
         </div>
 
-        {/* Dates */}
         <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
           <Clock size={12} />
           {fmt(poll.startDate)} – {fmt(poll.endDate)}
         </div>
 
-        {/* Actions */}
         <div className="pt-2 flex items-center gap-2 flex-wrap">
           {isVotable && (
             <button
@@ -372,180 +323,9 @@ const PollCard = ({
           >
             <BarChart3 size={15} /> Results
           </button>
-
-          {/* Admin actions */}
-          <div className="ml-auto flex items-center gap-1">
-            <button
-              onClick={() => onEdit(poll)}
-              title="Edit"
-              className="p-2 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 transition-colors"
-            >
-              <Pencil size={16} />
-            </button>
-            {poll.status === "open" && (
-              <button
-                onClick={() => onClose(poll._id)}
-                title="Close poll"
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-              >
-                <Lock size={16} />
-              </button>
-            )}
-            <button
-              onClick={() => onDelete(poll._id)}
-              title="Delete"
-              className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
         </div>
       </div>
     </div>
-  );
-};
-
-/** Poll form (create / edit) */
-const PollForm = ({
-  editingPoll,
-  onSubmit,
-  isPending,
-}: {
-  editingPoll: Poll | null;
-  onSubmit: (data: any) => void;
-  isPending: boolean;
-}) => {
-  const [options, setOptions] = useState<string[]>(
-    editingPoll?.options ?? ["", ""]
-  );
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    onSubmit({
-      title: fd.get("title"),
-      description: fd.get("description"),
-      startDate: new Date(fd.get("startDate") as string).toISOString(),
-      endDate: new Date(fd.get("endDate") as string).toISOString(),
-      options: options.filter((o) => o.trim() !== ""),
-    });
-  };
-
-  const toInputDate = (iso?: string) =>
-    iso ? new Date(iso).toISOString().slice(0, 16) : "";
-
-  return (
-    <form onSubmit={handleSubmit} className="p-2 space-y-6">
-      <div>
-        <label className="block text-base font-bold text-slate-800 mb-2">
-          Poll Title
-        </label>
-        <input
-          name="title"
-          defaultValue={editingPoll?.title}
-          required
-          placeholder="e.g., Best project theme for this semester"
-          className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
-        />
-      </div>
-
-      <div>
-        <label className="block text-base font-bold text-slate-800 mb-2">
-          Description{" "}
-          <span className="text-slate-400 font-normal text-sm">(optional)</span>
-        </label>
-        <textarea
-          name="description"
-          defaultValue={editingPoll?.description}
-          rows={2}
-          className="w-full border-2 border-slate-200 rounded-xl p-4 text-base focus:border-amber-500 outline-none resize-none"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-base font-bold text-slate-800 mb-2">
-            Start Date
-          </label>
-          <input
-            name="startDate"
-            type="datetime-local"
-            defaultValue={toInputDate(editingPoll?.startDate)}
-            required
-            className="w-full border-2 border-slate-200 rounded-xl p-4 text-base focus:border-amber-500 outline-none"
-          />
-        </div>
-        <div>
-          <label className="block text-base font-bold text-slate-800 mb-2">
-            End Date
-          </label>
-          <input
-            name="endDate"
-            type="datetime-local"
-            defaultValue={toInputDate(editingPoll?.endDate)}
-            required
-            className="w-full border-2 border-slate-200 rounded-xl p-4 text-base focus:border-amber-500 outline-none"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-base font-bold text-slate-800 mb-2">
-          Options{" "}
-          <span className="text-slate-400 font-normal text-sm">
-            (minimum 2)
-          </span>
-        </label>
-        <div className="space-y-3">
-          {options.map((opt, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <span className="w-7 h-7 flex-shrink-0 bg-slate-100 rounded-lg flex items-center justify-center text-xs font-black text-slate-500">
-                {i + 1}
-              </span>
-              <input
-                value={opt}
-                onChange={(e) => {
-                  const next = [...options];
-                  next[i] = e.target.value;
-                  setOptions(next);
-                }}
-                required
-                placeholder={`Option ${i + 1}`}
-                className="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-base focus:border-amber-500 outline-none"
-              />
-              {options.length > 2 && (
-                <button
-                  type="button"
-                  onClick={() => setOptions(options.filter((_, j) => j !== i))}
-                  className="p-2 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-400 transition-colors"
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={() => setOptions([...options, ""])}
-          className="mt-3 flex items-center gap-2 text-sm font-bold text-amber-600 hover:text-amber-700 transition-colors"
-        >
-          <PlusCircle size={16} /> Add Option
-        </button>
-      </div>
-
-      <button
-        type="submit"
-        disabled={isPending}
-        className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
-      >
-        {isPending
-          ? "Saving…"
-          : editingPoll
-          ? "Update Poll"
-          : "Create Poll"}
-      </button>
-    </form>
   );
 };
 
@@ -554,48 +334,20 @@ const PollForm = ({
 const StudentPoll = () => {
   const queryClient = useQueryClient();
 
-  const [modalMode, setModalMode] = useState<
-    "none" | "create" | "edit" | "vote" | "results"
-  >("none");
+  const [modalMode, setModalMode] = useState<"none" | "vote" | "results">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
   const [filter, setFilter] = useState<"all" | "open" | "closed">("all");
 
   const { data, isLoading, error } = useQuery({
-  queryKey: ["polls"],
-  queryFn: async () => {
-    return { data: mockPolls };
-  },
-});
-
-  const saveMutation = useMutation({
-    mutationFn: (payload: any) =>
-      activePoll && modalMode === "edit"
-        ? pollService.update(activePoll._id, payload)
-        : pollService.create(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["polls"] });
-      closeModal();
+    queryKey: ["polls"],
+    queryFn: async () => {
+      return { data: mockPolls };
     },
-  });
-
-  const closeMutation = useMutation({
-    mutationFn: (id: string) => pollService.close(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["polls"] }),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => pollService.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["polls"] }),
   });
 
   const closeModal = () => {
     setModalMode("none");
     setActivePoll(null);
-  };
-
-  const openCreate = () => {
-    setActivePoll(null);
-    setModalMode("create");
   };
 
   const polls: Poll[] = data?.data || [];
@@ -610,11 +362,7 @@ const StudentPoll = () => {
   const closedCount = polls.filter((p) => p.status === "closed").length;
 
   const modalTitle =
-    modalMode === "create"
-      ? "Create New Poll"
-      : modalMode === "edit"
-      ? "Edit Poll"
-      : modalMode === "vote"
+    modalMode === "vote"
       ? activePoll?.title ?? "Cast Your Vote"
       : activePoll?.title ?? "Poll Results";
 
@@ -639,7 +387,6 @@ const StudentPoll = () => {
 
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
-
       <main className="flex-1 p-12">
         {/* ── Header ── */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
@@ -656,13 +403,6 @@ const StudentPoll = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
-          >
-            <PlusCircle size={24} strokeWidth={3} />
-            New Poll
-          </button>
         </header>
 
         {/* ── Summary chips ── */}
@@ -728,7 +468,7 @@ const StudentPoll = () => {
             <p className="text-slate-400 text-sm">
               {filter !== "all"
                 ? `No ${filter} polls at the moment.`
-                : "Create the first poll to get started."}
+                : "No polls available yet."}
             </p>
           </div>
         ) : (
@@ -745,18 +485,6 @@ const StudentPoll = () => {
                   setActivePoll(p);
                   setModalMode("results");
                 }}
-                onEdit={(p) => {
-                  setActivePoll(p);
-                  setModalMode("edit");
-                }}
-                onClose={(id) => {
-                  if (window.confirm("Close this poll? Votes can still be viewed."))
-                    closeMutation.mutate(id);
-                }}
-                onDelete={(id) => {
-                  if (window.confirm("Permanently delete this poll and all votes?"))
-                    deleteMutation.mutate(id);
-                }}
               />
             ))}
           </div>
@@ -768,13 +496,6 @@ const StudentPoll = () => {
           onClose={closeModal}
           title={modalTitle}
         >
-          {(modalMode === "create" || modalMode === "edit") && (
-            <PollForm
-              editingPoll={modalMode === "edit" ? activePoll : null}
-              onSubmit={(data) => saveMutation.mutate(data)}
-              isPending={saveMutation.isPending}
-            />
-          )}
           {modalMode === "vote" && activePoll && (
             <VoteView
               poll={activePoll}
