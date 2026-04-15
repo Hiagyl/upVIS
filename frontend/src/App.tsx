@@ -7,6 +7,8 @@ import MembersPage from './pages/MembersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
+import ApplyPage from './pages/ApplyPage';
+import ApplicationsReviewPage from './pages/ApplicationsReviewPage';
 import LogoutTestPage from './pages/LogoutTestPage';
 import StudentPoll from './pages/StudentPoll';
 import AdminPoll from './pages/AdminPoll'; // ✅ NEW
@@ -91,6 +93,8 @@ function App() {
           </PublicRoute>
         }
       />
+      <Route path="/apply" element={<ApplyPage />} />
+      <Route path="/admin/applications" element={<ApplicationsReviewPage />} />
 
       {/* Student Poll */}
       <Route path="/student-poll" element={<StudentPoll />} />

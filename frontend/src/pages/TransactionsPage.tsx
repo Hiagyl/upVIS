@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionService } from "../services/api";
 import { donorService } from "../services/api";
@@ -69,29 +69,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   saveMutation.mutate(payload);
 };
   const [entryType, setEntryType] = useState(editingItem?.type || "donation");
-
-  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setEntryType(e.target.value);
-  };
-
-  const [donorInput, setDonorInput] = useState(editingItem?.donorName || "");
-  const [filteredDonors, setFilteredDonors] = useState<any[]>([]);
-
-  const handleDonorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDonorInput(value);
-    setFilteredDonors(
-      donors.filter((d: any) =>
-        d.name.toLowerCase().includes(value.toLowerCase()),
-      ),
-    );
-  };
-
-  const handleDonorSelect = (donor: any) => {
-    setDonorInput(donor.name);
-    setEditingItem((prev: any) => ({ ...prev, donorId: donor._id }));
-    setFilteredDonors([]);
-  };
 
   const donors = donor?.data || [];
   const transactions = data?.data || [];

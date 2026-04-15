@@ -38,6 +38,11 @@ const scholarSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Start date is required']
     },
+    applicationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Application',
+        default: null
+    },
     status: {
         type: String,
         enum: ['Student', 'Graduated'],
@@ -47,4 +52,4 @@ const scholarSchema = new mongoose.Schema({
     timestamps: true // Automatically adds createdAt and updatedAt
 });
 
-module.exports = mongoose.model('Scholar', scholarSchema);
+module.exports = mongoose.models.Scholar || mongoose.model('Scholar', scholarSchema);

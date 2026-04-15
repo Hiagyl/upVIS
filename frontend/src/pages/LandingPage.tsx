@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import photo1 from '../assets/photo1.jpg';
 import photo6 from '../assets/photo6.jpg';
 import photo7 from '../assets/photo7.jpg';
@@ -10,7 +10,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState("home");
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     section?.scrollIntoView({ behavior: "smooth" });
     setActive(id);
@@ -88,6 +88,13 @@ const LandingPage = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate("/apply")}
+            className="text-slate-600 hover:text-amber-600 font-semibold"
+          >
+            Apply
+          </button>
+
           <button
             onClick={() => navigate("/login")}
             className="text-slate-600 hover:text-amber-600 font-semibold"
