@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
 import LogoutTestPage from './pages/LogoutTestPage';
+import StudentPoll from './pages/StudentPoll';
 import { useEffect, useState } from "react";
 import { authService } from "./services/api.ts";
 
@@ -83,6 +84,8 @@ function App() {
                 </PublicRoute>
                 }
             />
+
+            <Route path="/student-poll" element={<StudentPoll />} />
 
             {/* Private Routes/needs to be logged in */}
             <Route path="/dashboard" element={
