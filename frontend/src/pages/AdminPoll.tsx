@@ -72,6 +72,20 @@ const AdminPoll = () => {
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
 
+  const [options, setOptions] = useState<string[]>(["", ""]);
+
+  const handleOptionChange = (value: string, index: number) => {
+    const updated = [...options];
+    updated[index] = value;
+    setOptions(updated);
+  };
+
+  const addOption = () => setOptions([...options, ""]);
+  const removeOption = (index: number) => {
+    if (options.length <= 2) return;
+    setOptions(options.filter((_, i) => i !== index));
+  };
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
     queryFn: pollService.getAll,
@@ -92,6 +106,7 @@ const AdminPoll = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["polls"] });
       closeModal();
+      setOptions(["", ""]);
     },
   });
 
@@ -108,9 +123,9 @@ const AdminPoll = () => {
   const closeModal = () => {
     setModalMode("none");
     setActivePoll(null);
+    setOptions(["", ""]);
   };
 
-  /* LOADING */
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#FAF9F6] ml-72">
@@ -119,7 +134,6 @@ const AdminPoll = () => {
     );
   }
 
-  /* ERROR */
   if (error) {
     return (
       <div className="ml-72 p-10 text-red-700 font-bold bg-red-50 h-screen">
@@ -134,7 +148,6 @@ const AdminPoll = () => {
 
       <main className="flex-1 ml-72 p-12">
 
-        {/* HEADER */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
@@ -160,7 +173,6 @@ const AdminPoll = () => {
           </button>
         </header>
 
-        {/* TITLE + FILTER */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <div className="h-8 w-1.5 bg-amber-500 rounded-full"></div>
@@ -169,11 +181,9 @@ const AdminPoll = () => {
             </h2>
           </div>
 
-          {/* FIXED FILTER BUTTONS */}
           <div className="flex gap-3">
             {["All", "Open", "Closed"].map((label) => {
               const value = label.toLowerCase();
-
               return (
                 <button
                   key={value}
@@ -191,25 +201,17 @@ const AdminPoll = () => {
           </div>
         </div>
 
-        {/* EMPTY */}
         {filteredPolls.length === 0 && (
           <div className="bg-white p-16 rounded-2xl border-2 border-dashed text-center text-slate-500">
             No polls available.
           </div>
         )}
 
-        {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredPolls.map((poll) => (
-            <div
-              key={poll._id}
-              className="bg-white p-6 rounded-2xl border-2 shadow-sm hover:shadow-lg"
-            >
+            <div key={poll._id} className="bg-white p-6 rounded-2xl border-2 shadow-sm hover:shadow-lg">
               <div className="flex justify-between">
-                <h2 className="font-serif font-bold text-lg">
-                  {poll.title}
-                </h2>
-
+                <h2 className="font-serif font-bold text-lg">{poll.title}</h2>
                 <span className="text-xs px-3 py-1 rounded-full bg-gray-200">
                   {poll.status}
                 </span>
@@ -229,12 +231,7 @@ const AdminPoll = () => {
 
               <div className="mt-6 flex justify-between items-center">
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setActivePoll(poll);
-                      setModalMode("edit");
-                    }}
-                  >
+                  <button onClick={() => { setActivePoll(poll); setModalMode("edit"); }}>
                     <Pencil size={16} />
                   </button>
 
@@ -262,7 +259,6 @@ const AdminPoll = () => {
           ))}
         </div>
 
-        {/* CREATE / EDIT MODAL */}
         <Modal
           isOpen={modalMode !== "none"}
           onClose={closeModal}
@@ -272,25 +268,95 @@ const AdminPoll = () => {
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
+
               saveMutation.mutate({
                 title: fd.get("title"),
                 description: fd.get("description"),
-                options: (fd.get("options") as string).split(","),
+                options: options.filter((o) => o.trim() !== ""),
               });
             }}
             className="space-y-6"
           >
-            <input name="title" placeholder="Title" required className="w-full border-2 p-4 rounded-xl" />
-            <textarea name="description" placeholder="Description" className="w-full border-2 p-4 rounded-xl" />
-            <input name="options" placeholder="Option1, Option2" required className="w-full border-2 p-4 rounded-xl" />
+            {/* TITLE (FIXED) */}
+            <div className="relative border-2 border-slate-300 rounded-xl p-4">
+              <span className="absolute -top-2 left-3 bg-white px-1 text-xs text-slate-500">
+                Title
+              </span>
+              <textarea
+                name="title"
+                rows={1}
+                required
+                className="w-full outline-none bg-transparent resize-none overflow-hidden"
+                onInput={(e) => {
+                  const el = e.currentTarget;
+                  el.style.height = "auto";
+                  el.style.height = el.scrollHeight + "px";
+                }}
+              />
+            </div>
 
-            <button className="w-full bg-slate-900 text-white py-4 rounded-xl">
+            {/* DESCRIPTION */}
+            <div className="relative border-2 border-slate-300 rounded-xl p-4">
+              <span className="absolute -top-2 left-3 bg-white px-1 text-xs text-slate-500">
+                Description
+              </span>
+              <textarea
+                name="description"
+                rows={1}
+                className="w-full outline-none bg-transparent resize-none overflow-hidden"
+                onInput={(e) => {
+                  const el = e.currentTarget;
+                  el.style.height = "auto";
+                  el.style.height = el.scrollHeight + "px";
+                }}
+              />
+            </div>
+
+            {/* OPTIONS */}
+            <div>
+              <p className="text-sm font-bold text-slate-600 mb-2">
+                Options
+              </p>
+
+              <div className="space-y-3">
+                {options.map((opt, i) => (
+                  <div key={i} className="flex gap-2">
+                    <input
+                      value={opt}
+                      onChange={(e) => handleOptionChange(e.target.value, i)}
+                      placeholder={`Option ${i + 1}`}
+                      className="w-full border-2 border-slate-300 p-3 rounded-xl outline-none"
+                      required
+                    />
+
+                    {options.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removeOption(i)}
+                        className="px-3 bg-red-100 text-red-600 rounded-xl"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={addOption}
+                className="mt-3 text-sm text-amber-600 font-bold"
+              >
+                + Add Option
+              </button>
+            </div>
+
+            <button className="w-full bg-slate-900 hover:bg-amber-600 text-white py-4 rounded-xl font-bold">
               Save Poll
             </button>
           </form>
         </Modal>
 
-        {/* RESULTS MODAL */}
         <Modal
           isOpen={resultModalOpen}
           onClose={() => setResultModalOpen(false)}
