@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   Compass,
   Circle,
+  Vote, // ✅ added
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -23,11 +24,18 @@ const Sidebar = () => {
     { name: "Donors", icon: <Users size={20} />, href: "/donors" },
     { name: "Scholars", icon: <GraduationCap size={20} />, href: "/scholars" },
     { name: "Members", icon: <ShieldCheck size={20} />, href: "/members" },
+
+    // ✅ NEW POLLS MENU
+    {
+      name: "Polls",
+      icon: <Vote size={20} />,
+      href: "/admin-poll",
+    },
   ];
 
   return (
     <div className="h-screen w-72 bg-[#FAF9F6] text-slate-800 flex flex-col fixed left-0 top-0 z-50 shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r-4 border-amber-100">
-      {/* Angelic Brand Emblem */}
+      {/* Brand */}
       <div className="p-8 mb-4 border-b-2 border-amber-50">
         <div className="flex items-center gap-4">
           <div className="bg-amber-100 p-2.5 rounded-full shadow-sm">
@@ -44,11 +52,12 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Navigation - Smaller links and tighter spacing */}
+      {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1.5">
         <p className="px-4 text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-3">
           Main Menu
         </p>
+
         {menuItems.map((item) => {
           const isActive = location.pathname === item.href;
 
@@ -63,13 +72,19 @@ const Sidebar = () => {
               }`}
             >
               <span
-                className={`${isActive ? "text-amber-400" : "text-slate-400 group-hover:text-amber-600"}`}
+                className={`${
+                  isActive
+                    ? "text-amber-400"
+                    : "text-slate-400 group-hover:text-amber-600"
+                }`}
               >
                 {item.icon}
               </span>
 
               <span
-                className={`text-base tracking-wide ${isActive ? "font-bold" : "font-semibold font-serif"}`}
+                className={`text-base tracking-wide ${
+                  isActive ? "font-bold" : "font-semibold font-serif"
+                }`}
               >
                 {item.name}
               </span>
@@ -85,7 +100,7 @@ const Sidebar = () => {
         })}
       </nav>
 
-      {/* Accessible Footer */}
+      {/* Footer */}
       <div className="p-6 mt-auto">
         <div className="bg-white rounded-xl p-4 border-2 border-amber-100 shadow-sm">
           <p className="text-[10px] uppercase tracking-widest text-slate-400 font-black mb-1.5">
