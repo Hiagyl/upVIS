@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import ApplicationSuccessState from "../shared/ApplicationSuccessState";
 import {
   applicationService,
@@ -18,6 +19,8 @@ type StudentAccountFormData = {
   studentNumber: string;
   program: string;
   reasonForRequestingAccount: string;
+  password: string;
+  confirmPassword: string;
 };
 
 const initialFormData: StudentAccountFormData = {
@@ -27,6 +30,8 @@ const initialFormData: StudentAccountFormData = {
   studentNumber: "",
   program: "",
   reasonForRequestingAccount: "",
+  password: "",
+  confirmPassword: "",
 };
 
 const inputClassName =
@@ -42,6 +47,8 @@ const StudentAccountForm = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -81,6 +88,15 @@ const StudentAccountForm = () => {
         "Student Number must be 9 digits, like 202612345.";
     }
     if (!formData.program.trim()) nextErrors.program = "Program is required.";
+    if (!formData.password.trim()) nextErrors.password = "Password is required.";
+    if (formData.password.trim() && formData.password.trim().length < 6) {
+      nextErrors.password = "Password must be at least 6 characters.";
+    }
+    if (!formData.confirmPassword.trim()) {
+      nextErrors.confirmPassword = "Confirm Password is required.";
+    } else if (formData.password !== formData.confirmPassword) {
+      nextErrors.confirmPassword = "Passwords do not match.";
+    }
     if (!formData.reasonForRequestingAccount.trim()) {
       nextErrors.reasonForRequestingAccount =
         "Reason for Requesting Account is required.";
@@ -110,6 +126,7 @@ const StudentAccountForm = () => {
         fullName: formData.fullName,
         email: formData.upMail,
         contactNo: formData.contactNo,
+        password: formData.password,
         details: {
           studentNumber: formData.studentNumber,
           program: formData.program,
@@ -228,6 +245,58 @@ const StudentAccountForm = () => {
             placeholder="BS Statistics"
           />
           {errors.program && <p className={errorClassName}>{errors.program}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="password" className={labelClassName}>
+            Password{requiredAsterisk}
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              className={inputClassName}
+              placeholder="Create a strong password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {errors.password && <p className={errorClassName}>{errors.password}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword" className={labelClassName}>
+            Confirm Password{requiredAsterisk}
+          </label>
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={inputClassName}
+              placeholder="Confirm your password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {errors.confirmPassword && <p className={errorClassName}>{errors.confirmPassword}</p>}
         </div>
 
         <div className="md:col-span-2">

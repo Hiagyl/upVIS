@@ -1,7 +1,7 @@
 import ky, { HTTPError } from 'ky';
 
 const api = ky.create({
-  prefixUrl: "http://localhost:5000/api/v1",
+  prefixUrl: "http://localhost:3000/api/v1",
   credentials: "include",
 });
 

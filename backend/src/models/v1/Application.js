@@ -38,6 +38,11 @@ const applicationSchema = new Schema(
       required: true,
       trim: true,
     },
+    password: {
+      type: String,
+      default: null,
+      trim: true,
+    },
     details: {
       type: Schema.Types.Mixed,
       default: {},
