@@ -1,0 +1,4 @@
+ignoredBuiltDependencies:
+  - '@scarf/scarf'
+  - bcrypt
+  - unrs-resolver
