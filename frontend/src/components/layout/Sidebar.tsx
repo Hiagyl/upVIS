@@ -8,7 +8,7 @@ import {
   ClipboardCheck,
   Compass,
   Circle,
-  Vote, // ✅ added
+  Vote, 
 } from "lucide-react";
 
 const Sidebar = () => {

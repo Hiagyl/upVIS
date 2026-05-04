@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
-import { mockPolls } from "../mockPolls";
 import {
   Vote,
   Sun,
@@ -10,11 +9,12 @@ import {
   Clock,
   XCircle,
   Lock,
+  AlertCircle,
 } from "lucide-react";
 
-// ─── API helpers ────────────────────────────────────────────────────────────
+// ─── API ─────────────────────────────────────────────────────────────────────
 
-const BASE = "/api/v1";
+const BASE = "/api/v1"; // ← update to your backend base URL if needed
 
 const pollService = {
   getAll: async () => {
@@ -49,7 +49,7 @@ const voteService = {
   },
 };
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Poll {
   _id: string;
@@ -97,6 +97,8 @@ const StatusBadge = ({ poll }: { poll: Poll }) => {
   );
 };
 
+// ─── Results View ─────────────────────────────────────────────────────────────
+
 const ResultsView = ({
   pollId,
   onClose,
@@ -104,7 +106,7 @@ const ResultsView = ({
   pollId: string;
   onClose: () => void;
 }) => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["poll-results", pollId],
     queryFn: () => pollService.getResults(pollId),
   });
@@ -117,23 +119,34 @@ const ResultsView = ({
       </div>
     );
 
+  if (error)
+    return (
+      <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-5 text-red-700">
+        <AlertCircle size={20} />
+        <span className="font-semibold">Failed to load results.</span>
+      </div>
+    );
+
   const { poll, totalVotes, results } = data?.data || {};
 
   return (
     <div className="p-2 space-y-6">
       <p className="text-slate-500 font-medium">
-        {totalVotes} total vote{totalVotes !== 1 ? "s" : ""} cast
+        {totalVotes ?? 0} total vote{totalVotes !== 1 ? "s" : ""} cast
       </p>
 
       <div className="space-y-4">
         {poll?.options.map((opt: string) => {
           const count = results?.[opt] ?? 0;
-          const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+          const pct =
+            totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
           return (
             <div key={opt}>
               <div className="flex justify-between text-sm font-bold text-slate-700 mb-1.5">
                 <span>{opt}</span>
-                <span>{pct}% ({count})</span>
+                <span>
+                  {pct}% ({count})
+                </span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden border border-slate-200">
                 <div
@@ -155,6 +168,8 @@ const ResultsView = ({
     </div>
   );
 };
+
+// ─── Vote View ────────────────────────────────────────────────────────────────
 
 const VoteView = ({
   poll,
@@ -252,6 +267,8 @@ const VoteView = ({
   );
 };
 
+// ─── Poll Card ────────────────────────────────────────────────────────────────
+
 const PollCard = ({
   poll,
   onVote,
@@ -275,7 +292,7 @@ const PollCard = ({
     });
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-md hover:border-amber-300 transition-all overflow-hidden group">
+    <div className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-md hover:border-amber-300 transition-all overflow-hidden">
       <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
 
       <div className="p-6 space-y-4">
@@ -340,9 +357,7 @@ const StudentPoll = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
-    queryFn: async () => {
-      return { data: mockPolls };
-    },
+    queryFn: pollService.getAll,
   });
 
   const closeModal = () => {
@@ -408,20 +423,35 @@ const StudentPoll = () => {
         {/* ── Summary chips ── */}
         <div className="grid grid-cols-3 gap-6 mb-10">
           {[
-            { label: "Total Polls", value: polls.length, icon: <BarChart3 size={22} />, accent: "slate" },
-            { label: "Active Polls", value: openCount, icon: <CheckCircle2 size={22} />, accent: "amber" },
-            { label: "Closed Polls", value: closedCount, icon: <Lock size={22} />, accent: "slate" },
+            {
+              label: "Total Polls",
+              value: polls.length,
+              icon: <BarChart3 size={22} />,
+              accent: "slate",
+            },
+            {
+              label: "Active Polls",
+              value: openCount,
+              icon: <CheckCircle2 size={22} />,
+              accent: "amber",
+            },
+            {
+              label: "Closed Polls",
+              value: closedCount,
+              icon: <Lock size={22} />,
+              accent: "slate",
+            },
           ].map(({ label, value, icon, accent }) => (
             <div
               key={label}
               className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm p-7 flex items-center gap-5"
             >
               <div
-                className={`p-3 rounded-xl ${
+                className={`p-3 rounded-xl shadow-md ${
                   accent === "amber"
                     ? "bg-amber-500 text-white"
                     : "bg-slate-900 text-amber-400"
-                } shadow-md`}
+                }`}
               >
                 {icon}
               </div>
@@ -500,7 +530,9 @@ const StudentPoll = () => {
             <VoteView
               poll={activePoll}
               onDone={() => {
-                queryClient.invalidateQueries({ queryKey: ["my-vote", activePoll._id] });
+                queryClient.invalidateQueries({
+                  queryKey: ["my-vote", activePoll._id],
+                });
                 closeModal();
               }}
             />
