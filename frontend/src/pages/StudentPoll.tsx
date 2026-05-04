@@ -14,7 +14,7 @@ import {
 
 // ─── API ─────────────────────────────────────────────────────────────────────
 
-const BASE = "/api/v1"; // ← update to your backend base URL if needed
+const BASE = "http://localhost:5001/api/v1"; // ← update to your backend base URL if needed
 
 const pollService = {
   getAll: async () => {
