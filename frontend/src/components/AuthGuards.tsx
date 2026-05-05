@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (mounted) {
           // FIX 1: Ensure we only set a valid user object.
           // If the backend sends an empty object or error message on failure, reject it.
-          if (res && res.role) {
-            setUser(res);
+          if (res && res.scholar) {
+            setUser(res.scholar); // ✅ consistent shape
           } else {
             setUser(null);
           }
@@ -63,9 +63,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (credentials: any) => {
     const res = await authService.login(credentials);
-    console.log("LOGIN RESPONSE:", res); // ADD THIS
-    setUser(res);
-    return res;
+
+    const normalizedUser = res.scholar; // ✅ extract correct object
+
+    setUser(normalizedUser); // ✅ now user.role works
+
+    return normalizedUser; // ✅ important for LoginPage
   };
 
   const logout = async () => {

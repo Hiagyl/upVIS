@@ -2,12 +2,13 @@ const registerService = require("../../services/v1/registerService");
 
 const registerScholar = async (req, res) => {
     try {
-        const { fullname, contactNo, email, password } = req.body;
+        const { fullname, contactNo, email, password,role} = req.body;
         const scholar = await registerService.registerScholar(
             fullname,
             contactNo,
             email,
             password,
+            role,
         );
         res.status(201).json({ message: "Scholar registered", scholar });
     } catch (err) {
