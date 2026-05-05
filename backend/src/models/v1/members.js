@@ -34,8 +34,8 @@ const memberSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['member', 'admin'],
-        default: 'member'
+        enum: ['student', 'admin'],
+        default: 'student'
     },
     applicationId: {
         type: mongoose.Schema.Types.ObjectId,

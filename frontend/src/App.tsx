@@ -1,68 +1,22 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from './pages/Dashboard';
-import TransactionsPage from './pages/TransactionsPage';
-import DonorsPage from './pages/DonorsPage';
-import ScholarsPage from './pages/ScholarsPage';
-import MembersPage from './pages/MembersPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import LandingPage from './pages/LandingPage';
-import ApplyPage from './pages/ApplyPage';
-import ApplicationsReviewPage from './pages/ApplicationsReviewPage';
-import LogoutTestPage from './pages/LogoutTestPage';
-import StudentPoll from './pages/StudentPoll';
-import AdminPoll from './pages/AdminPoll'; // ✅ NEW
-import { useEffect, useState } from "react";
-import { authService } from "./services/api.ts";
+import { Routes, Route } from "react-router-dom";
 
-// Redirects to /login if no token is found
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuth, setIsAuth] = useState<boolean | null>(null);
+// Auth logic (from your consolidated AuthGuards.tsx)
+import { AuthProvider, ProtectedRoute, PublicRoute } from "./components/AuthGuards";
 
-  useEffect(() => {
-    authService
-      .checkStatus()
-      .then(() => setIsAuth(true))
-      .catch(() => setIsAuth(false));
-  }, []);
-
-  if (isAuth === null)
-    return (
-      <div className="p-10 text-center font-serif">Verifying session...</div>
-    );
-
-  return isAuth ? <>{children}</> : <Navigate to="/login" replace />;
-};
-
-const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuth, setIsAuth] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    authService
-      .checkStatus()
-      .then(() => setIsAuth(true))
-      .catch(() => setIsAuth(false));
-  }, []);
-
-  if (isAuth === null) return null;
-
-  return isAuth ? <Navigate to="/dashboard" replace /> : <>{children}</>;
-};
-
-const LandingRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuth, setIsAuth] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    authService
-      .checkStatus()
-      .then(() => setIsAuth(true))
-      .catch(() => setIsAuth(false));
-  }, []);
-
-  if (isAuth === null) return null;
-
-  return isAuth ? <Navigate to="/logout-test" replace /> : <>{children}</>;
-};
+// Pages
+import Dashboard from "./pages/Dashboard";
+import TransactionsPage from "./pages/TransactionsPage";
+import DonorsPage from "./pages/DonorsPage";
+import ScholarsPage from "./pages/ScholarsPage";
+import MembersPage from "./pages/MembersPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import LandingPage from "./pages/LandingPage";
+import ApplyPage from "./pages/ApplyPage";
+import ApplicationsReviewPage from "./pages/ApplicationsReviewPage";
+import LogoutTestPage from "./pages/LogoutTestPage";
+import StudentPoll from "./pages/StudentPoll";
+import AdminPoll from "./pages/AdminPoll";
 
 function App() {
   return (
@@ -169,6 +123,135 @@ function App() {
         element={<div className="ml-64 p-8">404 - Page Not Found</div>}
       />
     </Routes>
+    <AuthProvider>
+      <Routes>
+        {/* =========================================================
+            1. UNGUARDED ROUTES (Open to everyone)
+           ========================================================= */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/apply" element={<ApplyPage />} />
+
+        {/* =========================================================
+            2. PUBLIC ROUTES (Login / Register)
+            Redirects authenticated users to their dashboards
+           ========================================================= */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* =========================================================
+            3. STUDENT PROTECTED ROUTES
+           ========================================================= */}
+        <Route
+          path="/student-poll"
+          element={
+            <ProtectedRoute allowedRoles={["student"]}>
+              <StudentPoll />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =========================================================
+            4. ADMIN PROTECTED ROUTES
+           ========================================================= */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/applications"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ApplicationsReviewPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin-poll"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminPoll />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <TransactionsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/donors"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <DonorsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/scholars"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ScholarsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/members"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <MembersPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/logout-test"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <LogoutTestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =========================================================
+            5. 404 CATCH-ALL
+           ========================================================= */}
+        <Route
+          path="*"
+          element={
+            <div className="ml-64 p-8 text-2xl font-bold">
+              404 - Page Not Found
+            </div>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { donorService, transactionService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import Modal from "../components/shared/Modal";
+import { reportService } from "../services/api";
 import {
   Edit2,
   Trash2,
@@ -13,6 +14,7 @@ import {
   History,
   Users,
   Receipt,
+  FileText,
 } from "lucide-react";
 
 const DonorsPage = () => {
@@ -106,6 +108,13 @@ const DonorsPage = () => {
               <p className="text-lg text-slate-500 font-medium italic font-serif">
                 Tracking the generosity that powers our programs.
               </p>
+              <button
+                onClick={() => reportService.downloadMonthlyReport()}
+                className="flex items-center gap-3 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+              >
+                <FileText size={24} strokeWidth={3} />
+                Generate Report
+              </button>
             </div>
           </div>
 
