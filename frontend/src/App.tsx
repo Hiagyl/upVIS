@@ -97,7 +97,11 @@ function App() {
       <Route path="/admin/applications" element={<ApplicationsReviewPage />} />
 
       {/* Student Poll */}
-      <Route path="/student-poll" element={<StudentPoll />} />
+      <Route path="/student-poll" element={
+          <ProtectedRoute>
+            <StudentPoll />
+          </ProtectedRoute>
+        }/>
 
       {/* Admin Poll (Protected) ✅ */}
       <Route

@@ -1,7 +1,7 @@
 import ky, { HTTPError } from 'ky';
 
 const api = ky.create({
-  prefixUrl: "http://localhost:3000/api/v1",
+  prefixUrl: "http://localhost:5000/api/v1",
   credentials: "include",
 });
 
@@ -54,6 +54,21 @@ export const applicationService = {
   ) => api.patch(`applications/${id}/review`, { json: data }).json<any>(),
 };
 
+export const pollService = {
+  getAll: () => api.get("polls").json<any>(),
+  getResults: (id: string) => api.get(`polls/${id}/results`).json<any>(),
+  create: (data: any) => api.post("polls", { json: data }).json<any>(),
+  update: (id: string, data: any) => api.put(`polls/${id}`, { json: data }).json<any>(),
+  close: (id: string) => api.patch(`polls/${id}/close`).json<any>(),
+  delete: (id: string) => api.delete(`polls/${id}`).json<any>(),
+};
+
+export const voteService = {
+  cast: (pollId: string, selectedOption: string) =>
+    api.post("votes", { json: { pollId, selectedOption } }).json<any>(),
+  myVote: (pollId: string) => api.get(`votes/poll/${pollId}/my-vote`).json<any>(),
+};
+
 export const getApiErrorMessage = async (error: unknown) => {
   if (error instanceof HTTPError) {
     try {
@@ -70,3 +85,5 @@ export const getApiErrorMessage = async (error: unknown) => {
 
   return "Something went wrong";
 };
+
+
