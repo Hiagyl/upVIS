@@ -80,5 +80,32 @@ export const reportService = {
     a.href = url;
     a.download = `Donor_Report_${new Date().getMonth() + 1}.pdf`;
     a.click();
+  },
+
+  downloadFinancialSummary: async (): Promise<void> => {
+    try {
+      // Ky handles the 'blob' type via the .blob() method
+      const blob = await api.get("reports/financial-summary").blob();
+
+      // Create a local URL for the binary data
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary hidden link to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Financial_Summary_${new Date().toLocaleDateString()}.pdf`);
+
+      // Append, trigger, and cleanup
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up DOM and memory
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download the financial report:", error);
+      throw error;
+    }
   }
 };
+

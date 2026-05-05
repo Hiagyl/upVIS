@@ -6,6 +6,8 @@ import SummaryCards from "../components/dashboard/SummaryCards";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Modal from "../components/shared/Modal";
 import { PlusCircle, Sun, LayoutDashboard } from "lucide-react";
+import { FileDown } from "lucide-react";
+import { reportService } from "../services/api";
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
@@ -98,6 +100,26 @@ const Dashboard = () => {
               <p className="text-lg text-slate-500 font-medium italic font-serif">
                 Financial overview of our organization.
               </p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => reportService.downloadFinancialSummary()}
+                  className="flex items-center gap-3 bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-md active:scale-95"
+                >
+                  <FileDown size={24} strokeWidth={3} />
+                  Export PDF
+                </button>
+
+                <button
+                  onClick={() => {
+                    setEditingItem(null);
+                    setIsModalOpen(true);
+                  }}
+                  className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+                >
+                  <PlusCircle size={24} strokeWidth={3} />
+                  Add New Entry
+                </button>
+              </div>
             </div>
           </div>
 
