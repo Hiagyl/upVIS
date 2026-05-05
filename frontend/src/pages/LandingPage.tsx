@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useRef} from "react";
 import photo1 from '../assets/photo1.jpg';
 import photo6 from '../assets/photo6.jpg';
 import photo7 from '../assets/photo7.jpg';
 import { useNavigate } from "react-router-dom";
+import { authService } from "../services/api";
 
 const sections = ["home", "about", "help", "scholars", "contact"];
 
@@ -15,6 +16,41 @@ const LandingPage = () => {
     section?.scrollIntoView({ behavior: "smooth" });
     setActive(id);
   };
+  const hasCreated = useRef(false);
+
+
+  useEffect(() => {
+    if (hasCreated.current) return;
+    hasCreated.current = true;
+
+    const createDemoUsers = async () => {
+      try {
+        await authService.register({
+          fullname: "Student Demo",
+          email: "student@up.edu.ph",
+          password: "1",
+          contactNo: "09123456789",
+          role: "student",
+        });
+
+        console.log("Student created (or already exists)");
+
+        await authService.register({
+          fullname: "Admin Demo",
+          email: "admin@up.edu.ph",
+          password: "1",
+          contactNo: "09123456789",
+          role: "admin",
+        });
+
+        console.log("Admin created (or already exists)");
+      } catch (err) {
+        console.log("Users already exist or error:", err);
+      }
+    };
+
+    createDemoUsers();
+  }, []);
 
   // 🔥 SCROLL ACTIVE NAV
   useEffect(() => {

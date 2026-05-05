@@ -26,10 +26,10 @@ const checkStatus = (req, res) => {
   if (req.session.scholarId) {
     return res.json({
       authenticated: true,
-      user: {
+      scholar: {
         id: req.session.scholarId,
-        role: req.session.role,
         email: req.session.email,
+        role: req.session.role,
       },
     });
   }
