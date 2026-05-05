@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
-import { pollService, voteService } from "../services/api";
 import {
   Vote,
   Sun,
@@ -12,6 +11,43 @@ import {
   Lock,
   AlertCircle,
 } from "lucide-react";
+
+// ─── API ─────────────────────────────────────────────────────────────────────
+
+const BASE = "http://localhost:5001/api/v1"; // ← update to your backend base URL if needed
+
+const pollService = {
+  getAll: async () => {
+    const r = await fetch(`${BASE}/polls`);
+    if (!r.ok) throw new Error("Failed to fetch polls");
+    return r.json();
+  },
+  getResults: async (id: string) => {
+    const r = await fetch(`${BASE}/polls/${id}/results`);
+    if (!r.ok) throw new Error("Failed to fetch results");
+    return r.json();
+  },
+};
+
+const voteService = {
+  cast: async (pollId: string, selectedOption: string) => {
+    const r = await fetch(`${BASE}/votes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pollId, selectedOption }),
+    });
+    if (!r.ok) {
+      const err = await r.json();
+      throw new Error(err.message || "Failed to cast vote");
+    }
+    return r.json();
+  },
+  myVote: async (pollId: string) => {
+    const r = await fetch(`${BASE}/votes/poll/${pollId}/my-vote`);
+    if (!r.ok) throw new Error("Failed to fetch vote");
+    return r.json();
+  },
+};
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -243,18 +279,10 @@ const PollCard = ({
   onResults: (p: Poll) => void;
 }) => {
   const now = new Date();
-
-const start = new Date(poll.startDate);
-const end = new Date(poll.endDate);
-
-// fallback safety for invalid dates
-const isValidDates = !isNaN(start.getTime()) && !isNaN(end.getTime());
-
-const isVotable =
-  poll.status?.toLowerCase() === "open" &&
-  isValidDates &&
-  now >= start &&
-  now <= end;
+  const isVotable =
+    poll.status === "open" &&
+    now >= new Date(poll.startDate) &&
+    now <= new Date(poll.endDate);
 
   const fmt = (d: string) =>
     new Date(d).toLocaleDateString("en-PH", {
