@@ -1,36 +1,36 @@
 import ky, { HTTPError } from 'ky';
 
 const api = ky.create({
-  prefixUrl: "http://localhost:5001/api/v1",
+  prefixUrl: "http://localhost:5000/api/v1",
   credentials: "include",
 });
 
 export const transactionService = {
-    getAll: () => api.get('transactions').json<any>(),
-    create: (data: any) => api.post('transactions', { json: data }).json(),
-    update: (id: string, data: any) => api.put(`transactions/${id}`, { json: data }).json(),
-    delete: (id: string) => api.delete(`transactions/${id}`).json(),
+  getAll: () => api.get('transactions').json<any>(),
+  create: (data: any) => api.post('transactions', { json: data }).json(),
+  update: (id: string, data: any) => api.put(`transactions/${id}`, { json: data }).json(),
+  delete: (id: string) => api.delete(`transactions/${id}`).json(),
 };
 
 export const donorService = {
-    getAll: () => api.get('donors').json<any>(),
-    create: (data: any) => api.post('donors', { json: data }).json(),
-    update: (id: string, data: any) => api.put(`donors/${id}`, { json: data }).json(),
-    delete: (id: string) => api.delete(`donors/${id}`).json(),
+  getAll: () => api.get('donors').json<any>(),
+  create: (data: any) => api.post('donors', { json: data }).json(),
+  update: (id: string, data: any) => api.put(`donors/${id}`, { json: data }).json(),
+  delete: (id: string) => api.delete(`donors/${id}`).json(),
 };
 
 export const scholarService = {
-    getAll: () => api.get('scholars').json<any>(),
-    create: (data: any) => api.post('scholars', { json: data }).json(),
-    update: (id: string, data: any) => api.put(`scholars/${id}`, { json: data }).json(),
-    delete: (id: string) => api.delete(`scholars/${id}`).json(),
+  getAll: () => api.get('scholars').json<any>(),
+  create: (data: any) => api.post('scholars', { json: data }).json(),
+  update: (id: string, data: any) => api.put(`scholars/${id}`, { json: data }).json(),
+  delete: (id: string) => api.delete(`scholars/${id}`).json(),
 };
 export const memberService = {
-    getAll: () => api.get('members').json<any>(),
-    getOne: (id: string) => api.get(`members/${id}`).json<any>(),
-    create: (data: any) => api.post('members', { json: data }).json(),
-    update: (id: string, data: any) => api.put(`members/${id}`, { json: data }).json(),
-    delete: (id: string) => api.delete(`members/${id}`).json(),
+  getAll: () => api.get('members').json<any>(),
+  getOne: (id: string) => api.get(`members/${id}`).json<any>(),
+  create: (data: any) => api.post('members', { json: data }).json(),
+  update: (id: string, data: any) => api.put(`members/${id}`, { json: data }).json(),
+  delete: (id: string) => api.delete(`members/${id}`).json(),
 };
 export const authService = {
   login: (credentials: any) =>
@@ -70,3 +70,42 @@ export const getApiErrorMessage = async (error: unknown) => {
 
   return "Something went wrong";
 };
+
+export const reportService = {
+  downloadMonthlyReport: async () => {
+    const response = await api.get("reports/monthly-donors");
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Donor_Report_${new Date().getMonth() + 1}.pdf`;
+    a.click();
+  },
+
+  downloadFinancialSummary: async (): Promise<void> => {
+    try {
+      // Ky handles the 'blob' type via the .blob() method
+      const blob = await api.get("reports/financial-summary").blob();
+
+      // Create a local URL for the binary data
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary hidden link to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Financial_Summary_${new Date().toLocaleDateString()}.pdf`);
+
+      // Append, trigger, and cleanup
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up DOM and memory
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download the financial report:", error);
+      throw error;
+    }
+  }
+};
+

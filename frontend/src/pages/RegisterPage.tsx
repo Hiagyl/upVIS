@@ -11,6 +11,7 @@ const RegisterPage = () => {
         password: "",
         confirmPassword: "",
         contactNo: "",  // add this
+
     });
     const [loading, setLoading] = useState(false);
 
@@ -35,10 +36,10 @@ const RegisterPage = () => {
         try {
             // Mapping the frontend form to your backend controller expectations
             await authService.register({
-                fullname: form.name,
-                email: form.email,
-                password: form.password,
-                contactNo: form.contactNo,  // replace the hardcoded 0
+              fullname: form.name,
+              email: form.email,
+              password: form.password,
+              contactNo: form.contactNo, // replace the hardcoded 0
             });
 
             console.log("Registration successful");
