@@ -11,6 +11,7 @@ import {
   Lock,
   AlertCircle,
 } from "lucide-react";
+import LogoutButton from "../components/shared/LogoutButton"; 
 
 // ─── API ─────────────────────────────────────────────────────────────────────
 
@@ -403,22 +404,29 @@ const StudentPoll = () => {
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <main className="flex-1 p-12">
-        {/* ── Header ── */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
-          <div className="flex items-center gap-6">
-            <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
-              <Vote size={32} />
-            </div>
-            <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
-                Scholar Polls
-              </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
-                Vote on active polls and view community results.
-              </p>
-            </div>
-          </div>
-        </header>
+  
+  {/* Left side */}
+  <div className="flex items-center gap-6">
+    <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
+      <Vote size={32} />
+    </div>
+    <div>
+      <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+        Scholar Polls
+      </h1>
+      <p className="text-lg text-slate-500 font-medium italic font-serif">
+        Vote on active polls and view community results.
+      </p>
+    </div>
+  </div>
+
+  {/* Right side (Logout) */}
+  <div className="flex items-center gap-4">
+    <LogoutButton />
+  </div>
+
+</header>
 
         {/* ── Summary chips ── */}
         <div className="grid grid-cols-3 gap-6 mb-10">

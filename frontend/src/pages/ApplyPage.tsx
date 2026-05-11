@@ -34,26 +34,19 @@ const ApplyPage = () => {
         </button>
 
         <div className="flex items-center gap-4">
+
           <button
-            type="button"
-            onClick={() => navigate("/apply")}
-            className="font-semibold text-amber-600"
-          >
-            Apply
-          </button>
-          <button
-            type="button"
             onClick={() => navigate("/login")}
-            className="font-semibold text-slate-600 transition hover:text-amber-600"
+            className="text-slate-600 hover:text-amber-600 font-semibold"
           >
             Login
           </button>
+
           <button
-            type="button"
-            onClick={() => navigate("/register")}
-            className="rounded-xl bg-slate-900 px-5 py-2 font-bold text-white shadow-md transition hover:bg-amber-600"
+            onClick={() => navigate("/apply")}
+            className="bg-slate-900 text-white px-5 py-2 rounded-xl font-bold hover:bg-amber-600 transition shadow-md"
           >
-            Join Now
+            Apply Now
           </button>
         </div>
       </nav>

@@ -11,7 +11,8 @@ const LogoutButton = () => {
         setLoading(true);
         try {
             await authService.logout();
-            navigate("/");
+
+            window.location.href = "/";
         } catch (err) {
             console.error("Logout failed:", err);
         } finally {

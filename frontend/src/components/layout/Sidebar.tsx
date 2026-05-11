@@ -10,6 +10,7 @@ import {
   Circle,
   Vote, 
 } from "lucide-react";
+import LogoutButton from "../shared/LogoutButton";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -102,6 +103,10 @@ const Sidebar = () => {
           );
         })}
       </nav>
+
+      <div className="px-4 pb-4">
+        <LogoutButton />
+      </div>
 
       {/* Footer */}
       <div className="p-6 mt-auto">

@@ -84,15 +84,13 @@ const Dashboard = () => {
 
       {/* Main Content: Increased margin for the wider sidebar */}
       <main className="flex-1 ml-72 p-12">
-        {/* Header Section: Bold and High Contrast */}
         {/* Header Section: Consistent with MembersPage */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
+          {/* Left: Icon + Title */}
           <div className="flex items-center gap-6">
-            {/* Icon container: same style as MembersPage */}
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <LayoutDashboard size={32} />
             </div>
-            {/* Title and subtitle */}
             <div>
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Dashboard
@@ -100,40 +98,29 @@ const Dashboard = () => {
               <p className="text-lg text-slate-500 font-medium italic font-serif">
                 Financial overview of our organization.
               </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => reportService.downloadFinancialSummary()}
-                  className="flex items-center gap-3 bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-md active:scale-95"
-                >
-                  <FileDown size={24} strokeWidth={3} />
-                  Export PDF
-                </button>
-
-                <button
-                  onClick={() => {
-                    setEditingItem(null);
-                    setIsModalOpen(true);
-                  }}
-                  className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
-                >
-                  <PlusCircle size={24} strokeWidth={3} />
-                  Add New Entry
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Action button */}
-          <button
-            onClick={() => {
-              setEditingItem(null);
-              setIsModalOpen(true);
-            }}
-            className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
-          >
-            <PlusCircle size={24} strokeWidth={3} />
-            Add New Entry
-          </button>
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => reportService.downloadFinancialSummary()}
+              className="flex items-center gap-3 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+            >
+              <FileDown size={24} strokeWidth={3} />
+              Export PDF
+            </button>
+            <button
+              onClick={() => {
+                setEditingItem(null);
+                setIsModalOpen(true);
+              }}
+              className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+            >
+              <PlusCircle size={24} strokeWidth={3} />
+              Add New Entry
+            </button>
+          </div>
         </header>
 
         {/* Summaries Section */}
