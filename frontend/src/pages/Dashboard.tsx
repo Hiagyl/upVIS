@@ -13,12 +13,20 @@ const Dashboard = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [entryType, setEntryType] = useState("donation");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["transactions"],
     queryFn: transactionService.getAll,
     refetchInterval: 30000,
   });
+
+  // Fetch donors for the datalist
+  const { data: donorsData } = useQuery({
+    queryKey: ["donors"],
+    queryFn: () => fetch("/api/donors").then((res) => res.json()),
+  });
+  const donors = donorsData?.data || [];
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => transactionService.delete(id),
@@ -47,6 +55,9 @@ const Dashboard = () => {
       amount: Number(formData.get("amount")),
       category: formData.get("category"),
       type: formData.get("type"),
+      donorInfo: entryType === "donation"
+        ? { name: formData.get("donor") }
+        : undefined,
       date: editingItem?.date || new Date().toISOString(),
     };
     saveMutation.mutate(payload);
@@ -82,11 +93,8 @@ const Dashboard = () => {
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <Sidebar />
 
-      {/* Main Content: Increased margin for the wider sidebar */}
       <main className="flex-1 ml-72 p-12">
-        {/* Header Section: Consistent with MembersPage */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
-          {/* Left: Icon + Title */}
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <LayoutDashboard size={32} />
@@ -101,7 +109,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Right: Action Buttons */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => reportService.downloadFinancialSummary()}
@@ -113,6 +120,7 @@ const Dashboard = () => {
             <button
               onClick={() => {
                 setEditingItem(null);
+                setEntryType("donation");
                 setIsModalOpen(true);
               }}
               className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
@@ -123,10 +131,8 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* Summaries Section */}
         <SummaryCards summary={summary} />
 
-        {/* Transaction Section */}
         <div className="mt-16">
           <div className="flex items-center gap-4 mb-6">
             <div className="h-8 w-1.5 bg-amber-500 rounded-full"></div>
@@ -139,6 +145,7 @@ const Dashboard = () => {
             transactions={transactions}
             onEdit={(t: any) => {
               setEditingItem(t);
+              setEntryType(t.type || "donation");
               setIsModalOpen(true);
             }}
             onDelete={(id: string) => {
@@ -152,28 +159,29 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* --- ACCESSIBLE MODAL --- */}
+        {/* --- CHRONICLE ENTRY MODAL --- */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={editingItem ? "Update Transaction" : "Record New Transaction"}
+          title={editingItem ? "Update Entry" : "Record New Entry"}
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
-              <label className="block text-base font-bold text-slate-800 mb-2">
-                Description of Transaction
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Description of Event
               </label>
               <input
                 name="description"
                 defaultValue={editingItem?.description}
                 required
-                className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg focus:border-amber-500 outline-none"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl focus:border-amber-500 outline-none transition-colors"
+                placeholder="e.g., Semester Tuition Grant"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-base font-bold text-slate-800 mb-2">
+                <label className="block text-lg font-bold text-slate-800 mb-2">
                   Amount (₱)
                 </label>
                 <input
@@ -181,34 +189,55 @@ const Dashboard = () => {
                   type="number"
                   defaultValue={editingItem?.amount}
                   required
-                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg"
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-base font-bold text-slate-800 mb-2">
-                  Type of Entry
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Entry Type
                 </label>
                 <select
                   name="type"
-                  defaultValue={editingItem?.type || "donation"}
-                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg font-bold bg-white"
+                  value={entryType}
+                  onChange={(e) => setEntryType(e.target.value)}
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-white cursor-pointer hover:border-amber-500 transition-colors"
                 >
-                  <option value="donation">Donation (+)</option>
-                  <option value="expense">Expense (-)</option>
+                  <option value="donation">Donation (Increase)</option>
+                  <option value="expense">Expense (Decrease)</option>
                 </select>
               </div>
             </div>
 
+            {entryType === "donation" && (
+              <div>
+                <label className="block text-lg font-bold text-slate-800 mb-2">
+                  Donor Name
+                </label>
+                <input
+                  list="donors"
+                  name="donor"
+                  defaultValue={editingItem?.donorInfo?.name || ""}
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                  placeholder="Start typing to search..."
+                />
+                <datalist id="donors">
+                  {donors.map((d: any) => (
+                    <option key={d._id} value={d.name} />
+                  ))}
+                </datalist>
+              </div>
+            )}
+
             <div>
-              <label className="block text-base font-bold text-slate-800 mb-2">
-                Category
+              <label className="block text-lg font-bold text-slate-800 mb-2">
+                Allocation Category
               </label>
               <input
                 name="category"
                 defaultValue={editingItem?.category}
                 required
-                className="w-full border-2 border-slate-200 rounded-xl p-4 text-lg"
-                placeholder="e.g., General Scholarship Fund"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl outline-none focus:border-amber-500 transition-colors"
+                placeholder="e.g., Medical Assistance"
               />
             </div>
 
@@ -218,10 +247,10 @@ const Dashboard = () => {
               className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
-                ? "Loading..."
+                ? "Updating the Chronicle..."
                 : editingItem
-                  ? "Update Transaction"
-                  : "Record Transaction"}
+                  ? "Amend Entry"
+                  : "Add Entry"}
             </button>
           </form>
         </Modal>

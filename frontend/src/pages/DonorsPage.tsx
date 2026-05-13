@@ -207,7 +207,7 @@ const DonorsPage = () => {
                           className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-900 border-2 border-slate-200 rounded-xl hover:bg-white hover:border-amber-500 transition-all font-bold"
                         >
                           <Edit2 size={18} />
-                          <span>Edit Profile</span>
+                          <span>Edit</span>
                         </button>
                         <button
                           onClick={() => {
@@ -217,7 +217,7 @@ const DonorsPage = () => {
                           className="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-700 border-2 border-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold"
                         >
                           <Trash2 size={18} />
-                          <span>Remove</span>
+                          <span>Delete</span>
                         </button>
                       </div>
                     </td>
