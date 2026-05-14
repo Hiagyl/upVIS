@@ -124,12 +124,6 @@ const LandingPage = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate("/apply")}
-            className="text-slate-600 hover:text-amber-600 font-semibold"
-          >
-            Apply
-          </button>
 
           <button
             onClick={() => navigate("/login")}
@@ -139,10 +133,10 @@ const LandingPage = () => {
           </button>
 
           <button
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/apply")}
             className="bg-slate-900 text-white px-5 py-2 rounded-xl font-bold hover:bg-amber-600 transition shadow-md"
           >
-            Join Now
+            Apply Now
           </button>
         </div>
       </nav>

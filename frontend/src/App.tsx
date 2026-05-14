@@ -1,7 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
-// Auth logic (from your consolidated AuthGuards.tsx)
-import { AuthProvider, ProtectedRoute, PublicRoute } from "./components/AuthGuards";
+// Auth logic
+import {
+  AuthProvider,
+  ProtectedRoute,
+  PublicRoute,
+} from "./components/AuthGuards";
 
 // Pages
 import Dashboard from "./pages/Dashboard";

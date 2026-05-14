@@ -10,6 +10,7 @@ import {
   Circle,
   Vote, 
 } from "lucide-react";
+import LogoutButton from "../shared/LogoutButton";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -37,7 +38,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-72 bg-[#FAF9F6] text-slate-800 flex flex-col fixed left-0 top-0 z-50 shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r-4 border-amber-100">
+    <div style={{ height: '100%' }} className="w-72 bg-[#FAF9F6] text-slate-800 flex flex-col fixed left-0 top-0 z-50 shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r-4 border-amber-100">
       {/* Brand */}
       <div className="p-8 mb-4 border-b-2 border-amber-50">
         <div className="flex items-center gap-4">
@@ -102,6 +103,10 @@ const Sidebar = () => {
           );
         })}
       </nav>
+
+      <div className="px-4 pb-4">
+        <LogoutButton />
+      </div>
 
       {/* Footer */}
       <div className="p-6 mt-auto">

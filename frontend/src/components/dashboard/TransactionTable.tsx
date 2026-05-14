@@ -105,7 +105,7 @@ const TransactionTable = ({
                   </span>
                 </td>
 
-<td className="p-6 text-center">
+<td className="p-6">
   <span className="text-slate-700 font-semibold">
     {t.type === "donation" ? t.donorInfo?.name || "Anonymous" : "-"}
   </span>
