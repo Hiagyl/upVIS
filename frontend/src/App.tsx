@@ -1,7 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
-// Auth logic (from your consolidated AuthGuards.tsx)
-import { AuthProvider, ProtectedRoute, PublicRoute } from "./components/AuthGuards";
+// Auth logic
+import {
+  AuthProvider,
+  ProtectedRoute,
+  PublicRoute,
+} from "./components/AuthGuards";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -23,15 +27,16 @@ function App() {
     <AuthProvider>
       <Routes>
         {/* =========================================================
-            1. UNGUARDED ROUTES (Open to everyone)
+            1. PUBLIC ROUTES
            ========================================================= */}
+
         <Route path="/" element={<LandingPage />} />
         <Route path="/apply" element={<ApplyPage />} />
 
         {/* =========================================================
-            2. PUBLIC ROUTES (Login / Register)
-            Redirects authenticated users to their dashboards
+            2. AUTH ROUTES
            ========================================================= */}
+
         <Route
           path="/login"
           element={
@@ -40,6 +45,7 @@ function App() {
             </PublicRoute>
           }
         />
+
         <Route
           path="/register"
           element={
@@ -50,8 +56,9 @@ function App() {
         />
 
         {/* =========================================================
-            3. STUDENT PROTECTED ROUTES
+            3. STUDENT ROUTES
            ========================================================= */}
+
         <Route
           path="/student-poll"
           element={
@@ -62,8 +69,9 @@ function App() {
         />
 
         {/* =========================================================
-            4. ADMIN PROTECTED ROUTES
+            4. ADMIN ROUTES
            ========================================================= */}
+
         <Route
           path="/dashboard"
           element={
@@ -137,8 +145,9 @@ function App() {
         />
 
         {/* =========================================================
-            5. 404 CATCH-ALL
+            5. 404 PAGE
            ========================================================= */}
+
         <Route
           path="*"
           element={
