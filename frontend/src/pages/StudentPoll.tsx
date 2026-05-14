@@ -13,43 +13,6 @@ import {
 } from "lucide-react";
 import LogoutButton from "../components/shared/LogoutButton"; 
 
-// ─── API ─────────────────────────────────────────────────────────────────────
-
-const BASE = "http://localhost:5001/api/v1"; // ← update to your backend base URL if needed
-
-const pollService = {
-  getAll: async () => {
-    const r = await fetch(`${BASE}/polls`);
-    if (!r.ok) throw new Error("Failed to fetch polls");
-    return r.json();
-  },
-  getResults: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}/results`);
-    if (!r.ok) throw new Error("Failed to fetch results");
-    return r.json();
-  },
-};
-
-const voteService = {
-  cast: async (pollId: string, selectedOption: string) => {
-    const r = await fetch(`${BASE}/votes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pollId, selectedOption }),
-    });
-    if (!r.ok) {
-      const err = await r.json();
-      throw new Error(err.message || "Failed to cast vote");
-    }
-    return r.json();
-  },
-  myVote: async (pollId: string) => {
-    const r = await fetch(`${BASE}/votes/poll/${pollId}/my-vote`);
-    if (!r.ok) throw new Error("Failed to fetch vote");
-    return r.json();
-  },
-};
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Poll {
@@ -405,28 +368,27 @@ const StudentPoll = () => {
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <main className="flex-1 p-12">
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
-  
-  {/* Left side */}
-  <div className="flex items-center gap-6">
-    <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
-      <Vote size={32} />
-    </div>
-    <div>
-      <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
-        Scholar Polls
-      </h1>
-      <p className="text-lg text-slate-500 font-medium italic font-serif">
-        Vote on active polls and view community results.
-      </p>
-    </div>
-  </div>
 
-  {/* Right side (Logout) */}
-  <div className="flex items-center gap-4">
-    <LogoutButton />
-  </div>
+          <div className="flex items-center gap-6">
+            <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
+              <Vote size={32} />
+            </div>
+            <div>
+              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+                Scholar Polls
+              </h1>
+              <p className="text-lg text-slate-500 font-medium italic font-serif">
+                Vote on active polls and view community results.
+              </p>
+            </div>
+          </div>
 
-</header>
+           {/* Right side (Logout) */}
+          <div className="flex items-center gap-4">
+            <LogoutButton />
+          </div>
+
+        </header>
 
         {/* ── Summary chips ── */}
         <div className="grid grid-cols-3 gap-6 mb-10">
