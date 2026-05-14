@@ -20,121 +20,19 @@ import AdminPoll from "./pages/AdminPoll";
 
 function App() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <LandingRoute>
-            <LandingPage />
-          </LandingRoute>
-        }
-      />
-
-      {/* Public-only Routes */}
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicRoute>
-            <RegisterPage />
-          </PublicRoute>
-        }
-      />
-      <Route path="/apply" element={<ApplyPage />} />
-      <Route path="/admin/applications" element={<ApplicationsReviewPage />} />
-
-      {/* Student Poll */}
-      <Route path="/student-poll" element={
-          <ProtectedRoute>
-            <StudentPoll />
-          </ProtectedRoute>
-        }/>
-
-      {/* Admin Poll (Protected) ✅ */}
-      <Route
-        path="/admin-poll"
-        element={
-          <ProtectedRoute>
-            <AdminPoll />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Private Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/transactions"
-        element={
-          <ProtectedRoute>
-            <TransactionsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/donors"
-        element={
-          <ProtectedRoute>
-            <DonorsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/scholars"
-        element={
-          <ProtectedRoute>
-            <ScholarsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/members"
-        element={
-          <ProtectedRoute>
-            <MembersPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/logout-test"
-        element={
-          <ProtectedRoute>
-            <LogoutTestPage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 404 */}
-      <Route
-        path="*"
-        element={<div className="ml-64 p-8">404 - Page Not Found</div>}
-      />
-    </Routes>
     <AuthProvider>
       <Routes>
         {/* =========================================================
-            1. UNGUARDED ROUTES (Open to everyone)
+            1. PUBLIC ROUTES
            ========================================================= */}
+
         <Route path="/" element={<LandingPage />} />
         <Route path="/apply" element={<ApplyPage />} />
 
         {/* =========================================================
-            2. PUBLIC ROUTES (Login / Register)
-            Redirects authenticated users to their dashboards
+            2. AUTH ROUTES
            ========================================================= */}
+
         <Route
           path="/login"
           element={
@@ -143,6 +41,7 @@ function App() {
             </PublicRoute>
           }
         />
+
         <Route
           path="/register"
           element={
@@ -153,8 +52,9 @@ function App() {
         />
 
         {/* =========================================================
-            3. STUDENT PROTECTED ROUTES
+            3. STUDENT ROUTES
            ========================================================= */}
+
         <Route
           path="/student-poll"
           element={
@@ -165,8 +65,9 @@ function App() {
         />
 
         {/* =========================================================
-            4. ADMIN PROTECTED ROUTES
+            4. ADMIN ROUTES
            ========================================================= */}
+
         <Route
           path="/dashboard"
           element={
@@ -240,8 +141,9 @@ function App() {
         />
 
         {/* =========================================================
-            5. 404 CATCH-ALL
+            5. 404 PAGE
            ========================================================= */}
+
         <Route
           path="*"
           element={

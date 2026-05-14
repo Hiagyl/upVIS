@@ -12,6 +12,7 @@ import {
   Lock,
   AlertCircle,
 } from "lucide-react";
+import LogoutButton from "../components/shared/LogoutButton"; 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -377,6 +378,7 @@ const StudentPoll = () => {
       <main className="flex-1 p-12">
         {/* ── Header ── */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
+
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <Vote size={32} />
@@ -390,6 +392,12 @@ const StudentPoll = () => {
               </p>
             </div>
           </div>
+
+           {/* Right side (Logout) */}
+          <div className="flex items-center gap-4">
+            <LogoutButton />
+          </div>
+
         </header>
 
         {/* ── Summary chips ── */}
