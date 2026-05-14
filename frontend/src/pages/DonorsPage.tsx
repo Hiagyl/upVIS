@@ -97,6 +97,7 @@ const DonorsPage = () => {
       <Sidebar />
       <main className="flex-1 ml-72 p-12">
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
+          {/* Left: Icon + Title */}
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <Users size={32} />
@@ -108,17 +109,18 @@ const DonorsPage = () => {
               <p className="text-lg text-slate-500 font-medium italic font-serif">
                 Tracking the generosity that powers our programs.
               </p>
-              <button
-                onClick={() => reportService.downloadMonthlyReport()}
-                className="flex items-center gap-3 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
-              >
-                <FileText size={24} strokeWidth={3} />
-                Generate Report
-              </button>
             </div>
           </div>
 
+          {/* Right: Action Buttons */}
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => reportService.downloadMonthlyReport()}
+              className="flex items-center gap-3 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
+            >
+              <FileText size={24} strokeWidth={3} />
+              Generate Report
+            </button>
             <button
               onClick={() => {
                 setEditingDonor(null);
@@ -205,7 +207,7 @@ const DonorsPage = () => {
                           className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-900 border-2 border-slate-200 rounded-xl hover:bg-white hover:border-amber-500 transition-all font-bold"
                         >
                           <Edit2 size={18} />
-                          <span>Edit Profile</span>
+                          <span>Edit</span>
                         </button>
                         <button
                           onClick={() => {
@@ -215,7 +217,7 @@ const DonorsPage = () => {
                           className="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-700 border-2 border-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold"
                         >
                           <Trash2 size={18} />
-                          <span>Remove</span>
+                          <span>Delete</span>
                         </button>
                       </div>
                     </td>
@@ -347,7 +349,6 @@ const DonorsPage = () => {
                 <label className="block text-lg font-bold text-slate-800 mb-2">
                   Entry Type
                 </label>
-                {/* Grayed out, locked to Donation */}
                 <div className="w-full border-2 border-slate-200 rounded-xl p-4 text-xl font-bold bg-slate-100 text-slate-400 cursor-not-allowed select-none">
                   Donation (Increase)
                 </div>
