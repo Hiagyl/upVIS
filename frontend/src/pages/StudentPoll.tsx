@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
+import { pollService, voteService } from "../services/api";
 import {
   Vote,
   Sun,
@@ -243,10 +244,18 @@ const PollCard = ({
   onResults: (p: Poll) => void;
 }) => {
   const now = new Date();
-  const isVotable =
-    poll.status === "open" &&
-    now >= new Date(poll.startDate) &&
-    now <= new Date(poll.endDate);
+  
+const start = new Date(poll.startDate);
+const end = new Date(poll.endDate);
+
+// fallback safety for invalid dates
+const isValidDates = !isNaN(start.getTime()) && !isNaN(end.getTime());
+
+const isVotable =
+  poll.status?.toLowerCase() === "open" &&
+  isValidDates &&
+  now >= start &&
+  now <= end;
 
   const fmt = (d: string) =>
     new Date(d).toLocaleDateString("en-PH", {

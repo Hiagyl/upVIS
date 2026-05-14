@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
 import Sidebar from "../components/layout/Sidebar";
+import { pollService } from "../services/api";
 import {
   PlusCircle,
   Sun,
@@ -14,49 +15,6 @@ import {
 } from "lucide-react";
 
 // ─── API ─────────────────────────────────────────────────────────────────────
-
-const BASE = "/api/v1"; // ← update to your backend base URL if needed
-
-const pollService = {
-  getAll: async () => {
-    const r = await fetch(`${BASE}/polls`);
-    if (!r.ok) throw new Error("Failed to fetch polls");
-    return r.json();
-  },
-  getResults: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}/results`);
-    if (!r.ok) throw new Error("Failed to fetch results");
-    return r.json();
-  },
-  create: async (body: any) => {
-    const r = await fetch(`${BASE}/polls`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error("Failed to create poll");
-    return r.json();
-  },
-  update: async (id: string, body: any) => {
-    const r = await fetch(`${BASE}/polls/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error("Failed to update poll");
-    return r.json();
-  },
-  close: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}/close`, { method: "PATCH" });
-    if (!r.ok) throw new Error("Failed to close poll");
-    return r.json();
-  },
-  delete: async (id: string) => {
-    const r = await fetch(`${BASE}/polls/${id}`, { method: "DELETE" });
-    if (!r.ok) throw new Error("Failed to delete poll");
-    return r.json();
-  },
-};
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
