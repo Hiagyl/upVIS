@@ -1,14 +1,61 @@
 const bcrypt = require("bcryptjs");
+
 const Scholar = require("../../models/v1/Scholar");
+const Member = require("../../models/v1/members");
 
-const loginScholar = async ({ email, password }) => {
-    const scholar = await Scholar.findOne({ upMail: email });
-    if (!scholar) throw new Error("Invalid credentials");
+const login = async ({ email, password }) => {
+  let user = null;
+  let role = null;
 
-    const isMatch = await bcrypt.compare(password, scholar.password);
-    if (!isMatch) throw new Error("Invalid credentials");
+  // =====================
+  // Check member/admin
+  // =====================
 
-    return { scholar };
+  user = await Member.findOne({
+    upMail: email,
+  });
+
+  if (user) {
+    // member or admin
+    role = user.role;
+  }
+
+  // =====================
+  // Check scholar
+  // =====================
+
+  if (!user) {
+    user = await Scholar.findOne({
+      upMail: email,
+    });
+
+    if (user) {
+      role = "scholar";
+    }
+  }
+
+  // =====================
+  // No account found
+  // =====================
+
+  if (!user) {
+    throw new Error("Invalid credentials");
+  }
+
+  // =====================
+  // Password check
+  // =====================
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+
+  return {
+    user,
+    role,
+  };
 };
 
-module.exports = { loginScholar };
+module.exports = { login };

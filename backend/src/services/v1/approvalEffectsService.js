@@ -20,7 +20,7 @@ class ApprovalEffectsService {
   }
 
   async handleScholarshipApproval(application) {
-    const { fullName, email, contactNo, details = {} } = application;
+    const { fullName, email, contactNo, password , details = {} } = application;
     const { studentNumber, program } = details;
 
     let scholar = await Scholar.findOne({
@@ -37,14 +37,15 @@ class ApprovalEffectsService {
         scholarshipStartDate: new Date(),
         // Current Scholar schema still requires a password even though
         // scholarship approval should not create a login account.
-        password: await this.generateTemporaryPasswordHash(),
+        password: application.password,
         applicationId: application._id,
       });
     } else {
-      scholar.name = scholar.name || fullName;
-      scholar.upMail = scholar.upMail || email;
+      scholar.name = fullName || scholar.name;
+      scholar.upMail = email || scholar.upMail;
       scholar.contactNo = contactNo || scholar.contactNo;
       scholar.program = program || scholar.program;
+      scholar.password = password || scholar.password;
       scholar.applicationId = application._id;
     }
 
@@ -62,19 +63,59 @@ class ApprovalEffectsService {
   }
 
   async handleStudentAccountApproval(application) {
-    const { fullName, email, contactNo, details = {} } = application;
+    const { fullName, email, contactNo, password, details = {} } = application;
+
     const { studentNumber = "", program = "" } = details;
 
-    let member = await Member.findOne({ email });
+    let scholar = await Scholar.findOne({
+      $or: [{ upMail: email }, { studentNumber }],
+    });
+
+    if (!scholar) {
+      scholar = new Scholar({
+        name: fullName,
+        upMail: email,
+        contactNo,
+        studentNumber,
+        program,
+        scholarshipStartDate: new Date(),
+        password: application.password,
+        applicationId: application._id,
+        role: "scholar",
+      });
+    } else {
+      scholar.name = fullName || scholar.name;
+      scholar.contactNo = contactNo || scholar.contactNo;
+      scholar.program = program || scholar.program;
+      scholar.applicationId = application._id;
+    }
+
+    await scholar.save();
+
+    application.linkedAccountId = scholar._id;
+    application.linkedAccountType = "Scholar";
+
+    await application.save();
+
+    return {
+      id: scholar._id,
+      model: "Scholar",
+      action: "created_or_updated",
+      role: "scholar",
+    };
+  }
+
+  async handleAdminAccountApproval(application) {
+    const { fullName, email, contactNo, password } = application;
+
+    let member = await Member.findOne({ upMail: email });
 
     if (!member) {
       member = new Member({
         fullname: fullName,
-        email,
+        upMail: email,
         contactNo,
-        studentNumber,
-        program,
-        password: await this.generateTemporaryPasswordHash(),
+        password: application.password,
         status: "active",
         role: "member",
         applicationId: application._id,
@@ -82,46 +123,8 @@ class ApprovalEffectsService {
     } else {
       member.fullname = fullName || member.fullname;
       member.contactNo = contactNo || member.contactNo;
-      member.studentNumber = studentNumber || member.studentNumber;
-      member.program = program || member.program;
       member.status = "active";
-      member.applicationId = application._id;
-    }
-
-    await member.save();
-
-    application.linkedAccountId = member._id;
-    application.linkedAccountType = "Member";
-    await application.save();
-
-    return {
-      id: member._id,
-      model: "Member",
-      action: "created_or_updated",
-      role: member.role,
-    };
-  }
-
-  async handleAdminAccountApproval(application) {
-    const { fullName, email, contactNo } = application;
-
-    let member = await Member.findOne({ email });
-
-    if (!member) {
-      member = new Member({
-        fullname: fullName,
-        email,
-        contactNo,
-        password: await this.generateTemporaryPasswordHash(),
-        status: "active",
-        role: "admin",
-        applicationId: application._id,
-      });
-    } else {
-      member.fullname = fullName || member.fullname;
-      member.contactNo = contactNo || member.contactNo;
-      member.status = "active";
-      member.role = "admin";
+      member.role = "member";
       member.applicationId = application._id;
     }
 

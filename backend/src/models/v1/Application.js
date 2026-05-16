@@ -114,6 +114,7 @@ applicationSchema.methods.toJSON = function toJSON() {
     fullName: this.fullName,
     email: this.email,
     contactNo: this.contactNo,
+    password: this.password,
     details: this.details,
     linkedAccountId: this.linkedAccountId,
     linkedAccountType: this.linkedAccountType,

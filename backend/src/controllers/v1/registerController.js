@@ -1,9 +1,9 @@
 const registerService = require("../../services/v1/registerService");
 
-const registerScholar = async (req, res) => {
+const register = async (req, res) => {
     try {
         const { fullname, contactNo, email, password,role} = req.body;
-        const scholar = await registerService.registerScholar(
+        const user = await registerService.register(
             fullname,
             contactNo,
             email,
@@ -16,4 +16,4 @@ const registerScholar = async (req, res) => {
     }
 };
 
-module.exports = { registerScholar };
+module.exports = { register };

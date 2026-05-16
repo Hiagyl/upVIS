@@ -10,9 +10,9 @@ const VALID_TYPES = [
 class ApplicationController {
   async create(req, res) {
     try {
-      const { type, fullName, email, contactNo, details } = req.body;
+      const { type, fullName, email, contactNo, details,password } = req.body;
 
-      if (!type || !fullName || !email || !contactNo) {
+      if (!type || !fullName || !email || !contactNo||!password) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
@@ -25,6 +25,7 @@ class ApplicationController {
         fullName,
         email,
         contactNo,
+        password,
         details: details || {},
       });
 
