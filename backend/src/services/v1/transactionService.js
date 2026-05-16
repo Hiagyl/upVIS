@@ -35,6 +35,18 @@ class TransactionService {
     }
     return deletedDoc;
   }
+
+  async getTotalDonationsByDonor(email) {
+    const donations = await Transaction.find({
+      type: "donation",
+      "donorInfo.email": email,
+    });
+
+    return donations.reduce(
+      (sum, donation) => sum + Number(donation.amount || 0),
+      0,
+    );
+  }
 }
 
 module.exports = new TransactionService();

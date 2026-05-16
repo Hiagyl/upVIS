@@ -1,8 +1,23 @@
 const Donor = require("../../models/v1/Donor");
+const transactionService = require("../../services/v1/transactionService");
 
 class DonorService {
   async getAllDonors() {
-    return await Donor.find().sort({ name: 1 });
+    const donors = await Donor.find();
+
+    const donorsWithTotals = await Promise.all(
+      donors.map(async (donor) => {
+        const totalDonations =
+          await transactionService.getTotalDonationsByDonor(donor.email);
+
+        return {
+          ...donor.toObject(),
+          totalDonations,
+        };
+      }),
+    );
+
+    return donorsWithTotals;
   }
 
   async getDonorById(id) {
@@ -22,7 +37,11 @@ class DonorService {
 
   async deleteDonor(id) {
     const donor = await Donor.findByIdAndDelete(id);
-    if (!donor) throw new Error("Donor not found");
+
+    if (!donor) {
+      throw new Error("Donor not found");
+    }
+
     return donor;
   }
 }
