@@ -4,7 +4,7 @@ class VoteController {
     async castVote(req, res, next) {
         try {
             // scholarId comes from session
-            const scholarId = req.session.scholarId;
+            const scholarId = req.session.userId;
             if (!scholarId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
@@ -27,7 +27,7 @@ class VoteController {
 
     async getVoteByScholar(req, res, next) {
         try {
-            const scholarId = req.session.scholarId;
+            const scholarId = req.session.userId;
             if (!scholarId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
@@ -40,7 +40,7 @@ class VoteController {
 
     async changeVote(req, res, next) {
         try {
-            const scholarId = req.session.scholarId;
+            const scholarId = req.session.userId;
             if (!scholarId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
