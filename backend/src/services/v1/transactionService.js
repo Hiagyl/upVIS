@@ -4,11 +4,18 @@ class TransactionService {
   /**
    * Fetch all transactions sorted by date descending
    */
-  async getAllTransactions(query = {}, skip = 0, limit = 10) {
-    return await Transaction.find(query)
-      .sort({ date: -1 })
-      .skip(skip)
-      .limit(limit);
+  async getAllTransactions(query = {}, skip = null, limit = null) {
+    let transactionQuery = Transaction.find(query).sort({ date: -1 });
+
+    if (skip !== null) {
+      transactionQuery = transactionQuery.skip(skip);
+    }
+
+    if (limit !== null) {
+      transactionQuery = transactionQuery.limit(limit);
+    }
+
+    return await transactionQuery;
   }
 
   async countTransactions(query = {}) {
