@@ -53,6 +53,9 @@ export const applicationService = {
     data: { status: string; reviewNotes?: string; rejectionReason?: string },
   ) => api.patch(`applications/${id}/review`, { json: data }).json<any>(),
 };
+export const statsService = {
+  getLandingStats: () => api.get("stats/landing").json<any>(),
+};
 
 export const pollService = {
   getAll: () => api.get("polls").json<any>(),
