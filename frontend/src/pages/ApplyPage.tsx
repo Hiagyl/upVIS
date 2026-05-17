@@ -4,6 +4,7 @@ import ApplyTabs from "../components/apply/ApplyTabs";
 import StudentScholarshipForm from "../components/apply/forms/StudentScholarshipForm";
 import StudentAccountForm from "../components/apply/forms/StudentAccountForm";
 import AdminAccountForm from "../components/apply/forms/AdminAccountForm";
+import logo from "../assets/logo.png";
 
 export type RoleTab = "student" | "admin";
 export type StudentSubtab = "scholarship" | "account";
@@ -26,12 +27,26 @@ const ApplyPage = () => {
     <div className="min-h-screen bg-[#FAF9F6] text-slate-900">
       <nav className="sticky top-0 z-50 mx-auto flex max-w-7xl items-center justify-between bg-[#FAF9F6]/90 px-6 py-6 backdrop-blur sm:px-8 lg:px-12">
         <button
-          type="button"
-          onClick={() => navigate("/")}
-          className="text-xl font-serif font-black tracking-wide"
-        >
-          UPVIS
-        </button>
+  type="button"
+  onClick={() => navigate("/")}
+  className="flex items-center gap-3 cursor-pointer"
+>
+  <img
+    src={logo}
+    alt="UPVIS Logo"
+    className="w-12 h-12 object-contain"
+  />
+
+  <div className="flex flex-col items-start">
+    <span className="text-xl font-serif font-black tracking-wide text-slate-900">
+      UP<span className="text-amber-600">VIS</span>
+    </span>
+
+    <span className="text-[10px] uppercase tracking-[0.15em] text-amber-700 font-bold">
+      Application Portal
+    </span>
+  </div>
+</button>
 
         <div className="flex items-center gap-4">
 
