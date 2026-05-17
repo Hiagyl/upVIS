@@ -302,11 +302,14 @@ Start Command: node server.js
 3. Production Environment Variables
 The following environment configurations must be set up securely in your production hosting dashboards to link the services together:
 Backend (.env)
-Code snippet
+```bash
 PORT=5000
 NODE_ENV=production
 MONGO_URI=your_production_mongodb_atlas_connection_string
 FRONTEND_URL=https://your-upvis-frontend.vercel.app
+```
+
 Frontend (.env.production)
-Code snippet
+```bash
 VITE_API_BASE_URL=https://your-upvis-backend.onrender.com
+```
