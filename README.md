@@ -288,18 +288,18 @@ upVIS is deployed as a decoupled full-stack application, splitting frontend asse
 
 1. Frontend Deployment (Static Hosting)
 The React single-page application (SPA) is built into optimized static files and hosted on a global Content Delivery Network (CDN) like Vercel or Netlify.
-Root Directory: frontend/
-Build Command: npm run build
-Output Directory: dist/
-Routing Rule: Configure a catch-all rewrite (/index.html) on the hosting provider to prevent 404 errors on page refresh.
+- Root Directory: frontend/
+- Build Command: npm run build
+- Output Directory: dist/
+- Routing Rule: Configure a catch-all rewrite (/index.html) on the hosting provider to prevent 404 errors on page refresh.
 
-2. Backend Deployment (Web Service)
+3. Backend Deployment (Web Service)
 The Node.js/Express REST API is deployed as an active background web service on an infrastructure provider like Render or Railway.
-Root Directory: backend/
-Build Command: npm install
-Start Command: node server.js
+- Root Directory: backend/
+- Build Command: npm install
+- Start Command: node server.js
 
-3. Production Environment Variables
+4. Production Environment Variables
 The following environment configurations must be set up securely in your production hosting dashboards to link the services together:
 Backend (.env)
 ```bash
