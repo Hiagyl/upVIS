@@ -3,6 +3,9 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  transform: scale(0.8);
+  transform-origin: top left;
+  width: 125%; /* compensate: 1/0.8 = 1.25 */
 }
 
 .logo {
