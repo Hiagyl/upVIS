@@ -15,6 +15,12 @@ const TransactionsPage = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [entryType, setEntryType] = useState("donation");
 
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   // ── Confirm modal state ──────────────────────────────────────────────────
   const [confirmState, setConfirmState] = useState<{
     isOpen: boolean;
@@ -25,8 +31,10 @@ const TransactionsPage = () => {
   const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: transactionService.getAll,
+    queryKey: ["transactions", page, search, startDate, endDate],
+
+    queryFn: () =>
+      transactionService.getAll(page, 10, search, startDate, endDate),
   });
 
   const { data: donor } = useQuery({
@@ -96,6 +104,8 @@ const TransactionsPage = () => {
 
   const donors = donor?.data || [];
   const transactions = data?.data || [];
+  const currentPage = data?.currentPage || 1;
+  const totalPages = data?.totalPages || 1;
 
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
@@ -128,10 +138,64 @@ const TransactionsPage = () => {
             Add New Entry
           </button>
         </header>
+        {/* FILTERS */}
+        <div className="bg-white p-6 rounded-2xl border-2 border-amber-100 shadow-sm mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search transactions..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+            />
+
+            {/* START DATE */}
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                setPage(1);
+              }}
+              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+            />
+
+            {/* END DATE */}
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                setPage(1);
+              }}
+              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+            />
+
+            {/* RESET */}
+            <button
+              onClick={() => {
+                setSearch("");
+                setStartDate("");
+                setEndDate("");
+                setPage(1);
+              }}
+              className="bg-slate-900 text-white rounded-xl px-4 py-3 font-bold hover:bg-amber-600 transition"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 gap-4 text-center">
-            <History className="text-amber-500 animate-spin-reverse mb-2" size={48} />
+            <History
+              className="text-amber-500 animate-spin-reverse mb-2"
+              size={48}
+            />
             <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">
               Consulting the Records...
             </p>
@@ -142,17 +206,42 @@ const TransactionsPage = () => {
             {(error as any).message}
           </div>
         ) : (
-          <TransactionTable
-            transactions={transactions}
-            onEdit={(t: any) => {
-              setEditingItem(t);
-              setEntryType(t.type || "donation");
-              setIsModalOpen(true);
-            }}
-            onDelete={(id: string) => {
-              setConfirmState({ isOpen: true, id });
-            }}
-          />
+          <div className="space-y-6">
+            <TransactionTable
+              transactions={transactions}
+              onEdit={(t: any) => {
+                setEditingItem(t);
+                setEntryType(t.type || "donation");
+                setIsModalOpen(true);
+              }}
+              onDelete={(id: string) => {
+                setConfirmState({ isOpen: true, id });
+              }}
+            />
+
+            {/* PAGINATION */}
+            <div className="flex justify-center items-center gap-4">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="px-5 py-3 rounded-xl bg-slate-900 text-white font-bold disabled:bg-slate-300"
+              >
+                Prev
+              </button>
+
+              <div className="font-bold text-slate-700">
+                Page {currentPage} of {totalPages}
+              </div>
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setPage((prev) => prev + 1)}
+                className="px-5 py-3 rounded-xl bg-slate-900 text-white font-bold disabled:bg-slate-300"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         )}
 
         {/* ── Entry Form Modal ─────────────────────────────────────────────── */}
