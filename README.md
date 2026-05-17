@@ -279,3 +279,34 @@ The Backend follows the MVC (Model–View–Controller) architecture. Controller
 The Frontend is built using React and serves as the client-side interface. It consists of reusable components, page-level views, and centralized API service logic for backend communication. The application entry points (App.jsx and main.jsx) manage routing and rendering. This layered approach ensures a responsive, maintainable, and well-organized user interface.
 
 Overall, the project structure supports clean architecture principles, efficient development, and long-term scalability of the full-stack application.
+
+---
+
+## 🚀 Deployment Plan
+
+upVIS is deployed as a decoupled full-stack application, splitting frontend asset delivery from backend business logic processing for optimal speed and reliability.
+
+1. Frontend Deployment (Static Hosting)
+The React single-page application (SPA) is built into optimized static files and hosted on a global Content Delivery Network (CDN) like Vercel or Netlify.
+Root Directory: frontend/
+Build Command: npm run build
+Output Directory: dist/
+Routing Rule: Configure a catch-all rewrite (/index.html) on the hosting provider to prevent 404 errors on page refresh.
+
+2. Backend Deployment (Web Service)
+The Node.js/Express REST API is deployed as an active background web service on an infrastructure provider like Render or Railway.
+Root Directory: backend/
+Build Command: npm install
+Start Command: node server.js
+
+3. Production Environment Variables
+The following environment configurations must be set up securely in your production hosting dashboards to link the services together:
+Backend (.env)
+Code snippet
+PORT=5000
+NODE_ENV=production
+MONGO_URI=your_production_mongodb_atlas_connection_string
+FRONTEND_URL=https://your-upvis-frontend.vercel.app
+Frontend (.env.production)
+Code snippet
+VITE_API_BASE_URL=https://your-upvis-backend.onrender.com
