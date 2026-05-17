@@ -11,8 +11,9 @@ import {
   XCircle,
   Lock,
   AlertCircle,
+  RefreshCw,
 } from "lucide-react";
-import LogoutButton from "../components/shared/LogoutButton"; 
+import LogoutButton from "../components/shared/LogoutButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -143,10 +144,11 @@ const VoteView = ({
 }: {
   poll: Poll;
   onDone: (selectedOption: string) => void;
-  onToast: (toast: { type: "success" | "error"; message: string }) => void;
+  onToast: (toast: { type: "success" | "error"; message: string; isChange?: boolean }) => void;
 }) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [isChangingVote, setIsChangingVote] = useState(false);
 
   const { data: existingVoteData, isLoading: checkingVote } = useQuery({
     queryKey: ["my-vote", poll._id],
@@ -160,14 +162,28 @@ const VoteView = ({
       onToast({
         type: "success",
         message: `Vote successfully submitted. Selected Option: ${selected}`,
+        isChange: false,
       });
     },
     onError: (err: any) => {
       setError(err instanceof Error ? err.message : "Failed to submit vote");
+      onToast({ type: "error", message: "Failed to submit vote" });
+    },
+  });
+
+  const changeVoteMutation = useMutation({
+    mutationFn: () => voteService.changeVote(poll._id, selected!),
+    onSuccess: () => {
+      onDone(selected!);
       onToast({
-        type: "error",
-        message: "Failed to submit vote",
+        type: "success",
+        message: `Vote changed successfully. New selection: ${selected}`,
+        isChange: true,
       });
+    },
+    onError: (err: any) => {
+      setError(err instanceof Error ? err.message : "Failed to change vote");
+      onToast({ type: "error", message: "Failed to change vote" });
     },
   });
 
@@ -180,68 +196,128 @@ const VoteView = ({
     );
 
   const alreadyVoted = existingVoteData?.data != null;
+  const currentVote = existingVoteData?.data?.selectedOption;
+  const isPending = voteMutation.isPending || changeVoteMutation.isPending;
 
-  return (
-    <div className="p-2 space-y-5">
-      {poll.description && (
-        <p className="text-slate-500 font-medium italic">{poll.description}</p>
-      )}
+  // ── Already voted, not in change mode ──
+  if (alreadyVoted && !isChangingVote) {
+    return (
+      <div className="p-2 space-y-5">
+        {poll.description && (
+          <p className="text-slate-500 font-medium italic">{poll.description}</p>
+        )}
 
-      {alreadyVoted ? (
         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-5">
           <CheckCircle2 className="text-green-500 shrink-0" size={22} />
           <div>
             <p className="font-bold text-green-700">You've already voted</p>
             <p className="text-sm text-green-600">
               Your response:{" "}
-              <span className="font-black">
-                {existingVoteData?.data?.selectedOption}
-              </span>
+              <span className="font-black">{currentVote}</span>
             </p>
           </div>
         </div>
-      ) : (
-        <>
-          <div className="space-y-3">
-            {poll.options.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setSelected(opt)}
-                className={`w-full text-left px-5 py-4 rounded-xl border-2 font-bold text-slate-700 transition-all ${
-                  selected === opt
-                    ? "border-amber-500 bg-amber-50 text-amber-800 shadow-md"
-                    : "border-slate-200 bg-white hover:border-amber-300 hover:bg-amber-50/50"
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <span
-                    className={`w-4 h-4 rounded-full border-2 shrink-0 transition-all ${
-                      selected === opt
-                        ? "border-amber-500 bg-amber-500"
-                        : "border-slate-300"
-                    }`}
-                  />
-                  {opt}
-                </span>
-              </button>
-            ))}
-          </div>
 
-          {error && (
-            <p className="text-red-600 text-sm font-semibold bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-              {error}
-            </p>
-          )}
+        <button
+          onClick={() => {
+            setSelected(currentVote ?? null);
+            setIsChangingVote(true);
+          }}
+          className="w-full flex items-center justify-center gap-2 border-2 border-amber-400 text-amber-700 bg-amber-50 hover:bg-amber-100 py-3.5 rounded-xl font-bold transition-all"
+        >
+          <RefreshCw size={16} />
+          Change My Vote
+        </button>
+      </div>
+    );
+  }
 
-          <button
-            onClick={() => voteMutation.mutate()}
-            disabled={!selected || voteMutation.isPending}
-            className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl mt-2"
-          >
-            {voteMutation.isPending ? "Submitting…" : "Submit Vote"}
-          </button>
-        </>
+  // ── New vote or change vote form ──
+  return (
+    <div className="p-2 space-y-5">
+      {poll.description && (
+        <p className="text-slate-500 font-medium italic">{poll.description}</p>
       )}
+
+      {isChangingVote && (
+        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <RefreshCw size={15} className="text-amber-600 shrink-0" />
+          <p className="text-sm font-semibold text-amber-700">
+            You're changing your vote from{" "}
+            <span className="font-black">"{currentVote}"</span>. Select a new option below.
+          </p>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {poll.options.map((opt) => (
+          <button
+            key={opt}
+            onClick={() => setSelected(opt)}
+            className={`w-full text-left px-5 py-4 rounded-xl border-2 font-bold text-slate-700 transition-all ${
+              selected === opt
+                ? "border-amber-500 bg-amber-50 text-amber-800 shadow-md"
+                : opt === currentVote && isChangingVote
+                ? "border-slate-300 bg-slate-50 text-slate-400"
+                : "border-slate-200 bg-white hover:border-amber-300 hover:bg-amber-50/50"
+            }`}
+          >
+            <span className="flex items-center gap-3">
+              <span
+                className={`w-4 h-4 rounded-full border-2 shrink-0 transition-all ${
+                  selected === opt
+                    ? "border-amber-500 bg-amber-500"
+                    : "border-slate-300"
+                }`}
+              />
+              {opt}
+              {opt === currentVote && isChangingVote && (
+                <span className="ml-auto text-xs font-semibold text-slate-400 italic">
+                  current
+                </span>
+              )}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {error && (
+        <p className="text-red-600 text-sm font-semibold bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          {error}
+        </p>
+      )}
+
+      <div className="flex flex-col gap-2 mt-2">
+        <button
+          onClick={() =>
+            isChangingVote ? changeVoteMutation.mutate() : voteMutation.mutate()
+          }
+          disabled={!selected || isPending || (isChangingVote && selected === currentVote)}
+          className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl"
+        >
+          {isPending
+            ? isChangingVote
+              ? "Changing…"
+              : "Submitting…"
+            : isChangingVote
+            ? "Confirm Change"
+            : "Submit Vote"}
+        </button>
+
+        {isChangingVote && (
+          <button
+            onClick={() => {
+              setIsChangingVote(false);
+              setSelected(null);
+              setError("");
+            }}
+            disabled={isPending}
+            className="w-full border-2 border-slate-200 text-slate-600 py-3.5 rounded-xl font-bold hover:border-slate-300 hover:bg-slate-50 transition-all"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </div>
   );
 };
@@ -258,18 +334,17 @@ const PollCard = ({
   onResults: (p: Poll) => void;
 }) => {
   const now = new Date();
-  
-const start = new Date(poll.startDate);
-const end = new Date(poll.endDate);
 
-// fallback safety for invalid dates
-const isValidDates = !isNaN(start.getTime()) && !isNaN(end.getTime());
+  const start = new Date(poll.startDate);
+  const end = new Date(poll.endDate);
 
-const isVotable =
-  poll.status?.toLowerCase() === "open" &&
-  isValidDates &&
-  now >= start &&
-  now <= end;
+  const isValidDates = !isNaN(start.getTime()) && !isNaN(end.getTime());
+
+  const isVotable =
+    poll.status?.toLowerCase() === "open" &&
+    isValidDates &&
+    now >= start &&
+    now <= end;
 
   const fmt = (d: string) =>
     new Date(d).toLocaleDateString("en-PH", {
@@ -341,10 +416,11 @@ const StudentPoll = () => {
   const [modalMode, setModalMode] = useState<"none" | "vote" | "results">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
   const [filter, setFilter] = useState<"all" | "open" | "closed">("all");
-  const [toast, setToast] = useState<
-    | { type: "success" | "error"; message: string }
-    | null
-  >(null);
+  const [toast, setToast] = useState<{
+    type: "success" | "error";
+    message: string;
+    isChange?: boolean;
+  } | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
@@ -401,7 +477,6 @@ const StudentPoll = () => {
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <main className="flex-1 p-12">
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
-
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <Vote size={32} />
@@ -416,11 +491,9 @@ const StudentPoll = () => {
             </div>
           </div>
 
-           {/* Right side (Logout) */}
           <div className="flex items-center gap-4">
             <LogoutButton />
           </div>
-
         </header>
 
         {/* ── Summary chips ── */}
@@ -491,16 +564,14 @@ const StudentPoll = () => {
           </div>
         </div>
 
+        {/* ── Toast ── */}
         {toast && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4 animate-in fade-in duration-300">
             <div
               className={`relative w-full max-w-md overflow-hidden rounded-3xl border-2 bg-white shadow-2xl animate-in zoom-in-95 duration-300 ${
-                toast.type === "success"
-                  ? "border-amber-200"
-                  : "border-red-200"
+                toast.type === "success" ? "border-amber-200" : "border-red-200"
               }`}
             >
-              {/* Top Accent Bar */}
               <div
                 className={`h-2 w-full ${
                   toast.type === "success"
@@ -510,7 +581,6 @@ const StudentPoll = () => {
               />
 
               <div className="p-8 text-center">
-                {/* Icon */}
                 <div
                   className={`mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full shadow-lg ${
                     toast.type === "success"
@@ -519,25 +589,30 @@ const StudentPoll = () => {
                   }`}
                 >
                   {toast.type === "success" ? (
-                    <CheckCircle2 size={42} />
+                    toast.isChange ? (
+                      <RefreshCw size={42} />
+                    ) : (
+                      <CheckCircle2 size={42} />
+                    )
                   ) : (
                     <AlertCircle size={42} />
                   )}
                 </div>
 
-                {/* Title */}
                 <h2 className="text-3xl font-serif font-black text-slate-900 mb-2">
                   {toast.type === "success"
-                    ? "Vote Submitted"
+                    ? toast.isChange
+                      ? "Vote Changed"
+                      : "Vote Submitted"
+                    : toast.isChange
+                    ? "Change Failed"
                     : "Submission Failed"}
                 </h2>
 
-                {/* Message */}
                 <p className="text-slate-500 leading-relaxed font-medium text-base">
                   {toast.message}
                 </p>
 
-                {/* Button */}
                 <button
                   onClick={() => setToast(null)}
                   className={`mt-8 w-full rounded-2xl py-4 text-lg font-black text-white transition-all shadow-lg active:scale-95 ${

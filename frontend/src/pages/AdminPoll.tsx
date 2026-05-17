@@ -12,6 +12,7 @@ import {
   BarChart3,
   BarChart,
   AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -32,7 +33,7 @@ interface PollResults {
   results: Record<string, number>;
 }
 
-// ─── Results Modal Content ────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const formatDateInputValue = (value?: string | null) => {
   if (!value) return "";
@@ -51,6 +52,8 @@ const formatDateLabel = (value?: string | null) => {
     day: "numeric",
   });
 };
+
+// ─── Results Modal Content ────────────────────────────────────────────────────
 
 const ResultsView = ({ pollId }: { pollId: string }) => {
   const { data, isLoading, error } = useQuery<{ data: PollResults }>({
@@ -95,13 +98,11 @@ const ResultsView = ({ pollId }: { pollId: string }) => {
             <div key={option}>
               <div className="flex justify-between text-sm font-bold text-slate-700 mb-1.5">
                 <span>{option}</span>
-                <span>
-                  {count} votes ({pct}%)
-                </span>
+                <span>{count} votes ({pct}%)</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
                 <div
-                  className="bg-amber-500 h-3 rounded-full transition-all duration-700"
+                  className="h-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-700"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -135,6 +136,9 @@ const AdminPoll = () => {
   const filteredPolls =
     filter === "all" ? polls : polls.filter((p) => p.status === filter);
 
+  const openCount = polls.filter((p) => p.status === "open").length;
+  const closedCount = polls.filter((p) => p.status === "closed").length;
+
   const saveMutation = useMutation({
     mutationFn: (payload: any) =>
       activePoll && modalMode === "edit"
@@ -162,16 +166,19 @@ const AdminPoll = () => {
     setFormError(null);
   };
 
-  /* LOADING */
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#FAF9F6] ml-72">
-        <Sun className="text-amber-500 animate-spin" size={48} />
+        <div className="flex flex-col items-center gap-4">
+          <Sun className="text-amber-500 animate-spin" size={48} />
+          <div className="text-2xl font-serif font-bold text-slate-700">
+            Loading Polls…
+          </div>
+        </div>
       </div>
     );
   }
 
-  /* ERROR */
   if (error) {
     return (
       <div className="ml-72 p-10 text-red-700 font-bold bg-red-50 h-screen">
@@ -185,6 +192,7 @@ const AdminPoll = () => {
       <Sidebar />
 
       <main className="flex-1 ml-72 p-12">
+
         {/* HEADER */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
           <div className="flex items-center gap-6">
@@ -192,10 +200,10 @@ const AdminPoll = () => {
               <BarChart size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900">
+              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Poll Management
               </h1>
-              <p className="text-lg text-slate-500 italic font-serif">
+              <p className="text-lg text-slate-500 font-medium italic font-serif">
                 Manage polls, responses, and voting history.
               </p>
             </div>
@@ -203,18 +211,61 @@ const AdminPoll = () => {
 
           <button
             onClick={() => setModalMode("create")}
-            className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all"
+            className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
           >
-            <PlusCircle size={24} />
+            <PlusCircle size={24} strokeWidth={3} />
             Create Poll
           </button>
         </header>
+
+        {/* SUMMARY CARDS */}
+        <div className="grid grid-cols-3 gap-6 mb-10">
+          {[
+            {
+              label: "Total Polls",
+              value: polls.length,
+              icon: <BarChart3 size={22} />,
+              accent: "slate",
+            },
+            {
+              label: "Open Polls",
+              value: openCount,
+              icon: <CheckCircle2 size={22} />,
+              accent: "amber",
+            },
+            {
+              label: "Closed Polls",
+              value: closedCount,
+              icon: <Lock size={22} />,
+              accent: "slate",
+            },
+          ].map(({ label, value, icon, accent }) => (
+            <div
+              key={label}
+              className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm p-7 flex items-center gap-5"
+            >
+              <div
+                className={`p-3 rounded-xl shadow-md ${
+                  accent === "amber"
+                    ? "bg-amber-500 text-white"
+                    : "bg-slate-900 text-amber-400"
+                }`}
+              >
+                {icon}
+              </div>
+              <div>
+                <p className="text-3xl font-serif font-black text-slate-900">{value}</p>
+                <p className="text-sm text-slate-500 font-semibold">{label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* TITLE + FILTER */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <div className="h-8 w-1.5 bg-amber-500 rounded-full" />
-            <h2 className="text-2xl font-serif font-black text-slate-900 uppercase">
+            <h2 className="text-2xl font-serif font-black text-slate-900 uppercase tracking-wide">
               Poll Records
             </h2>
           </div>
@@ -229,7 +280,7 @@ const AdminPoll = () => {
                   className={`px-5 py-2 rounded-xl text-sm font-bold transition-all border-2 ${
                     filter === value
                       ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white border-slate-200 hover:border-amber-300"
+                      : "bg-white border-slate-200 hover:border-amber-300 text-slate-500"
                   }`}
                 >
                   {label}
@@ -241,8 +292,14 @@ const AdminPoll = () => {
 
         {/* EMPTY */}
         {filteredPolls.length === 0 && (
-          <div className="bg-white p-16 rounded-2xl border-2 border-dashed text-center text-slate-500">
-            No polls available.
+          <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border-2 border-dashed border-amber-200">
+            <BarChart3 size={48} className="text-amber-300" />
+            <p className="text-xl font-serif font-bold text-slate-400">No polls found</p>
+            <p className="text-slate-400 text-sm">
+              {filter !== "all"
+                ? `No ${filter} polls at the moment.`
+                : "Create a poll to get started."}
+            </p>
           </div>
         )}
 
@@ -251,91 +308,100 @@ const AdminPoll = () => {
           {filteredPolls.map((poll) => (
             <div
               key={poll._id}
-              className="bg-white p-6 rounded-2xl border-2 shadow-sm hover:shadow-lg transition-all"
+              className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-lg hover:border-amber-300 transition-all overflow-hidden"
             >
-              <div className="flex justify-between items-start gap-2">
-                <h2 className="font-serif font-bold text-lg">{poll.title}</h2>
-                <span
-                  className={`text-xs px-3 py-1 rounded-full font-bold shrink-0 ${
-                    poll.status === "open"
-                      ? "bg-amber-50 text-amber-700 border border-amber-200"
-                      : "bg-slate-100 text-slate-500 border border-slate-200"
-                  }`}
-                >
-                  {poll.status}
-                </span>
-              </div>
+              {/* Top accent bar */}
+              <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
 
-              <p className="text-sm text-slate-500 mt-2 italic">
-                {poll.description}
-              </p>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {poll.options.map((o) => (
+              <div className="p-6 space-y-4">
+                <div className="flex justify-between items-start gap-2">
+                  <h2 className="font-serif font-black text-slate-900 text-lg leading-snug flex-1">
+                    {poll.title}
+                  </h2>
                   <span
-                    key={o}
-                    className="text-xs bg-amber-50 px-2 py-1 rounded border border-amber-100"
+                    className={`text-xs px-3 py-1 rounded-full font-bold shrink-0 ${
+                      poll.status === "open"
+                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                        : "bg-slate-100 text-slate-500 border border-slate-200"
+                    }`}
                   >
-                    {o}
+                    {poll.status}
                   </span>
-                ))}
-              </div>
-
-              <div className="mt-4 text-sm text-slate-500 space-y-1">
-                <div>
-                  <span className="font-semibold text-slate-700">Start:</span>{" "}
-                  {formatDateLabel(poll.startDate)}
                 </div>
-                <div>
-                  <span className="font-semibold text-slate-700">End:</span>{" "}
-                  {formatDateLabel(poll.endDate)}
-                </div>
-              </div>
 
-              <div className="mt-6 flex justify-between items-center">
-                <div className="flex gap-3">
+                {poll.description && (
+                  <p className="text-sm text-slate-500 italic leading-relaxed">
+                    {poll.description}
+                  </p>
+                )}
+
+                <div className="flex flex-wrap gap-2">
+                  {poll.options.map((o) => (
+                    <span
+                      key={o}
+                      className="text-xs bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg font-semibold text-slate-600"
+                    >
+                      {o}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="text-sm text-slate-500 space-y-1 pt-1">
+                  <div>
+                    <span className="font-semibold text-slate-700">Start:</span>{" "}
+                    {formatDateLabel(poll.startDate)}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-slate-700">End:</span>{" "}
+                    {formatDateLabel(poll.endDate)}
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-between items-center border-t border-slate-100">
+                  <div className="flex gap-1">
+                    <button
+                      title="Edit"
+                      onClick={() => {
+                        setActivePoll(poll);
+                        setModalMode("edit");
+                      }}
+                      className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                    >
+                      <Pencil size={16} />
+                    </button>
+
+                    <button
+                      title="Close poll"
+                      onClick={() => closeMutation.mutate(poll._id)}
+                      disabled={poll.status === "closed"}
+                      className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 disabled:opacity-30 transition-colors"
+                    >
+                      <Lock size={16} />
+                    </button>
+
+                    <button
+                      title="Delete"
+                      onClick={() => {
+                        if (window.confirm("Delete this poll?"))
+                          deleteMutation.mutate(poll._id);
+                      }}
+                      className="p-2 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+
                   <button
-                    title="Edit"
                     onClick={() => {
-                      setActivePoll(poll);
-                      setModalMode("edit");
+                      setSelectedPoll(poll);
+                      setResultModalOpen(true);
                     }}
-                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                    className="flex items-center gap-1.5 text-sm font-bold text-amber-600 hover:text-amber-800 transition-colors"
                   >
-                    <Pencil size={16} />
-                  </button>
-
-                  <button
-                    title="Close poll"
-                    onClick={() => closeMutation.mutate(poll._id)}
-                    disabled={poll.status === "closed"}
-                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 disabled:opacity-30 transition-colors"
-                  >
-                    <Lock size={16} />
-                  </button>
-
-                  <button
-                    title="Delete"
-                    onClick={() => {
-                      if (window.confirm("Delete this poll?"))
-                        deleteMutation.mutate(poll._id);
-                    }}
-                    className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition-colors"
-                  >
-                    <Trash2 size={16} />
+                    <BarChart3 size={15} />
+                    Results
                   </button>
                 </div>
-
-                <button
-                  onClick={() => {
-                    setSelectedPoll(poll);
-                    setResultModalOpen(true);
-                  }}
-                  className="flex items-center gap-1 text-sm text-amber-600 font-bold hover:text-amber-800 transition-colors"
-                >
-                  <BarChart3 size={16} />
-                  Results
-                </button>
               </div>
             </div>
           ))}
@@ -366,13 +432,7 @@ const AdminPoll = () => {
               }
 
               setFormError(null);
-              saveMutation.mutate({
-                title,
-                description,
-                options,
-                startDate,
-                endDate,
-              });
+              saveMutation.mutate({ title, description, options, startDate, endDate });
             }}
             className="space-y-5"
           >
@@ -385,7 +445,7 @@ const AdminPoll = () => {
                 defaultValue={activePoll?.title}
                 placeholder="Poll title"
                 required
-                className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500 transition-colors text-slate-900"
               />
             </div>
 
@@ -398,23 +458,21 @@ const AdminPoll = () => {
                 defaultValue={activePoll?.description}
                 placeholder="Optional description"
                 rows={3}
-                className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors resize-none"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500 transition-colors resize-none text-slate-900"
               />
             </div>
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1">
                 Options{" "}
-                <span className="font-normal text-slate-400">
-                  (comma-separated)
-                </span>
+                <span className="font-normal text-slate-400">(comma-separated)</span>
               </label>
               <input
                 name="options"
                 defaultValue={activePoll?.options?.join(", ")}
                 placeholder="Option A, Option B, Option C"
                 required
-                className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
+                className="w-full border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500 transition-colors text-slate-900"
               />
             </div>
 
@@ -428,7 +486,7 @@ const AdminPoll = () => {
                   type="date"
                   required
                   defaultValue={formatDateInputValue(activePoll?.startDate ?? null)}
-                  className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500 transition-colors text-slate-900"
                 />
               </div>
               <div>
@@ -440,7 +498,7 @@ const AdminPoll = () => {
                   type="date"
                   required
                   defaultValue={formatDateInputValue(activePoll?.endDate ?? null)}
-                  className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
+                  className="w-full border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500 transition-colors text-slate-900"
                 />
               </div>
             </div>
@@ -454,7 +512,7 @@ const AdminPoll = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-amber-600 disabled:bg-slate-300 transition-all"
+              className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl active:scale-95"
             >
               {saveMutation.isPending ? "Saving…" : "Save Poll"}
             </button>

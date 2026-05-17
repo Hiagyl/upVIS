@@ -145,7 +145,7 @@ const ApplicationsReviewPage = () => {
                   Review Applications
                 </h1>
                 <p className="mt-2 text-base text-slate-500 sm:text-lg">
-                  Mock admin access is enabled. {counts.pending} pending applications are waiting for review.
+                  {counts.pending} pending applications are waiting for review.
                 </p>
               </div>
             </div>
