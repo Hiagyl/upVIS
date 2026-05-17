@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const Application = require("../../models/v1/Application");
 
 const VALID_TYPES = [
@@ -11,9 +12,16 @@ const VALID_REVIEW_STATUSES = ["approved", "rejected"];
 
 class ApplicationService {
   validateCreateData(applicationData) {
-    const { type, fullName, email, contactNo, details = {} } = applicationData;
+    const {
+      type,
+      fullName,
+      email,
+      contactNo,
+      password,
+      details = {},
+    } = applicationData;
 
-    if (!type || !fullName || !email || !contactNo) {
+    if (!type || !fullName || !email || !contactNo || !password) {
       throw new Error("Missing required fields");
     }
 
@@ -38,11 +46,26 @@ class ApplicationService {
   }
 
   async create(applicationData) {
-    const { type, fullName, email, contactNo, details = {} } = applicationData;
+    const {
+      type,
+      fullName,
+      email,
+      contactNo,
+      password,
+      details = {},
+    } = applicationData;
 
-    this.validateCreateData({ type, fullName, email, contactNo, details });
+    this.validateCreateData({
+      type,
+      fullName,
+      email,
+      contactNo,
+      password,
+      details,
+    });
 
     const normalizedEmail = String(email).trim().toLowerCase();
+
     const normalizedContactNo = String(contactNo).trim();
 
     const existing = await Application.findOne({
@@ -55,17 +78,21 @@ class ApplicationService {
       throw new Error(`You already have a pending ${type} application`);
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newApplication = new Application({
       type,
       fullName: String(fullName).trim(),
       email: normalizedEmail,
       contactNo: normalizedContactNo,
+      password: hashedPassword,
       details,
       status: "pending",
       submittedAt: new Date(),
     });
 
     await newApplication.save();
+
     return newApplication;
   }
 

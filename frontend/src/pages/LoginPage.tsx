@@ -1,32 +1,47 @@
+// LoginPage.tsx
+
 import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { Sun, LogIn } from "lucide-react";
 
-// Import useAuth instead of authService
 import { useAuth } from "../components/AuthGuards";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  // Extract the login function from your AuthContext
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
 
     try {
-      // Use the context's login function so global state is updated
-      const userData = await login({ email, password });
+      const userData = await login({
+        email,
+        password,
+      });
 
-      // Route based on the normalized user data
-      if (userData.role === "admin") {
-        navigate("/dashboard", { replace: true });
-      } else {
-        navigate("/student-poll", { replace: true });
+      // Admin or member
+      if (userData.role === "admin" || userData.role === "member") {
+        navigate("/dashboard", {
+          replace: true,
+        });
+      }
+
+      // Scholar
+      else {
+        navigate("/student-poll", {
+          replace: true,
+        });
       }
     } catch (err: any) {
       console.error("Login failed:", err);

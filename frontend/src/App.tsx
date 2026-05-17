@@ -62,7 +62,7 @@ function App() {
         <Route
           path="/student-poll"
           element={
-            <ProtectedRoute allowedRoles={["student"]}>
+            <ProtectedRoute allowedRoles={["scholar"]}>
               <StudentPoll />
             </ProtectedRoute>
           }
@@ -75,7 +75,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <Dashboard />
             </ProtectedRoute>
           }
@@ -93,7 +93,7 @@ function App() {
         <Route
           path="/admin-poll"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <AdminPoll />
             </ProtectedRoute>
           }
@@ -102,7 +102,7 @@ function App() {
         <Route
           path="/transactions"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <TransactionsPage />
             </ProtectedRoute>
           }
@@ -111,7 +111,7 @@ function App() {
         <Route
           path="/donors"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <DonorsPage />
             </ProtectedRoute>
           }
@@ -120,7 +120,7 @@ function App() {
         <Route
           path="/scholars"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <ScholarsPage />
             </ProtectedRoute>
           }
@@ -129,7 +129,7 @@ function App() {
         <Route
           path="/members"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <MembersPage />
             </ProtectedRoute>
           }
@@ -138,7 +138,7 @@ function App() {
         <Route
           path="/logout-test"
           element={
-            <ProtectedRoute allowedRoles={["admin"]}>
+            <ProtectedRoute allowedRoles={["admin", "member"]}>
               <LogoutTestPage />
             </ProtectedRoute>
           }

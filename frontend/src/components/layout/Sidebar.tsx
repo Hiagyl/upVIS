@@ -8,15 +8,21 @@ import {
   ClipboardCheck,
   Compass,
   Circle,
-  Vote, 
+  Vote,
 } from "lucide-react";
 import LogoutButton from "../shared/LogoutButton";
+import { useAuth } from "../AuthGuards";
 
 const Sidebar = () => {
   const location = useLocation();
+  const { user } = useAuth();
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/dashboard" },
+    {
+      name: "Dashboard",
+      icon: <LayoutDashboard size={20} />,
+      href: "/dashboard",
+    },
     {
       name: "Transactions",
       icon: <Receipt size={20} />,
@@ -25,11 +31,15 @@ const Sidebar = () => {
     { name: "Donors", icon: <Users size={20} />, href: "/donors" },
     { name: "Scholars", icon: <GraduationCap size={20} />, href: "/scholars" },
     { name: "Members", icon: <ShieldCheck size={20} />, href: "/members" },
-    {
-      name: "Applications Review",
-      icon: <ClipboardCheck size={20} />,
-      href: "/admin/applications",
-    },
+    ...(user?.role === "admin"
+      ? [
+          {
+            name: "Applications Review",
+            icon: <ClipboardCheck size={20} />,
+            href: "/admin/applications",
+          },
+        ]
+      : []),
     {
       name: "Polls",
       icon: <Vote size={20} />,

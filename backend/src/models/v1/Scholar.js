@@ -50,8 +50,8 @@ const scholarSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['student', 'admin'],
-        default: 'student'
+        enum: ['scholar'],
+        default: 'scholar'
     }
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt

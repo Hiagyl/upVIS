@@ -30,24 +30,37 @@ const LandingPage = () => {
           email: "student@up.edu.ph",
           password: "1",
           contactNo: "09123456789",
-          role: "student",
+          role: "scholar",
         });
 
+      } catch (err) {
         console.log("Student created (or already exists)");
+      }
+    try {
+      await authService.register({
+        fullname: "Admin Demo",
+        email: "admin@up.edu.ph",
+        password: "1",
+        contactNo: "09123456789",
+        role: "member",
+      });
 
+
+    } catch (err) {
+      console.log("Admin created (or already exists)");
+    }
+      try {
         await authService.register({
-          fullname: "Admin Demo",
-          email: "admin@up.edu.ph",
+          fullname: "Super Admin Demo",
+          email: "superadmin@up.edu.ph",
           password: "1",
           contactNo: "09123456789",
           role: "admin",
         });
-
-        console.log("Admin created (or already exists)");
       } catch (err) {
-        console.log("Users already exist or error:", err);
+        console.log("Admin created (or already exists)");
       }
-    };
+  };
 
     createDemoUsers();
   }, []);
