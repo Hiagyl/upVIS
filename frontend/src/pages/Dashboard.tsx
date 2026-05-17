@@ -17,6 +17,13 @@ const Dashboard = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [entryType, setEntryType] = useState("donation");
 
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+
   // ── Confirm modal state ──────────────────────────────────────────────────
   const [confirmState, setConfirmState] = useState<{
     isOpen: boolean;
@@ -27,9 +34,10 @@ const Dashboard = () => {
   const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: transactionService.getAll,
-    refetchInterval: 30000,
+    queryKey: ["transactions", page, search, startDate, endDate],
+
+    queryFn: () =>
+      transactionService.getAll(page, 10, search, startDate, endDate),
   });
 
   const { data: donorsData } = useQuery({
@@ -114,6 +122,8 @@ const Dashboard = () => {
     balance: 0,
   };
   const transactions = data?.data || [];
+  const currentPage = data?.currentPage || 1;
+  const totalPages = data?.totalPages || 1;
 
   return (
     <div className="flex bg-[#FAF9F6] min-h-screen">
@@ -167,18 +177,42 @@ const Dashboard = () => {
             </h2>
           </div>
 
-          <TransactionTable
-            transactions={transactions}
-            onEdit={(t: any) => {
-              setEditingItem(t);
-              setEntryType(t.type || "donation");
-              setIsModalOpen(true);
-            }}
-            onDelete={(id: string) => {
-              // ── Open confirm modal instead of window.confirm ──
-              setConfirmState({ isOpen: true, id });
-            }}
-          />
+          <div className="space-y-6">
+            <TransactionTable
+              transactions={transactions}
+              onEdit={(t: any) => {
+                setEditingItem(t);
+                setEntryType(t.type || "donation");
+                setIsModalOpen(true);
+              }}
+              onDelete={(id: string) => {
+                setConfirmState({ isOpen: true, id });
+              }}
+            />
+
+            {/* PAGINATION */}
+            <div className="flex justify-center items-center gap-4">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="px-5 py-3 rounded-xl bg-slate-900 text-white font-bold disabled:bg-slate-300"
+              >
+                Prev
+              </button>
+
+              <div className="font-bold text-slate-700">
+                Page {currentPage} of {totalPages}
+              </div>
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setPage((prev) => prev + 1)}
+                className="px-5 py-3 rounded-xl bg-slate-900 text-white font-bold disabled:bg-slate-300"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* ── Entry Form Modal ─────────────────────────────────────────────── */}

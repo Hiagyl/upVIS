@@ -6,9 +6,21 @@ const api = ky.create({
 });
 
 export const transactionService = {
-  getAll: () => api.get('transactions').json<any>(),
-  create: (data: any) => api.post('transactions', { json: data }).json(),
-  update: (id: string, data: any) => api.put(`transactions/${id}`, { json: data }).json(),
+  getAll: (page = 1, limit = 10, search = "", startDate = "", endDate = "") =>
+    api
+      .get("transactions", {
+        searchParams: {
+          page,
+          limit,
+          search,
+          startDate,
+          endDate,
+        },
+      })
+      .json<any>(),
+  create: (data: any) => api.post("transactions", { json: data }).json(),
+  update: (id: string, data: any) =>
+    api.put(`transactions/${id}`, { json: data }).json(),
   delete: (id: string) => api.delete(`transactions/${id}`).json(),
 };
 
