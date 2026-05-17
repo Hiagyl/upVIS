@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
 import { pollService, voteService } from "../services/api";
@@ -139,9 +139,11 @@ const ResultsView = ({
 const VoteView = ({
   poll,
   onDone,
+  onToast,
 }: {
   poll: Poll;
-  onDone: () => void;
+  onDone: (selectedOption: string) => void;
+  onToast: (toast: { type: "success" | "error"; message: string }) => void;
 }) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -153,8 +155,20 @@ const VoteView = ({
 
   const voteMutation = useMutation({
     mutationFn: () => voteService.cast(poll._id, selected!),
-    onSuccess: onDone,
-    onError: (err: any) => setError(err.message),
+    onSuccess: () => {
+      onDone(selected!);
+      onToast({
+        type: "success",
+        message: `Vote successfully submitted. Selected Option: ${selected}`,
+      });
+    },
+    onError: (err: any) => {
+      setError(err instanceof Error ? err.message : "Failed to submit vote");
+      onToast({
+        type: "error",
+        message: "Failed to submit vote",
+      });
+    },
   });
 
   if (checkingVote)
@@ -327,6 +341,10 @@ const StudentPoll = () => {
   const [modalMode, setModalMode] = useState<"none" | "vote" | "results">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
   const [filter, setFilter] = useState<"all" | "open" | "closed">("all");
+  const [toast, setToast] = useState<
+    | { type: "success" | "error"; message: string }
+    | null
+  >(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
@@ -337,6 +355,12 @@ const StudentPoll = () => {
     setModalMode("none");
     setActivePoll(null);
   };
+
+  useEffect(() => {
+    if (!toast) return;
+    const id = window.setTimeout(() => setToast(null), 3500);
+    return () => window.clearTimeout(id);
+  }, [toast]);
 
   const polls: Poll[] = data?.data || [];
 
@@ -467,6 +491,68 @@ const StudentPoll = () => {
           </div>
         </div>
 
+        {toast && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4 animate-in fade-in duration-300">
+            <div
+              className={`relative w-full max-w-md overflow-hidden rounded-3xl border-2 bg-white shadow-2xl animate-in zoom-in-95 duration-300 ${
+                toast.type === "success"
+                  ? "border-amber-200"
+                  : "border-red-200"
+              }`}
+            >
+              {/* Top Accent Bar */}
+              <div
+                className={`h-2 w-full ${
+                  toast.type === "success"
+                    ? "bg-gradient-to-r from-amber-400 via-amber-500 to-slate-800"
+                    : "bg-gradient-to-r from-red-400 via-red-500 to-slate-800"
+                }`}
+              />
+
+              <div className="p-8 text-center">
+                {/* Icon */}
+                <div
+                  className={`mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full shadow-lg ${
+                    toast.type === "success"
+                      ? "bg-amber-50 text-amber-500"
+                      : "bg-red-50 text-red-500"
+                  }`}
+                >
+                  {toast.type === "success" ? (
+                    <CheckCircle2 size={42} />
+                  ) : (
+                    <AlertCircle size={42} />
+                  )}
+                </div>
+
+                {/* Title */}
+                <h2 className="text-3xl font-serif font-black text-slate-900 mb-2">
+                  {toast.type === "success"
+                    ? "Vote Submitted"
+                    : "Submission Failed"}
+                </h2>
+
+                {/* Message */}
+                <p className="text-slate-500 leading-relaxed font-medium text-base">
+                  {toast.message}
+                </p>
+
+                {/* Button */}
+                <button
+                  onClick={() => setToast(null)}
+                  className={`mt-8 w-full rounded-2xl py-4 text-lg font-black text-white transition-all shadow-lg active:scale-95 ${
+                    toast.type === "success"
+                      ? "bg-slate-900 hover:bg-amber-600"
+                      : "bg-red-500 hover:bg-red-600"
+                  }`}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ── Poll grid ── */}
         {filteredPolls.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border-2 border-dashed border-amber-200">
@@ -514,6 +600,7 @@ const StudentPoll = () => {
                 });
                 closeModal();
               }}
+              onToast={(message) => setToast(message)}
             />
           )}
           {modalMode === "results" && activePoll && (

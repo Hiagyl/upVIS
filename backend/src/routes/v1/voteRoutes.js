@@ -9,4 +9,5 @@ module.exports = (app) => {
     route.post("/", VoteController.castVote);
     route.get("/poll/:pollId", VoteController.getVotesByPoll);
     route.get("/poll/:pollId/my-vote", VoteController.getVoteByScholar);
+    route.put("/poll/:pollId/change", VoteController.changeVote);
 };

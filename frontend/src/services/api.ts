@@ -67,6 +67,8 @@ export const voteService = {
   cast: (pollId: string, selectedOption: string) =>
     api.post("votes", { json: { pollId, selectedOption } }).json<any>(),
   myVote: (pollId: string) => api.get(`votes/poll/${pollId}/my-vote`).json<any>(),
+  changeVote: (pollId: string, selectedOption: string) =>       
+    api.put(`votes/poll/${pollId}/change`, { json: { selectedOption } }).json<any>(),
 };
 
 
