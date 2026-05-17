@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import LogoutButton from "../shared/LogoutButton";
 import { useAuth } from "../AuthGuards";
+import logo from "../../assets/logo.png";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -51,20 +52,29 @@ const Sidebar = () => {
     <div style={{ height: '100%' }} className="w-72 bg-[#FAF9F6] text-slate-800 flex flex-col fixed left-0 top-0 z-50 shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r-4 border-amber-100">
       {/* Brand */}
       <div className="p-8 mb-4 border-b-2 border-amber-50">
-        <div className="flex items-center gap-4">
-          <div className="bg-amber-100 p-2.5 rounded-full shadow-sm">
-            <Compass className="text-amber-700" size={28} strokeWidth={2.5} />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-2xl font-serif font-black tracking-tight text-slate-900 leading-none">
-              up<span className="text-amber-600">VIS</span>
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.15em] text-amber-700 font-bold mt-1">
-              Scholarship Guide
-            </span>
-          </div>
-        </div>
-      </div>
+  <div className="flex items-center gap-4">
+    
+    {/* Logo */}
+    <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-amber-100 p-2">
+      <img
+        src={logo}
+        alt="UPVIS Logo"
+        className="w-full h-full object-contain"
+      />
+    </div>
+
+    {/* Brand Text */}
+    <div className="flex flex-col">
+      <span className="text-2xl font-serif font-black tracking-tight text-slate-900 leading-none">
+        UP<span className="text-amber-600">VIS</span>
+      </span>
+
+      <span className="text-[10px] uppercase tracking-[0.15em] text-amber-700 font-bold mt-1">
+        Scholarship System
+      </span>
+    </div>
+  </div>
+</div>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1.5">
@@ -133,7 +143,7 @@ const Sidebar = () => {
         </div>
 
         <p className="mt-5 text-[10px] text-center text-slate-400 font-serif italic font-medium leading-relaxed">
-          "The path to wisdom is <br /> illuminated by your grace."
+          "They can because they think they can."
         </p>
       </div>
     </div>
