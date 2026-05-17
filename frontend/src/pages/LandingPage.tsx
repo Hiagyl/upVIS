@@ -238,7 +238,7 @@ const LandingPage = () => {
           <div className="bg-white border-2 border-amber-100 rounded-2xl px-6 py-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
             <div className="text-2xl mb-2">💰</div>
             <h2 className="text-2xl font-black">
-              ₱{stats.totalDonations.toLocaleString()}
+              ₱{stats.totalDonations.toLocaleString()}K+
             </h2>
             <p className="text-sm text-slate-500 font-semibold">
               Donations Tracked
