@@ -23,7 +23,7 @@ class PollController {
     async createPoll(req, res, next) {
         try {
             // adminId comes from session
-            const adminId = req.session.scholarId;
+            const adminId = req.session.userId;
             if (!adminId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
@@ -36,7 +36,7 @@ class PollController {
 
     async updatePoll(req, res, next) {
         try {
-            const adminId = req.session.scholarId;
+            const adminId = req.session.userId;
             if (!adminId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
@@ -49,7 +49,7 @@ class PollController {
 
     async closePoll(req, res, next) {
         try {
-            const adminId = req.session.scholarId;
+            const adminId = req.session.userId;
             if (!adminId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
@@ -62,7 +62,7 @@ class PollController {
 
     async deletePoll(req, res, next) {
         try {
-            const adminId = req.session.scholarId;
+            const adminId = req.session.userId;
             if (!adminId)
                 return res.status(401).json({ success: false, message: "Unauthorized" });
 
