@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
 import Sidebar from "../components/layout/Sidebar";
@@ -14,8 +14,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-// ─── API ─────────────────────────────────────────────────────────────────────
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Poll {
@@ -24,6 +22,8 @@ interface Poll {
   description: string;
   options: string[];
   status: "open" | "closed";
+  startDate: string;
+  endDate: string;
 }
 
 interface PollResults {
@@ -33,6 +33,24 @@ interface PollResults {
 }
 
 // ─── Results Modal Content ────────────────────────────────────────────────────
+
+const formatDateInputValue = (value?: string | null) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+};
+
+const formatDateLabel = (value?: string | null) => {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 const ResultsView = ({ pollId }: { pollId: string }) => {
   const { data, isLoading, error } = useQuery<{ data: PollResults }>({
@@ -103,6 +121,7 @@ const AdminPoll = () => {
   const [modalMode, setModalMode] = useState<"none" | "create" | "edit">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
   const [filter, setFilter] = useState<"all" | "open" | "closed">("all");
+  const [formError, setFormError] = useState<string | null>(null);
 
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
@@ -140,6 +159,7 @@ const AdminPoll = () => {
   const closeModal = () => {
     setModalMode("none");
     setActivePoll(null);
+    setFormError(null);
   };
 
   /* LOADING */
@@ -261,6 +281,17 @@ const AdminPoll = () => {
                 ))}
               </div>
 
+              <div className="mt-4 text-sm text-slate-500 space-y-1">
+                <div>
+                  <span className="font-semibold text-slate-700">Start:</span>{" "}
+                  {formatDateLabel(poll.startDate)}
+                </div>
+                <div>
+                  <span className="font-semibold text-slate-700">End:</span>{" "}
+                  {formatDateLabel(poll.endDate)}
+                </div>
+              </div>
+
               <div className="mt-6 flex justify-between items-center">
                 <div className="flex gap-3">
                   <button
@@ -320,15 +351,27 @@ const AdminPoll = () => {
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
+              const title = fd.get("title");
+              const description = fd.get("description");
+              const options = (fd.get("options") as string)
+                .split(",")
+                .map((o) => o.trim())
+                .filter(Boolean);
+              const startDate = fd.get("startDate") as string;
+              const endDate = fd.get("endDate") as string;
+
+              if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+                setFormError("Start date must be earlier than end date.");
+                return;
+              }
+
+              setFormError(null);
               saveMutation.mutate({
-                title: fd.get("title"),
-                description: fd.get("description"),
-                options: (fd.get("options") as string)
-                  .split(",")
-                  .map((o) => o.trim())
-                  .filter(Boolean),
-                startDate: fd.get("startDate"),
-                endDate: fd.get("endDate"),
+                title,
+                description,
+                options,
+                startDate,
+                endDate,
               });
             }}
             className="space-y-5"
@@ -384,6 +427,7 @@ const AdminPoll = () => {
                   name="startDate"
                   type="date"
                   required
+                  defaultValue={formatDateInputValue(activePoll?.startDate ?? null)}
                   className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
@@ -395,10 +439,17 @@ const AdminPoll = () => {
                   name="endDate"
                   type="date"
                   required
+                  defaultValue={formatDateInputValue(activePoll?.endDate ?? null)}
                   className="w-full border-2 p-4 rounded-xl outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
             </div>
+
+            {formError && (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {formError}
+              </div>
+            )}
 
             <button
               type="submit"
