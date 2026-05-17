@@ -1,9 +1,0 @@
-{
-  "name": "upvis",
-  "private": true,
-  "scripts": {
-    "dev": "powershell -ExecutionPolicy Bypass -File ./scripts/dev.ps1",
-    "dev:backend": "pnpm --dir backend dev",
-    "dev:frontend": "pnpm --dir frontend dev"
-  }
-}
