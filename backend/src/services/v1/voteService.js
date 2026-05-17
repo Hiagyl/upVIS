@@ -35,6 +35,26 @@ class VoteService {
     async getVoteByScholar(pollId, scholarId) {
         return await Vote.findOne({ pollId, scholarId });
     }
+
+    async changeVote(pollId, scholarId, newSelectedOption) {
+        // Delete the existing vote
+        const deleted = await Vote.findOneAndDelete({ pollId, scholarId });
+
+        if (!deleted) {
+            const error = new Error("No existing vote found to change");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        // Create the new vote
+        const newVote = await Vote.create({
+            pollId,
+            scholarId,
+            selectedOption: newSelectedOption,
+        });
+
+        return newVote;
+    }
 }
 
 module.exports = new VoteService();
