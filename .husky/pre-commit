@@ -1,2 +1,0 @@
-#!/bin/sh
-# cd backend && pnpm lint-staged --config ./package.json

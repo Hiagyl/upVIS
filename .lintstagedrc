@@ -1,6 +1,0 @@
-{
-  "backend/**/*.{js,ts}": [
-    "pnpm --dir backend eslint --fix",
-    "pnpm --dir backend prettier --write"
-  ]
-}
