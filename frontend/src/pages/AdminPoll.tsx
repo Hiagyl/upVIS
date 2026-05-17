@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import Sidebar from "../components/layout/Sidebar";
 import { pollService } from "../services/api";
 import {
@@ -118,6 +120,7 @@ const ResultsView = ({ pollId }: { pollId: string }) => {
 
 const AdminPoll = () => {
   const queryClient = useQueryClient();
+  const { toasts, removeToast, toast } = useToast();
 
   const [modalMode, setModalMode] = useState<"none" | "create" | "edit">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
@@ -126,6 +129,19 @@ const AdminPoll = () => {
 
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
+
+  // ── Confirm modal state ──
+  const [confirmState, setConfirmState] = useState<{
+    open: boolean;
+    mode: "delete" | "close" | null;
+    poll: Poll | null;
+  }>({ open: false, mode: null, poll: null });
+
+  const openConfirm = (mode: "delete" | "close", poll: Poll) =>
+    setConfirmState({ open: true, mode, poll });
+
+  const closeConfirm = () =>
+    setConfirmState({ open: false, mode: null, poll: null });
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
@@ -146,24 +162,61 @@ const AdminPoll = () => {
         : pollService.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["polls"] });
+      toast.success(
+        modalMode === "edit" ? "Poll Updated" : "Poll Created",
+        modalMode === "edit"
+          ? "The poll has been updated successfully."
+          : "Your new poll is now live.",
+      );
       closeModal();
+    },
+    onError: () => {
+      toast.error(
+        modalMode === "edit" ? "Update Failed" : "Creation Failed",
+        "Something went wrong. Please try again.",
+      );
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => pollService.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["polls"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["polls"] });
+      toast.success("Poll Deleted", "The poll has been permanently removed.");
+      closeConfirm();
+    },
+    onError: () => {
+      toast.error("Delete Failed", "Could not delete the poll. Try again.");
+      closeConfirm();
+    },
   });
 
   const closeMutation = useMutation({
     mutationFn: (id: string) => pollService.close(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["polls"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["polls"] });
+      toast.success("Poll Closed", "Voting has been disabled for this poll.");
+      closeConfirm();
+    },
+    onError: () => {
+      toast.error("Close Failed", "Could not close the poll. Try again.");
+      closeConfirm();
+    },
   });
 
   const closeModal = () => {
     setModalMode("none");
     setActivePoll(null);
     setFormError(null);
+  };
+
+  const handleConfirmAction = () => {
+    if (!confirmState.poll) return;
+    if (confirmState.mode === "delete") {
+      deleteMutation.mutate(confirmState.poll._id);
+    } else if (confirmState.mode === "close") {
+      closeMutation.mutate(confirmState.poll._id);
+    }
   };
 
   if (isLoading) {
@@ -221,24 +274,9 @@ const AdminPoll = () => {
         {/* SUMMARY CARDS */}
         <div className="grid grid-cols-3 gap-6 mb-10">
           {[
-            {
-              label: "Total Polls",
-              value: polls.length,
-              icon: <BarChart3 size={22} />,
-              accent: "slate",
-            },
-            {
-              label: "Open Polls",
-              value: openCount,
-              icon: <CheckCircle2 size={22} />,
-              accent: "amber",
-            },
-            {
-              label: "Closed Polls",
-              value: closedCount,
-              icon: <Lock size={22} />,
-              accent: "slate",
-            },
+            { label: "Total Polls", value: polls.length, icon: <BarChart3 size={22} />, accent: "slate" },
+            { label: "Open Polls", value: openCount, icon: <CheckCircle2 size={22} />, accent: "amber" },
+            { label: "Closed Polls", value: closedCount, icon: <Lock size={22} />, accent: "slate" },
           ].map(({ label, value, icon, accent }) => (
             <div
               key={label}
@@ -246,9 +284,7 @@ const AdminPoll = () => {
             >
               <div
                 className={`p-3 rounded-xl shadow-md ${
-                  accent === "amber"
-                    ? "bg-amber-500 text-white"
-                    : "bg-slate-900 text-amber-400"
+                  accent === "amber" ? "bg-amber-500 text-white" : "bg-slate-900 text-amber-400"
                 }`}
               >
                 {icon}
@@ -296,9 +332,7 @@ const AdminPoll = () => {
             <BarChart3 size={48} className="text-amber-300" />
             <p className="text-xl font-serif font-bold text-slate-400">No polls found</p>
             <p className="text-slate-400 text-sm">
-              {filter !== "all"
-                ? `No ${filter} polls at the moment.`
-                : "Create a poll to get started."}
+              {filter !== "all" ? `No ${filter} polls at the moment.` : "Create a poll to get started."}
             </p>
           </div>
         )}
@@ -310,7 +344,6 @@ const AdminPoll = () => {
               key={poll._id}
               className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-lg hover:border-amber-300 transition-all overflow-hidden"
             >
-              {/* Top accent bar */}
               <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
 
               <div className="p-6 space-y-4">
@@ -372,7 +405,7 @@ const AdminPoll = () => {
 
                     <button
                       title="Close poll"
-                      onClick={() => closeMutation.mutate(poll._id)}
+                      onClick={() => openConfirm("close", poll)}
                       disabled={poll.status === "closed"}
                       className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 disabled:opacity-30 transition-colors"
                     >
@@ -381,10 +414,7 @@ const AdminPoll = () => {
 
                     <button
                       title="Delete"
-                      onClick={() => {
-                        if (window.confirm("Delete this poll?"))
-                          deleteMutation.mutate(poll._id);
-                      }}
+                      onClick={() => openConfirm("delete", poll)}
                       className="p-2 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-500 transition-colors"
                     >
                       <Trash2 size={16} />
@@ -437,9 +467,7 @@ const AdminPoll = () => {
             className="space-y-5"
           >
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Title
-              </label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">Title</label>
               <input
                 name="title"
                 defaultValue={activePoll?.title}
@@ -450,9 +478,7 @@ const AdminPoll = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Description
-              </label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">Description</label>
               <textarea
                 name="description"
                 defaultValue={activePoll?.description}
@@ -464,8 +490,7 @@ const AdminPoll = () => {
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1">
-                Options{" "}
-                <span className="font-normal text-slate-400">(comma-separated)</span>
+                Options <span className="font-normal text-slate-400">(comma-separated)</span>
               </label>
               <input
                 name="options"
@@ -478,9 +503,7 @@ const AdminPoll = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">
-                  Start Date
-                </label>
+                <label className="block text-sm font-bold text-slate-700 mb-1">Start Date</label>
                 <input
                   name="startDate"
                   type="date"
@@ -490,9 +513,7 @@ const AdminPoll = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">
-                  End Date
-                </label>
+                <label className="block text-sm font-bold text-slate-700 mb-1">End Date</label>
                 <input
                   name="endDate"
                   type="date"
@@ -530,6 +551,25 @@ const AdminPoll = () => {
         >
           {selectedPoll && <ResultsView pollId={selectedPoll._id} />}
         </Modal>
+
+        {/* CONFIRM MODAL */}
+        <ConfirmModal
+          isOpen={confirmState.open}
+          onClose={closeConfirm}
+          onConfirm={handleConfirmAction}
+          isDestructive={confirmState.mode === "delete"}
+          isPending={deleteMutation.isPending || closeMutation.isPending}
+          title={confirmState.mode === "delete" ? "Delete Poll?" : "Close Poll?"}
+          message={
+            confirmState.mode === "delete"
+              ? `"${confirmState.poll?.title}" will be permanently removed and cannot be recovered.`
+              : `"${confirmState.poll?.title}" will be closed. Voting will be disabled and this cannot be undone.`
+          }
+          confirmLabel={confirmState.mode === "delete" ? "Delete Poll" : "Close Poll"}
+        />
+
+        {/* TOAST NOTIFICATIONS */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );

@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { scholarService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import Modal from "../components/shared/Modal";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import {
   GraduationCap,
   Edit2,
@@ -11,14 +13,24 @@ import {
   UserPlus,
   BookOpen,
   History,
-  Search, // Added Search icon
+  Search,
 } from "lucide-react";
 
 const ScholarsPage = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingScholar, setEditingScholar] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Added searchTerm state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // ── Confirm modal state ──────────────────────────────────────────────────
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    name: string;
+  }>({ isOpen: false, id: null, name: "" });
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["scholars"],
@@ -27,7 +39,15 @@ const ScholarsPage = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => scholarService.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["scholars"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scholars"] });
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.success("Scholar Removed", "The record has been struck from the directory.");
+    },
+    onError: () => {
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.error("Delete Failed", "Something went wrong. Please try again.");
+    },
   });
 
   const saveMutation = useMutation({
@@ -39,6 +59,15 @@ const ScholarsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["scholars"] });
       setIsModalOpen(false);
       setEditingScholar(null);
+      toast.success(
+        editingScholar ? "Profile Updated" : "Scholar Registered",
+        editingScholar
+          ? "The scholar's record has been successfully amended."
+          : "New scholar has been added to the directory."
+      );
+    },
+    onError: () => {
+      toast.error("Save Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -51,10 +80,10 @@ const ScholarsPage = () => {
 
   const scholars = data?.data || [];
 
-  // FILTER LOGIC: Matches name or student number
-  const filteredScholars = scholars.filter((s: any) =>
-    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.studentNumber?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredScholars = scholars.filter(
+    (s: any) =>
+      s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.studentNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -77,7 +106,6 @@ const ScholarsPage = () => {
           </div>
 
           <div className="flex gap-4">
-            {/* SEARCH INPUT: Styled to match DonorsPage */}
             <div className="relative group">
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors"
@@ -91,7 +119,6 @@ const ScholarsPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
             <button
               onClick={() => {
                 setEditingScholar(null);
@@ -107,10 +134,7 @@ const ScholarsPage = () => {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 gap-4 text-center">
-            <History
-              className="text-amber-500 animate-spin-reverse mb-2"
-              size={48}
-            />
+            <History className="text-amber-500 animate-spin-reverse mb-2" size={48} />
             <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">
               Consulting the Records...
             </p>
@@ -135,11 +159,7 @@ const ScholarsPage = () => {
                   <tr>
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
-                        <History
-                          size={48}
-                          strokeWidth={1.5}
-                          className="opacity-20"
-                        />
+                        <History size={48} strokeWidth={1.5} className="opacity-20" />
                         <p className="text-xl font-medium italic font-serif text-slate-500">
                           {searchTerm
                             ? `No records matching "${searchTerm}" found.`
@@ -167,7 +187,6 @@ const ScholarsPage = () => {
                           </span>
                         </div>
                       </td>
-
                       <td className="p-6">
                         <div className="flex items-center gap-3">
                           <div className="p-2.5 rounded-full border-2 bg-slate-100 border-slate-200 text-slate-400">
@@ -178,18 +197,17 @@ const ScholarsPage = () => {
                           </span>
                         </div>
                       </td>
-
                       <td className="p-6">
                         <span
-                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wide border-2 ${scholar.status === "Student"
+                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wide border-2 ${
+                            scholar.status === "Student"
                               ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                               : "bg-amber-50 border-amber-200 text-amber-700"
-                            }`}
+                          }`}
                         >
                           {scholar.status}
                         </span>
                       </td>
-
                       <td className="p-6">
                         <div className="flex justify-center gap-4">
                           <button
@@ -203,10 +221,13 @@ const ScholarsPage = () => {
                             <span>Edit</span>
                           </button>
                           <button
-                            onClick={() => {
-                              if (window.confirm("Strike this scholar from the active directory?"))
-                                deleteMutation.mutate(scholar._id);
-                            }}
+                            onClick={() =>
+                              setConfirmState({
+                                isOpen: true,
+                                id: scholar._id,
+                                name: scholar.name,
+                              })
+                            }
                             className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border-2 border-red-100 rounded-lg hover:bg-red-600 hover:text-white transition-all font-bold text-sm"
                           >
                             <Trash2 size={18} />
@@ -218,7 +239,6 @@ const ScholarsPage = () => {
                   ))
                 )}
               </tbody>
-
               <tfoot>
                 <tr>
                   <td colSpan={4}>
@@ -240,6 +260,7 @@ const ScholarsPage = () => {
           </div>
         )}
 
+        {/* ── Entry Form Modal ─────────────────────────────────────────────── */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -323,12 +344,31 @@ const ScholarsPage = () => {
                   <Loader2 size={24} className="animate-spin" />
                   <span>Processing...</span>
                 </div>
+              ) : editingScholar ? (
+                "Confirm Update"
               ) : (
-                editingScholar ? "Confirm Update" : "Confirm Registration"
+                "Confirm Registration"
               )}
             </button>
           </form>
         </Modal>
+
+        {/* ── Delete Confirm Modal ─────────────────────────────────────────── */}
+        <ConfirmModal
+          isOpen={confirmState.isOpen}
+          onClose={() => setConfirmState({ isOpen: false, id: null, name: "" })}
+          onConfirm={() => {
+            if (confirmState.id) deleteMutation.mutate(confirmState.id);
+          }}
+          title="Strike This Scholar?"
+          message={`${confirmState.name} will be permanently struck from the active directory. This action cannot be undone.`}
+          confirmLabel="Yes, Strike It"
+          isDestructive
+          isPending={deleteMutation.isPending}
+        />
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );

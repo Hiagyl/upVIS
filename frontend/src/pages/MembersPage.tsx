@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { memberService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import Modal from "../components/shared/Modal";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import {
   UserPlus,
   Edit2,
@@ -20,10 +22,17 @@ const MembersPage = () => {
   const [editingMember, setEditingMember] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const {
-    data: members,
-    isLoading,
-  } = useQuery({
+  // ── Confirm modal state ──────────────────────────────────────────────────
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    name: string;
+  }>({ isOpen: false, id: null, name: "" });
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
+
+  const { data: members, isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: memberService.getAll,
   });
@@ -32,6 +41,12 @@ const MembersPage = () => {
     mutationFn: (id: string) => memberService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.success("Member Removed", "The member has been removed from the roster.");
+    },
+    onError: () => {
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.error("Delete Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -42,13 +57,19 @@ const MembersPage = () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       setIsModalOpen(false);
       setEditingMember(null);
+      toast.success(
+        editingMember ? "Profile Updated" : "Member Registered",
+        editingMember
+          ? "The member's profile has been successfully amended."
+          : "New member has been added to the roster."
+      );
     },
     onError: (err: any) => {
       const errorMsg = err.response?.data?.error || "";
       if (errorMsg.includes("E11000")) {
-        alert("Database Error: This Member ID or Contact already exists.");
+        toast.error("Duplicate Entry", "This Member ID or Contact already exists.");
       } else {
-        alert("Failed to save member.");
+        toast.error("Save Failed", "Failed to save member. Please try again.");
       }
     },
   });
@@ -61,7 +82,7 @@ const MembersPage = () => {
   };
 
   const filteredMembers = members?.filter((m: any) =>
-    m.fullname.toLowerCase().includes(searchTerm.toLowerCase()),
+    m.fullname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -69,7 +90,6 @@ const MembersPage = () => {
       <Sidebar />
 
       <main className="flex-1 ml-72 p-12">
-        {/* Header Box: Consistent with Transactions */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
@@ -123,36 +143,21 @@ const MembersPage = () => {
         ) : (
           <div className="bg-white rounded-xl shadow-md border-2 border-slate-200 overflow-hidden">
             <table className="w-full text-left border-collapse">
-              {/* Header */}
               <thead className="bg-slate-900 text-slate-100 text-sm font-bold uppercase tracking-wide">
                 <tr>
                   <th className="p-6 border-b-2 border-slate-800">Full Name</th>
-                  <th className="p-6 border-b-2 border-slate-800">
-                    Contact Details
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800">
-                    Tenure Since
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800">
-                    Security Status
-                  </th>
-                  <th className="p-6 border-b-2 border-slate-800 text-center">
-                    Actions
-                  </th>
+                  <th className="p-6 border-b-2 border-slate-800">Contact Details</th>
+                  <th className="p-6 border-b-2 border-slate-800">Tenure Since</th>
+                  <th className="p-6 border-b-2 border-slate-800">Security Status</th>
+                  <th className="p-6 border-b-2 border-slate-800 text-center">Actions</th>
                 </tr>
               </thead>
-
-              {/* Body */}
               <tbody className="divide-y-2 divide-slate-100">
                 {filteredMembers?.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
-                        <History
-                          size={48}
-                          strokeWidth={1.5}
-                          className="opacity-20"
-                        />
+                        <History size={48} strokeWidth={1.5} className="opacity-20" />
                         <p className="text-xl font-medium italic font-serif text-slate-500">
                           The member directory is currently empty.
                         </p>
@@ -180,14 +185,11 @@ const MembersPage = () => {
                       </td>
                       <td className="p-6">
                         <span className="text-lg font-medium font-serif text-slate-500">
-                          {new Date(member.joinDate).toLocaleDateString(
-                            undefined,
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            },
-                          )}
+                          {new Date(member.joinDate).toLocaleDateString(undefined, {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
                         </span>
                       </td>
                       <td className="p-6">
@@ -214,22 +216,19 @@ const MembersPage = () => {
                               setIsModalOpen(true);
                             }}
                             className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-900 border-2 border-slate-200 rounded-lg hover:bg-white hover:border-amber-500 transition-all font-bold text-sm"
-                            title="Edit Member"
                           >
                             <Edit2 size={18} />
                             <span>Edit</span>
                           </button>
                           <button
-                            onClick={() => {
-                              if (
-                                confirm(
-                                  `Permanently remove ${member.fullname}?`,
-                                )
-                              )
-                                deleteMutation.mutate(member._id);
-                            }}
+                            onClick={() =>
+                              setConfirmState({
+                                isOpen: true,
+                                id: member._id,
+                                name: member.fullname,
+                              })
+                            }
                             className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border-2 border-red-100 rounded-lg hover:bg-red-600 hover:text-white transition-all font-bold text-sm"
-                            title="Remove Member"
                           >
                             <Trash2 size={18} />
                             <span>Remove</span>
@@ -240,8 +239,6 @@ const MembersPage = () => {
                   ))
                 )}
               </tbody>
-
-              {/* Footer (optional consistency) */}
               <tfoot>
                 <tr>
                   <td colSpan={5}>
@@ -263,6 +260,7 @@ const MembersPage = () => {
           </div>
         )}
 
+        {/* ── Member Form Modal ────────────────────────────────────────────── */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -316,9 +314,7 @@ const MembersPage = () => {
                 type="date"
                 defaultValue={
                   editingMember?.joinDate
-                    ? new Date(editingMember.joinDate)
-                        .toISOString()
-                        .split("T")[0]
+                    ? new Date(editingMember.joinDate).toISOString().split("T")[0]
                     : new Date().toISOString().split("T")[0]
                 }
                 className="w-full border-2 border-slate-100 rounded-xl p-4 text-xl outline-none focus:border-amber-500 bg-slate-50"
@@ -329,13 +325,28 @@ const MembersPage = () => {
               disabled={saveMutation.isPending}
               className="w-full bg-slate-900 text-white py-5 rounded-2xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl flex justify-center items-center gap-3 mt-4"
             >
-              {saveMutation.isPending && (
-                <Loader2 size={24} className="animate-spin" />
-              )}
+              {saveMutation.isPending && <Loader2 size={24} className="animate-spin" />}
               {editingMember ? "Confirm Update" : "Confirm Registration"}
             </button>
           </form>
         </Modal>
+
+        {/* ── Delete Confirm Modal ─────────────────────────────────────────── */}
+        <ConfirmModal
+          isOpen={confirmState.isOpen}
+          onClose={() => setConfirmState({ isOpen: false, id: null, name: "" })}
+          onConfirm={() => {
+            if (confirmState.id) deleteMutation.mutate(confirmState.id);
+          }}
+          title="Remove This Member?"
+          message={`${confirmState.name} will be permanently removed from the roster. This action cannot be undone.`}
+          confirmLabel="Yes, Remove"
+          isDestructive
+          isPending={deleteMutation.isPending}
+        />
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );
