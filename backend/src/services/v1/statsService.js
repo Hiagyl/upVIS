@@ -30,7 +30,8 @@ class StatsService {
       },
     ]);
 
-    const totalDonations = donations.length > 0 ? donations[0].total : 0;
+    const totalDonations =
+      donations.length > 0 ? Math.floor(donations[0].total / 1000) : 0;
 
     return {
       activeScholars,
