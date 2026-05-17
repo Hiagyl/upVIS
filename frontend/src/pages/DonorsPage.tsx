@@ -4,6 +4,8 @@ import { donorService, transactionService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import Modal from "../components/shared/Modal";
 import { reportService } from "../services/api";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import {
   Edit2,
   Trash2,
@@ -20,12 +22,19 @@ import {
 const DonorsPage = () => {
   const queryClient = useQueryClient();
 
-  // Donor modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonor, setEditingDonor] = useState<any>(null);
-
-  // Donation modal state
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
+
+  // ── Confirm modal state ──────────────────────────────────────────────────
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    name: string;
+  }>({ isOpen: false, id: null, name: "" });
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["donors"],
@@ -36,6 +45,12 @@ const DonorsPage = () => {
     mutationFn: (id: string) => donorService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["donors"] });
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.success("Donor Removed", "The donor has been permanently removed from the registry.");
+    },
+    onError: () => {
+      setConfirmState({ isOpen: false, id: null, name: "" });
+      toast.error("Delete Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -48,6 +63,15 @@ const DonorsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["donors"] });
       setIsModalOpen(false);
       setEditingDonor(null);
+      toast.success(
+        editingDonor ? "Profile Updated" : "Donor Registered",
+        editingDonor
+          ? "The donor's profile has been successfully updated."
+          : "New donor has been added to the registry."
+      );
+    },
+    onError: () => {
+      toast.error("Save Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -57,6 +81,10 @@ const DonorsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["donors"] });
       setIsDonationModalOpen(false);
+      toast.success("Donation Recorded", "The donation has been successfully added to the chronicle.");
+    },
+    onError: () => {
+      toast.error("Record Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -97,7 +125,6 @@ const DonorsPage = () => {
       <Sidebar />
       <main className="flex-1 ml-72 p-12">
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
-          {/* Left: Icon + Title */}
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400 shadow-xl">
               <Users size={32} />
@@ -112,7 +139,6 @@ const DonorsPage = () => {
             </div>
           </div>
 
-          {/* Right: Action Buttons */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => reportService.downloadMonthlyReport()}
@@ -147,7 +173,7 @@ const DonorsPage = () => {
               <div
                 key={i}
                 className="h-24 bg-white animate-pulse rounded-2xl border-2 border-amber-50"
-              ></div>
+              />
             ))}
           </div>
         ) : error ? (
@@ -210,10 +236,13 @@ const DonorsPage = () => {
                           <span>Edit</span>
                         </button>
                         <button
-                          onClick={() => {
-                            if (window.confirm(`Permanently remove ${donor.name}?`))
-                              deleteMutation.mutate(donor._id);
-                          }}
+                          onClick={() =>
+                            setConfirmState({
+                              isOpen: true,
+                              id: donor._id,
+                              name: donor.name,
+                            })
+                          }
                           className="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-700 border-2 border-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold"
                         >
                           <Trash2 size={18} />
@@ -257,7 +286,7 @@ const DonorsPage = () => {
           </div>
         )}
 
-        {/* --- DONOR REGISTRATION MODAL --- */}
+        {/* ── Donor Registration Modal ─────────────────────────────────────── */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -314,7 +343,7 @@ const DonorsPage = () => {
           </form>
         </Modal>
 
-        {/* --- ADD DONATION MODAL --- */}
+        {/* ── Add Donation Modal ───────────────────────────────────────────── */}
         <Modal
           isOpen={isDonationModalOpen}
           onClose={() => setIsDonationModalOpen(false)}
@@ -332,7 +361,6 @@ const DonorsPage = () => {
                 placeholder="e.g., Semester Tuition Grant"
               />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-lg font-bold text-slate-800 mb-2">
@@ -354,7 +382,6 @@ const DonorsPage = () => {
                 </div>
               </div>
             </div>
-
             <div>
               <label className="block text-lg font-bold text-slate-800 mb-2">
                 Donor Name
@@ -371,7 +398,6 @@ const DonorsPage = () => {
                 ))}
               </datalist>
             </div>
-
             <div>
               <label className="block text-lg font-bold text-slate-800 mb-2">
                 Allocation Category
@@ -383,7 +409,6 @@ const DonorsPage = () => {
                 placeholder="e.g., Medical Assistance"
               />
             </div>
-
             <button
               type="submit"
               disabled={donationMutation.isPending}
@@ -393,6 +418,23 @@ const DonorsPage = () => {
             </button>
           </form>
         </Modal>
+
+        {/* ── Delete Confirm Modal ─────────────────────────────────────────── */}
+        <ConfirmModal
+          isOpen={confirmState.isOpen}
+          onClose={() => setConfirmState({ isOpen: false, id: null, name: "" })}
+          onConfirm={() => {
+            if (confirmState.id) deleteMutation.mutate(confirmState.id);
+          }}
+          title="Remove This Donor?"
+          message={`${confirmState.name} will be permanently removed from the registry. This action cannot be undone.`}
+          confirmLabel="Yes, Remove"
+          isDestructive
+          isPending={deleteMutation.isPending}
+        />
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );

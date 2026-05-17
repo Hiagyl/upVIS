@@ -1,16 +1,28 @@
 import { useState } from "react";
+import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { transactionService } from "../services/api";
-import { donorService } from "../services/api";
+import { transactionService, donorService } from "../services/api";
 import Sidebar from "../components/layout/Sidebar";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Modal from "../components/shared/Modal";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import { PlusCircle, History, Receipt } from "lucide-react";
 
 const TransactionsPage = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [entryType, setEntryType] = useState("donation");
+
+  // ── Confirm modal state ──────────────────────────────────────────────────
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+  }>({ isOpen: false, id: null });
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["transactions"],
@@ -26,6 +38,12 @@ const TransactionsPage = () => {
     mutationFn: (id: string) => transactionService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      setConfirmState({ isOpen: false, id: null });
+      toast.success("Entry Deleted", "The record has been struck from the chronicle.");
+    },
+    onError: () => {
+      setConfirmState({ isOpen: false, id: null });
+      toast.error("Delete Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -38,37 +56,43 @@ const TransactionsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       setIsModalOpen(false);
       setEditingItem(null);
+      toast.success(
+        editingItem ? "Entry Updated" : "Entry Added",
+        editingItem
+          ? "The transaction has been successfully amended."
+          : "New transaction has been recorded in the chronicle."
+      );
+    },
+    onError: () => {
+      toast.error("Save Failed", "Something went wrong. Please try again.");
     },
   });
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
-  
-  const payload: any = {
-    description: formData.get("description"),
-    amount: Number(formData.get("amount")),
-    category: formData.get("category"),
-    type: formData.get("type"),
-    date: editingItem?.date || new Date().toISOString(),
-  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
 
-  if (formData.get("type") === "donation") {
-    const donorName = formData.get("donor") as string;
-    // Find the matching donor from the donors list
-    const matchedDonor = donors.find(
-      (d: any) => d.name.toLowerCase() === donorName.toLowerCase()
-    );
-
-    payload.donorInfo = {
-      name: matchedDonor?.name || donorName,
-      email: matchedDonor?.email || "",
+    const payload: any = {
+      description: formData.get("description"),
+      amount: Number(formData.get("amount")),
+      category: formData.get("category"),
+      type: formData.get("type"),
+      date: editingItem?.date || new Date().toISOString(),
     };
-  }
 
-  saveMutation.mutate(payload);
-};
-  const [entryType, setEntryType] = useState(editingItem?.type || "donation");
+    if (formData.get("type") === "donation") {
+      const donorName = formData.get("donor") as string;
+      const matchedDonor = donors.find(
+        (d: any) => d.name.toLowerCase() === donorName.toLowerCase()
+      );
+      payload.donorInfo = {
+        name: matchedDonor?.name || donorName,
+        email: matchedDonor?.email || "",
+      };
+    }
+
+    saveMutation.mutate(payload);
+  };
 
   const donors = donor?.data || [];
   const transactions = data?.data || [];
@@ -77,7 +101,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     <div className="flex bg-[#FAF9F6] min-h-screen">
       <Sidebar />
       <main className="flex-1 ml-72 p-12">
-        {/* Header: High Contrast Landmark */}
         <header className="mb-12 flex justify-between items-center bg-white p-10 rounded-2xl border-2 border-amber-100 shadow-sm">
           <div className="flex items-center gap-6">
             <div className="p-4 bg-slate-900 rounded-2xl text-amber-400">
@@ -96,6 +119,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           <button
             onClick={() => {
               setEditingItem(null);
+              setEntryType("donation");
               setIsModalOpen(true);
             }}
             className="flex items-center gap-3 bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg active:scale-95"
@@ -107,10 +131,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 gap-4 text-center">
-            <History
-              className="text-amber-500 animate-spin-reverse mb-2"
-              size={48}
-            />
+            <History className="text-amber-500 animate-spin-reverse mb-2" size={48} />
             <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">
               Consulting the Records...
             </p>
@@ -121,25 +142,20 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             {(error as any).message}
           </div>
         ) : (
-          /* Table rendered directly on the background without an extra nested container box */
           <TransactionTable
             transactions={transactions}
             onEdit={(t: any) => {
               setEditingItem(t);
+              setEntryType(t.type || "donation");
               setIsModalOpen(true);
             }}
             onDelete={(id: string) => {
-              if (
-                window.confirm(
-                  "Do you wish to strike this entry from the records?",
-                )
-              )
-                deleteMutation.mutate(id);
+              setConfirmState({ isOpen: true, id });
             }}
           />
         )}
 
-        {/* --- CHRONICLE ENTRY MODAL --- */}
+        {/* ── Entry Form Modal ─────────────────────────────────────────────── */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -158,7 +174,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 placeholder="e.g., Semester Tuition Grant"
               />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-lg font-bold text-slate-800 mb-2">
@@ -187,7 +202,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 </select>
               </div>
             </div>
-
             {entryType === "donation" && (
               <div>
                 <label className="block text-lg font-bold text-slate-800 mb-2">
@@ -207,7 +221,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 </datalist>
               </div>
             )}
-
             <div>
               <label className="block text-lg font-bold text-slate-800 mb-2">
                 Allocation Category
@@ -220,7 +233,6 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
                 placeholder="e.g., Medical Assistance"
               />
             </div>
-
             <button
               type="submit"
               disabled={saveMutation.isPending}
@@ -234,6 +246,23 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
             </button>
           </form>
         </Modal>
+
+        {/* ── Delete Confirm Modal ─────────────────────────────────────────── */}
+        <ConfirmModal
+          isOpen={confirmState.isOpen}
+          onClose={() => setConfirmState({ isOpen: false, id: null })}
+          onConfirm={() => {
+            if (confirmState.id) deleteMutation.mutate(confirmState.id);
+          }}
+          title="Strike This Entry?"
+          message="This transaction will be permanently removed from the chronicle. This action cannot be undone."
+          confirmLabel="Yes, Strike It"
+          isDestructive
+          isPending={deleteMutation.isPending}
+        />
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );

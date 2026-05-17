@@ -5,6 +5,8 @@ import Sidebar from "../components/layout/Sidebar";
 import SummaryCards from "../components/dashboard/SummaryCards";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Modal from "../components/shared/Modal";
+import ConfirmModal from "../components/shared/ConfirmModal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import { PlusCircle, Sun, LayoutDashboard } from "lucide-react";
 import { FileDown } from "lucide-react";
 import { reportService } from "../services/api";
@@ -15,13 +17,21 @@ const Dashboard = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [entryType, setEntryType] = useState("donation");
 
+  // ── Confirm modal state ──────────────────────────────────────────────────
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+  }>({ isOpen: false, id: null });
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["transactions"],
     queryFn: transactionService.getAll,
     refetchInterval: 30000,
   });
 
-  // Fetch donors for the datalist
   const { data: donorsData } = useQuery({
     queryKey: ["donors"],
     queryFn: () => fetch("/api/donors").then((res) => res.json()),
@@ -32,6 +42,12 @@ const Dashboard = () => {
     mutationFn: (id: string) => transactionService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      setConfirmState({ isOpen: false, id: null });
+      toast.success("Entry Deleted", "The transaction has been permanently removed.");
+    },
+    onError: () => {
+      setConfirmState({ isOpen: false, id: null });
+      toast.error("Delete Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -44,6 +60,15 @@ const Dashboard = () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       setIsModalOpen(false);
       setEditingItem(null);
+      toast.success(
+        editingItem ? "Entry Updated" : "Entry Added",
+        editingItem
+          ? "The transaction has been successfully amended."
+          : "New transaction has been recorded."
+      );
+    },
+    onError: () => {
+      toast.error("Save Failed", "Something went wrong. Please try again.");
     },
   });
 
@@ -55,9 +80,10 @@ const Dashboard = () => {
       amount: Number(formData.get("amount")),
       category: formData.get("category"),
       type: formData.get("type"),
-      donorInfo: entryType === "donation"
-        ? { name: formData.get("donor") }
-        : undefined,
+      donorInfo:
+        entryType === "donation"
+          ? { name: formData.get("donor") }
+          : undefined,
       date: editingItem?.date || new Date().toISOString(),
     };
     saveMutation.mutate(payload);
@@ -149,17 +175,13 @@ const Dashboard = () => {
               setIsModalOpen(true);
             }}
             onDelete={(id: string) => {
-              if (
-                window.confirm(
-                  "Are you sure you want to permanently remove this entry?",
-                )
-              )
-                deleteMutation.mutate(id);
+              // ── Open confirm modal instead of window.confirm ──
+              setConfirmState({ isOpen: true, id });
             }}
           />
         </div>
 
-        {/* --- CHRONICLE ENTRY MODAL --- */}
+        {/* ── Entry Form Modal ─────────────────────────────────────────────── */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -254,6 +276,23 @@ const Dashboard = () => {
             </button>
           </form>
         </Modal>
+
+        {/* ── Delete Confirm Modal ─────────────────────────────────────────── */}
+        <ConfirmModal
+          isOpen={confirmState.isOpen}
+          onClose={() => setConfirmState({ isOpen: false, id: null })}
+          onConfirm={() => {
+            if (confirmState.id) deleteMutation.mutate(confirmState.id);
+          }}
+          title="Delete Entry?"
+          message="This transaction will be permanently removed from the chronicle. This action cannot be undone."
+          confirmLabel="Yes, Delete"
+          isDestructive
+          isPending={deleteMutation.isPending}
+        />
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );

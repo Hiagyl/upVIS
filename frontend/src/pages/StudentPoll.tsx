@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../components/shared/Modal";
+import ToastContainer, { useToast } from "../components/shared/Toast";
 import { pollService, voteService } from "../services/api";
 import {
   Vote,
@@ -143,8 +144,8 @@ const VoteView = ({
   onToast,
 }: {
   poll: Poll;
-  onDone: (selectedOption: string) => void;
-  onToast: (toast: { type: "success" | "error"; message: string; isChange?: boolean }) => void;
+  onDone: () => void;
+  onToast: (type: "success" | "error", title: string, message?: string) => void;
 }) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -158,32 +159,26 @@ const VoteView = ({
   const voteMutation = useMutation({
     mutationFn: () => voteService.cast(poll._id, selected!),
     onSuccess: () => {
-      onDone(selected!);
-      onToast({
-        type: "success",
-        message: `Vote successfully submitted. Selected Option: ${selected}`,
-        isChange: false,
-      });
+      onToast("success", "Vote Submitted", `Your selection "${selected}" has been recorded.`);
+      onDone();
     },
     onError: (err: any) => {
-      setError(err instanceof Error ? err.message : "Failed to submit vote");
-      onToast({ type: "error", message: "Failed to submit vote" });
+      const msg = err instanceof Error ? err.message : "Failed to submit vote";
+      setError(msg);
+      onToast("error", "Submission Failed", msg);
     },
   });
 
   const changeVoteMutation = useMutation({
     mutationFn: () => voteService.changeVote(poll._id, selected!),
     onSuccess: () => {
-      onDone(selected!);
-      onToast({
-        type: "success",
-        message: `Vote changed successfully. New selection: ${selected}`,
-        isChange: true,
-      });
+      onToast("success", "Vote Changed", `Your vote has been updated to "${selected}".`);
+      onDone();
     },
     onError: (err: any) => {
-      setError(err instanceof Error ? err.message : "Failed to change vote");
-      onToast({ type: "error", message: "Failed to change vote" });
+      const msg = err instanceof Error ? err.message : "Failed to change vote";
+      setError(msg);
+      onToast("error", "Change Failed", msg);
     },
   });
 
@@ -206,18 +201,15 @@ const VoteView = ({
         {poll.description && (
           <p className="text-slate-500 font-medium italic">{poll.description}</p>
         )}
-
         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-5">
           <CheckCircle2 className="text-green-500 shrink-0" size={22} />
           <div>
             <p className="font-bold text-green-700">You've already voted</p>
             <p className="text-sm text-green-600">
-              Your response:{" "}
-              <span className="font-black">{currentVote}</span>
+              Your response: <span className="font-black">{currentVote}</span>
             </p>
           </div>
         </div>
-
         <button
           onClick={() => {
             setSelected(currentVote ?? null);
@@ -244,7 +236,8 @@ const VoteView = ({
           <RefreshCw size={15} className="text-amber-600 shrink-0" />
           <p className="text-sm font-semibold text-amber-700">
             You're changing your vote from{" "}
-            <span className="font-black">"{currentVote}"</span>. Select a new option below.
+            <span className="font-black">"{currentVote}"</span>. Select a new
+            option below.
           </p>
         </div>
       )}
@@ -292,7 +285,11 @@ const VoteView = ({
           onClick={() =>
             isChangingVote ? changeVoteMutation.mutate() : voteMutation.mutate()
           }
-          disabled={!selected || isPending || (isChangingVote && selected === currentVote)}
+          disabled={
+            !selected ||
+            isPending ||
+            (isChangingVote && selected === currentVote)
+          }
           className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl"
         >
           {isPending
@@ -334,12 +331,9 @@ const PollCard = ({
   onResults: (p: Poll) => void;
 }) => {
   const now = new Date();
-
   const start = new Date(poll.startDate);
   const end = new Date(poll.endDate);
-
   const isValidDates = !isNaN(start.getTime()) && !isNaN(end.getTime());
-
   const isVotable =
     poll.status?.toLowerCase() === "open" &&
     isValidDates &&
@@ -356,7 +350,6 @@ const PollCard = ({
   return (
     <div className="bg-white rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-md hover:border-amber-300 transition-all overflow-hidden">
       <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
-
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-serif font-black text-slate-900 text-xl leading-snug flex-1">
@@ -364,13 +357,11 @@ const PollCard = ({
           </h3>
           <StatusBadge poll={poll} />
         </div>
-
         {poll.description && (
           <p className="text-slate-500 text-sm leading-relaxed">
             {poll.description}
           </p>
         )}
-
         <div className="flex flex-wrap gap-2">
           {poll.options.map((opt) => (
             <span
@@ -381,12 +372,10 @@ const PollCard = ({
             </span>
           ))}
         </div>
-
         <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
           <Clock size={12} />
           {fmt(poll.startDate)} – {fmt(poll.endDate)}
         </div>
-
         <div className="pt-2 flex items-center gap-2 flex-wrap">
           {isVotable && (
             <button
@@ -416,11 +405,9 @@ const StudentPoll = () => {
   const [modalMode, setModalMode] = useState<"none" | "vote" | "results">("none");
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
   const [filter, setFilter] = useState<"all" | "open" | "closed">("all");
-  const [toast, setToast] = useState<{
-    type: "success" | "error";
-    message: string;
-    isChange?: boolean;
-  } | null>(null);
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  const { toasts, removeToast, toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["polls"],
@@ -431,12 +418,6 @@ const StudentPoll = () => {
     setModalMode("none");
     setActivePoll(null);
   };
-
-  useEffect(() => {
-    if (!toast) return;
-    const id = window.setTimeout(() => setToast(null), 3500);
-    return () => window.clearTimeout(id);
-  }, [toast]);
 
   const polls: Poll[] = data?.data || [];
 
@@ -490,7 +471,6 @@ const StudentPoll = () => {
               </p>
             </div>
           </div>
-
           <div className="flex items-center gap-4">
             <LogoutButton />
           </div>
@@ -499,24 +479,9 @@ const StudentPoll = () => {
         {/* ── Summary chips ── */}
         <div className="grid grid-cols-3 gap-6 mb-10">
           {[
-            {
-              label: "Total Polls",
-              value: polls.length,
-              icon: <BarChart3 size={22} />,
-              accent: "slate",
-            },
-            {
-              label: "Active Polls",
-              value: openCount,
-              icon: <CheckCircle2 size={22} />,
-              accent: "amber",
-            },
-            {
-              label: "Closed Polls",
-              value: closedCount,
-              icon: <Lock size={22} />,
-              accent: "slate",
-            },
+            { label: "Total Polls", value: polls.length, icon: <BarChart3 size={22} />, accent: "slate" },
+            { label: "Active Polls", value: openCount, icon: <CheckCircle2 size={22} />, accent: "amber" },
+            { label: "Closed Polls", value: closedCount, icon: <Lock size={22} />, accent: "slate" },
           ].map(({ label, value, icon, accent }) => (
             <div
               key={label}
@@ -532,9 +497,7 @@ const StudentPoll = () => {
                 {icon}
               </div>
               <div>
-                <p className="text-3xl font-serif font-black text-slate-900">
-                  {value}
-                </p>
+                <p className="text-3xl font-serif font-black text-slate-900">{value}</p>
                 <p className="text-sm text-slate-500 font-semibold">{label}</p>
               </div>
             </div>
@@ -564,77 +527,11 @@ const StudentPoll = () => {
           </div>
         </div>
 
-        {/* ── Toast ── */}
-        {toast && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4 animate-in fade-in duration-300">
-            <div
-              className={`relative w-full max-w-md overflow-hidden rounded-3xl border-2 bg-white shadow-2xl animate-in zoom-in-95 duration-300 ${
-                toast.type === "success" ? "border-amber-200" : "border-red-200"
-              }`}
-            >
-              <div
-                className={`h-2 w-full ${
-                  toast.type === "success"
-                    ? "bg-gradient-to-r from-amber-400 via-amber-500 to-slate-800"
-                    : "bg-gradient-to-r from-red-400 via-red-500 to-slate-800"
-                }`}
-              />
-
-              <div className="p-8 text-center">
-                <div
-                  className={`mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full shadow-lg ${
-                    toast.type === "success"
-                      ? "bg-amber-50 text-amber-500"
-                      : "bg-red-50 text-red-500"
-                  }`}
-                >
-                  {toast.type === "success" ? (
-                    toast.isChange ? (
-                      <RefreshCw size={42} />
-                    ) : (
-                      <CheckCircle2 size={42} />
-                    )
-                  ) : (
-                    <AlertCircle size={42} />
-                  )}
-                </div>
-
-                <h2 className="text-3xl font-serif font-black text-slate-900 mb-2">
-                  {toast.type === "success"
-                    ? toast.isChange
-                      ? "Vote Changed"
-                      : "Vote Submitted"
-                    : toast.isChange
-                    ? "Change Failed"
-                    : "Submission Failed"}
-                </h2>
-
-                <p className="text-slate-500 leading-relaxed font-medium text-base">
-                  {toast.message}
-                </p>
-
-                <button
-                  onClick={() => setToast(null)}
-                  className={`mt-8 w-full rounded-2xl py-4 text-lg font-black text-white transition-all shadow-lg active:scale-95 ${
-                    toast.type === "success"
-                      ? "bg-slate-900 hover:bg-amber-600"
-                      : "bg-red-500 hover:bg-red-600"
-                  }`}
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* ── Poll grid ── */}
         {filteredPolls.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border-2 border-dashed border-amber-200">
             <Vote size={48} className="text-amber-300" />
-            <p className="text-xl font-serif font-bold text-slate-400">
-              No polls found
-            </p>
+            <p className="text-xl font-serif font-bold text-slate-400">No polls found</p>
             <p className="text-slate-400 text-sm">
               {filter !== "all"
                 ? `No ${filter} polls at the moment.`
@@ -660,7 +557,7 @@ const StudentPoll = () => {
           </div>
         )}
 
-        {/* ── Modal ── */}
+        {/* ── Vote / Results Modal ─────────────────────────────────────────── */}
         <Modal
           isOpen={modalMode !== "none"}
           onClose={closeModal}
@@ -675,13 +572,16 @@ const StudentPoll = () => {
                 });
                 closeModal();
               }}
-              onToast={(message) => setToast(message)}
+              onToast={(type, title, message) => toast[type](title, message)}
             />
           )}
           {modalMode === "results" && activePoll && (
             <ResultsView pollId={activePoll._id} onClose={closeModal} />
           )}
         </Modal>
+
+        {/* ── Toast Notifications ──────────────────────────────────────────── */}
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </main>
     </div>
   );
