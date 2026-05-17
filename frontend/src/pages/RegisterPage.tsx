@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
 import { Sun, UserPlus } from "lucide-react";
+import logo from "../assets/logo.png";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -59,19 +60,25 @@ const RegisterPage = () => {
       {/* Register Card */}
       <div className="w-full max-w-md bg-white border-2 border-amber-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-10">
         {/* Header */}
-        <div className="flex flex-col items-center mb-10 text-center">
-          <div className="p-4 bg-amber-100 text-amber-700 rounded-xl mb-4">
-            <Sun size={32} />
-          </div>
+<div className="flex flex-col items-center mb-10 text-center">
+  {/* Logo */}
+  <div className="w-24 h-24 mb-4">
+    <img
+      src={logo}
+      alt="UPVIS Logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
 
-          <h1 className="text-3xl font-serif font-black text-slate-900 tracking-tight">
-            Sign up
-          </h1>
+  {/* Title */}
+  <h1 className="text-3xl font-serif font-black text-slate-900 tracking-tight">
+    Sign up
+  </h1>
 
-          <p className="text-slate-500 mt-2 font-medium">
-            Welcome. Register to access UPVis.
-          </p>
-        </div>
+  <p className="text-slate-500 mt-2 font-medium">
+    Welcome. Register to access upVIS.
+  </p>
+</div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">

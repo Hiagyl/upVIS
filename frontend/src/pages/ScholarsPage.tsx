@@ -250,7 +250,7 @@ const ScholarsPage = () => {
                         </p>
                       </div>
                       <p className="text-xs text-slate-400 italic font-serif">
-                        "Behold the light that leads the way."
+                        "From a little spark may burst a flame."
                       </p>
                     </div>
                   </td>

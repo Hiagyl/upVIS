@@ -2,6 +2,7 @@ import { useEffect, useState ,useRef} from "react";
 import photo1 from '../assets/photo1.jpg';
 import photo6 from '../assets/photo6.jpg';
 import photo7 from '../assets/photo7.jpg';
+import logo from '../assets/logo.png';
 import { useNavigate } from "react-router-dom";
 import { authService, statsService} from "../services/api";
 
@@ -132,7 +133,20 @@ const LandingPage = () => {
     <div className="min-h-screen bg-[#FAF9F6] text-slate-900">
       {/* NAVBAR */}
       <nav className="sticky top-0 bg-[#FAF9F6]/90 backdrop-blur z-50 flex items-center justify-between px-12 py-6 max-w-7xl mx-auto">
-        <h1 className="text-xl font-serif font-black tracking-wide">UPVIS</h1>
+        <div
+  onClick={() => scrollToSection("home")}
+  className="flex items-center gap-3 cursor-pointer"
+>
+  <img
+    src={logo}
+    alt="UPVIS Logo"
+    className="w-10 h-10 object-contain"
+  />
+
+  <h1 className="text-xl font-serif font-black tracking-wide">
+    UPVIS
+  </h1>
+</div>
 
         <div className="hidden md:flex items-center gap-8 font-semibold">
           {sections.map((sec) => (
