@@ -224,7 +224,7 @@ const AdminPoll = () => {
       <div className="flex h-screen items-center justify-center bg-[#FAF9F6] ml-72">
         <div className="flex flex-col items-center gap-4">
           <Sun className="text-amber-500 animate-spin" size={48} />
-          <div className="text-2xl font-serif font-bold text-slate-700">
+          <div className="text-2xl font-sans font-bold text-slate-700">
             Loading Polls…
           </div>
         </div>
@@ -253,10 +253,10 @@ const AdminPoll = () => {
               <BarChart size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                 Poll Management
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 Manage polls, responses, and voting history.
               </p>
             </div>
@@ -290,7 +290,7 @@ const AdminPoll = () => {
                 {icon}
               </div>
               <div>
-                <p className="text-3xl font-serif font-black text-slate-900">{value}</p>
+                <p className="text-3xl font-sans font-bold text-slate-900">{value}</p>
                 <p className="text-sm text-slate-500 font-semibold">{label}</p>
               </div>
             </div>
@@ -301,7 +301,7 @@ const AdminPoll = () => {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <div className="h-8 w-1.5 bg-amber-500 rounded-full" />
-            <h2 className="text-2xl font-serif font-black text-slate-900 uppercase tracking-wide">
+            <h2 className="text-2xl font-sans font-bold text-slate-900 uppercase tracking-wide">
               Poll Records
             </h2>
           </div>
@@ -330,7 +330,7 @@ const AdminPoll = () => {
         {filteredPolls.length === 0 && (
           <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border-2 border-dashed border-amber-200">
             <BarChart3 size={48} className="text-amber-300" />
-            <p className="text-xl font-serif font-bold text-slate-400">No polls found</p>
+            <p className="text-xl font-sans font-bold text-slate-400">No polls found</p>
             <p className="text-slate-400 text-sm">
               {filter !== "all" ? `No ${filter} polls at the moment.` : "Create a poll to get started."}
             </p>
@@ -348,7 +348,7 @@ const AdminPoll = () => {
 
               <div className="p-6 space-y-4">
                 <div className="flex justify-between items-start gap-2">
-                  <h2 className="font-serif font-black text-slate-900 text-lg leading-snug flex-1">
+                  <h2 className="font-sans font-bold text-slate-900 text-lg leading-snug flex-1">
                     {poll.title}
                   </h2>
                   <span

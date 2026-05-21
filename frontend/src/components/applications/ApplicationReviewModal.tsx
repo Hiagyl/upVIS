@@ -66,7 +66,7 @@ const ApplicationReviewModal = ({
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[1.75rem] border-2 border-amber-100 bg-[#FAF9F6] p-6 shadow-[0_24px_60px_rgba(0,0,0,0.25)] sm:p-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-serif font-black text-slate-900">
+            <h2 className="text-3xl font-sans font-black text-slate-900">
               Review Application
             </h2>
             <p className="mt-1 text-sm text-slate-500">

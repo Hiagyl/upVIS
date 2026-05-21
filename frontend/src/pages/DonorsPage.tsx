@@ -130,10 +130,10 @@ const DonorsPage = () => {
               <Users size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                 Donors
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 Tracking the generosity that powers our programs.
               </p>
             </div>
@@ -183,7 +183,7 @@ const DonorsPage = () => {
         ) : (
           <div className="bg-white rounded-xl shadow-md border-2 border-slate-200 overflow-hidden">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-900 text-slate-100 text-sm font-black uppercase tracking-widest">
+              <thead className="bg-slate-900 text-slate-100 text-sm font-bold uppercase tracking-widest">
                 <tr>
                   <th className="p-6 border-b-2 border-slate-800">Donor Name</th>
                   <th className="p-6 border-b-2 border-slate-800">Contact Information</th>
@@ -199,7 +199,7 @@ const DonorsPage = () => {
                         <div className="p-3 bg-amber-100 rounded-full text-amber-700">
                           <Heart size={20} fill="currentColor" />
                         </div>
-                        <span className="text-xl font-bold text-slate-900 font-serif">
+                        <span className="text-xl font-bold text-slate-900 font-sans">
                           {donor.name}
                         </span>
                       </div>
@@ -257,7 +257,7 @@ const DonorsPage = () => {
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
                         <History size={48} strokeWidth={1.5} className="opacity-20" />
-                        <p className="text-xl font-medium italic font-serif text-slate-500">
+                        <p className="text-xl font-medium italic font-sans text-slate-500">
                           The donor directory is currently empty.
                         </p>
                       </div>
@@ -271,11 +271,11 @@ const DonorsPage = () => {
                     <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">
                           upVIS
                         </p>
                       </div>
-                      <p className="text-xs text-slate-400 italic font-serif">
+                      <p className="text-xs text-slate-400 italic font-sans">
                         "From a little spark may burst a flame."
                       </p>
                     </div>
@@ -332,7 +332,7 @@ const DonorsPage = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
                 ? "Loading..."
@@ -412,7 +412,7 @@ const DonorsPage = () => {
             <button
               type="submit"
               disabled={donationMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {donationMutation.isPending ? "Recording..." : "Add Donation"}
             </button>

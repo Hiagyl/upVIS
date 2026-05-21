@@ -96,10 +96,10 @@ const MembersPage = () => {
               <ShieldCheck size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                 Organization Roster
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 Managing the hands that build our community.
               </p>
             </div>
@@ -158,7 +158,7 @@ const MembersPage = () => {
                     <td colSpan={5} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
                         <History size={48} strokeWidth={1.5} className="opacity-20" />
-                        <p className="text-xl font-medium italic font-serif text-slate-500">
+                        <p className="text-xl font-medium italic font-sans text-slate-500">
                           The member directory is currently empty.
                         </p>
                       </div>
@@ -171,7 +171,7 @@ const MembersPage = () => {
                       className="hover:bg-slate-50 transition-colors group"
                     >
                       <td className="p-6">
-                        <span className="text-lg font-bold font-serif text-slate-900">
+                        <span className="text-lg font-bold font-sans text-slate-900">
                           {member.fullname}
                         </span>
                       </td>
@@ -184,7 +184,7 @@ const MembersPage = () => {
                         </div>
                       </td>
                       <td className="p-6">
-                        <span className="text-lg font-medium font-serif text-slate-500">
+                        <span className="text-lg font-medium font-sans text-slate-500">
                           {new Date(member.joinDate).toLocaleDateString(undefined, {
                             year: "numeric",
                             month: "long",
@@ -194,7 +194,7 @@ const MembersPage = () => {
                       </td>
                       <td className="p-6">
                         <span
-                          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${
+                          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${
                             member.status === "active"
                               ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
                               : "bg-amber-100 text-amber-700 border border-amber-200"
@@ -245,11 +245,11 @@ const MembersPage = () => {
                     <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">
                           upVIS
                         </p>
                       </div>
-                      <p className="text-xs text-slate-400 italic font-serif">
+                      <p className="text-xs text-slate-400 italic font-sans">
                         "From a little spark may burst a flame."
                       </p>
                     </div>
@@ -268,20 +268,20 @@ const MembersPage = () => {
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
-              <label className="block text-sm font-black uppercase tracking-widest text-slate-500 mb-2">
+              <label className="block text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">
                 Full Legal Name
               </label>
               <input
                 name="fullname"
                 defaultValue={editingMember?.fullname}
                 required
-                className="w-full border-2 border-slate-100 rounded-xl p-4 text-xl outline-none focus:border-amber-500 bg-slate-50 transition-all font-serif"
+                className="w-full border-2 border-slate-100 rounded-xl p-4 text-xl outline-none focus:border-amber-500 bg-slate-50 transition-all font-sans"
                 placeholder="e.g., Juan Dela Cruz"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-black uppercase tracking-widest text-slate-500 mb-2">
+                <label className="block text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">
                   Primary Contact No.
                 </label>
                 <input
@@ -292,7 +292,7 @@ const MembersPage = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-black uppercase tracking-widest text-slate-500 mb-2">
+                <label className="block text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">
                   Access Status
                 </label>
                 <select
@@ -306,7 +306,7 @@ const MembersPage = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-black uppercase tracking-widest text-slate-500 mb-2">
+              <label className="block text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">
                 Official Join Date
               </label>
               <input
@@ -323,7 +323,7 @@ const MembersPage = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-2xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl flex justify-center items-center gap-3 mt-4"
+              className="w-full bg-slate-900 text-white py-5 rounded-2xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl flex justify-center items-center gap-3 mt-4"
             >
               {saveMutation.isPending && <Loader2 size={24} className="animate-spin" />}
               {editingMember ? "Confirm Update" : "Confirm Registration"}

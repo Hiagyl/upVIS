@@ -25,7 +25,7 @@ const ApplicationSuccessState = ({
               <CheckCircle2 size={16} />
               Application Received
             </div>
-            <h3 className="mt-4 font-serif text-3xl font-black text-slate-900">
+            <h3 className="mt-4 font-sans text-3xl font-black text-slate-900">
               {applicationTitle}
             </h3>
             <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">

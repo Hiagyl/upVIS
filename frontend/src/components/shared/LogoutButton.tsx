@@ -28,7 +28,7 @@ const LogoutButton = () => {
             <span className="text-slate-400 group-hover:text-red-500 transition-colors">
                 <LogOut size={20} />
             </span>
-            <span className="text-base font-semibold font-serif tracking-wide text-slate-600 group-hover:text-red-600 transition-colors">
+            <span className="text-base font-semibold font-sans tracking-wide text-slate-600 group-hover:text-red-600 transition-colors">
                 {loading ? "Logging out..." : "Logout"}
             </span>
         </button>

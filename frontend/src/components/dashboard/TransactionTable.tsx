@@ -56,7 +56,7 @@ const TransactionTable = ({
               <td colSpan={6} className="p-20 text-center">
                 <div className="flex flex-col items-center gap-4 text-slate-400">
                   <History size={48} strokeWidth={1.5} className="opacity-20" />
-                  <p className="text-xl font-medium italic font-serif text-slate-500">
+                  <p className="text-xl font-medium italic font-sans text-slate-500">
                     The ledger is currently empty.
                   </p>
                 </div>
@@ -92,7 +92,7 @@ const TransactionTable = ({
                         <ArrowDownLeft size={20} />
                       )}
                     </div>
-                    <span className="text-lg font-bold text-slate-900 font-serif">
+                    <span className="text-lg font-bold text-slate-900 font-sans">
                       {t.description}
                     </span>
                   </div>
@@ -155,7 +155,7 @@ const TransactionTable = ({
             upVIS
           </p>
         </div>
-        <p className="text-xs text-slate-400 italic font-serif">
+        <p className="text-xs text-slate-400 italic font-sans">
           "From a little spark may burst a flame."
         </p>
       </div>

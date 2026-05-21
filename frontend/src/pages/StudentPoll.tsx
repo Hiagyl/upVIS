@@ -128,7 +128,7 @@ const ResultsView = ({
 
       <button
         onClick={onClose}
-        className="w-full bg-slate-900 text-white py-4 rounded-xl text-lg font-black hover:bg-amber-600 transition-all shadow-lg"
+        className="w-full bg-slate-900 text-white py-4 rounded-xl text-lg font-bold hover:bg-amber-600 transition-all shadow-lg"
       >
         Close
       </button>
@@ -199,14 +199,14 @@ const VoteView = ({
     return (
       <div className="p-2 space-y-5">
         {poll.description && (
-          <p className="text-slate-500 font-medium italic">{poll.description}</p>
+          <p className="text-slate-500 font-medium">{poll.description}</p>
         )}
         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-5">
           <CheckCircle2 className="text-green-500 shrink-0" size={22} />
           <div>
             <p className="font-bold text-green-700">You've already voted</p>
             <p className="text-sm text-green-600">
-              Your response: <span className="font-black">{currentVote}</span>
+              Your response: <span className="font-bold">{currentVote}</span>
             </p>
           </div>
         </div>
@@ -228,7 +228,7 @@ const VoteView = ({
   return (
     <div className="p-2 space-y-5">
       {poll.description && (
-        <p className="text-slate-500 font-medium italic">{poll.description}</p>
+        <p className="text-slate-500 font-medium">{poll.description}</p>
       )}
 
       {isChangingVote && (
@@ -236,7 +236,7 @@ const VoteView = ({
           <RefreshCw size={15} className="text-amber-600 shrink-0" />
           <p className="text-sm font-semibold text-amber-700">
             You're changing your vote from{" "}
-            <span className="font-black">"{currentVote}"</span>. Select a new
+            <span className="font-bold">"{currentVote}"</span>. Select a new
             option below.
           </p>
         </div>
@@ -290,7 +290,7 @@ const VoteView = ({
             isPending ||
             (isChangingVote && selected === currentVote)
           }
-          className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl"
+          className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl"
         >
           {isPending
             ? isChangingVote
@@ -352,7 +352,7 @@ const PollCard = ({
       <div className="h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-amber-400" />
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-serif font-black text-slate-900 text-xl leading-snug flex-1">
+          <h3 className="font-sans font-bold text-slate-900 text-xl leading-snug flex-1">
             {poll.title}
           </h3>
           <StatusBadge poll={poll} />
@@ -440,7 +440,7 @@ const StudentPoll = () => {
       <div className="flex h-screen items-center justify-center bg-[#FAF9F6]">
         <div className="flex flex-col items-center gap-4">
           <Sun className="text-amber-500 animate-spin" size={48} />
-          <div className="text-2xl font-serif font-bold text-slate-700">
+          <div className="text-2xl font-sans font-bold text-slate-700">
             Loading Polls…
           </div>
         </div>
@@ -463,10 +463,10 @@ const StudentPoll = () => {
               <Vote size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                 Scholar Polls
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 Vote on active polls and view community results.
               </p>
             </div>
@@ -477,7 +477,7 @@ const StudentPoll = () => {
         </header>
 
         {/* ── Summary chips ── */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-3 gap-6 mb-10 px-4 text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-3">
           {[
             { label: "Total Polls", value: polls.length, icon: <BarChart3 size={22} />, accent: "slate" },
             { label: "Active Polls", value: openCount, icon: <CheckCircle2 size={22} />, accent: "amber" },
@@ -497,7 +497,7 @@ const StudentPoll = () => {
                 {icon}
               </div>
               <div>
-                <p className="text-3xl font-serif font-black text-slate-900">{value}</p>
+                <p className="text-3xl font-sans font-bold text-slate-900">{value}</p>
                 <p className="text-sm text-slate-500 font-semibold">{label}</p>
               </div>
             </div>
@@ -507,7 +507,7 @@ const StudentPoll = () => {
         {/* ── Filter tabs ── */}
         <div className="flex items-center gap-4 mb-6">
           <div className="h-8 w-1.5 bg-amber-500 rounded-full" />
-          <h2 className="text-2xl font-serif font-black text-slate-900 uppercase tracking-wide">
+          <h2 className="text-2xl font-sans font-bold text-slate-900 uppercase tracking-wide">
             All Polls
           </h2>
           <div className="ml-auto flex gap-2">
@@ -531,7 +531,7 @@ const StudentPoll = () => {
         {filteredPolls.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border-2 border-dashed border-amber-200">
             <Vote size={48} className="text-amber-300" />
-            <p className="text-xl font-serif font-bold text-slate-400">No polls found</p>
+            <p className="text-xl font-sans font-bold text-slate-400">No polls found</p>
             <p className="text-slate-400 text-sm">
               {filter !== "all"
                 ? `No ${filter} polls at the moment.`

@@ -102,7 +102,7 @@ const Dashboard = () => {
       <div className="flex h-screen items-center justify-center bg-[#FAF9F6] ml-72">
         <div className="flex flex-col items-center gap-4">
           <Sun className="text-amber-500 animate-spin" size={48} />
-          <div className="text-2xl font-serif font-bold text-slate-700">
+          <div className="text-2xl font-sans font-bold text-slate-700">
             Updating the Transaction History...
           </div>
         </div>
@@ -136,10 +136,10 @@ const Dashboard = () => {
               <LayoutDashboard size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                 Dashboard
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 Financial overview of our organization.
               </p>
             </div>
@@ -172,7 +172,7 @@ const Dashboard = () => {
         <div className="mt-16">
           <div className="flex items-center gap-4 mb-6">
             <div className="h-8 w-1.5 bg-amber-500 rounded-full"></div>
-            <h2 className="text-2xl font-serif font-black text-slate-900 uppercase tracking-wide">
+            <h2 className="text-2xl font-sans font-bold text-slate-900 uppercase tracking-wide">
               Recent Transaction Entries
             </h2>
           </div>
@@ -300,7 +300,7 @@ const Dashboard = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
                 ? "Updating the Chronicle..."

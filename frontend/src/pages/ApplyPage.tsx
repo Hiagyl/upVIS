@@ -38,7 +38,7 @@ const ApplyPage = () => {
   />
 
   <div className="flex flex-col items-start">
-    <span className="text-xl font-serif font-black tracking-wide text-slate-900">
+    <span className="text-xl font-sans font-bold tracking-wide text-slate-900">
       UP<span className="text-amber-600">VIS</span>
     </span>
 
@@ -73,7 +73,7 @@ const ApplyPage = () => {
               <span className="inline-flex rounded-full bg-amber-100 px-4 py-1 text-sm font-semibold text-amber-700">
                 Application Portal
               </span>
-              <h1 className="mt-4 font-serif text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+              <h1 className="mt-4 font-sans text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
                 Apply to upVIS
               </h1>
               <p className="mt-4 max-w-2xl text-base text-slate-600 sm:text-lg">
@@ -101,7 +101,7 @@ const ApplyPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-300">
               upVIS
             </p>
-            <h2 className="mt-4 font-serif text-3xl font-black leading-tight sm:text-4xl">
+            <h2 className="mt-4 font-sans text-3xl font-bold leading-tight sm:text-4xl">
               Start your application with the right path.
             </h2>
             <p className="mt-4 text-base text-amber-100 sm:text-lg">

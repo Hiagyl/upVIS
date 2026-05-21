@@ -143,7 +143,7 @@ const LandingPage = () => {
     className="w-10 h-10 object-contain"
   />
 
-  <h1 className="text-xl font-serif font-black tracking-wide">
+  <h1 className="text-xl font-sans font-black tracking-wide">
     UPVIS
   </h1>
 </div>
@@ -191,7 +191,7 @@ const LandingPage = () => {
         className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-28 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center"
       >
         <div>
-          <h1 className="text-5xl md:text-6xl font-serif font-black leading-tight mb-6">
+          <h1 className="text-5xl md:text-6xl font-sans font-black leading-tight mb-6">
             Change a Life.
             <br />
             <span className="text-amber-500">Support an Iskolar.</span>
@@ -204,15 +204,8 @@ const LandingPage = () => {
 
           <div className="flex gap-4">
             <button
-              onClick={() => navigate("/register")}
-              className="bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition hover:scale-105"
-            >
-              Donate Now
-            </button>
-
-            <button
               onClick={() => scrollToSection("about")}
-              className="border-2 border-slate-300 px-8 py-4 rounded-xl font-semibold hover:bg-slate-100 transition"
+              className="bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition hover:scale-105"
             >
               Learn More
             </button>
@@ -230,16 +223,13 @@ const LandingPage = () => {
               alt="picture of upVIS"
               className="w-full h-full object-cover rounded-3xl"
             ></img>
-            <p className="mt-2 text-sm text-slate-500 italic text-center">
-              Photo credit:
-              https://www.facebook.com/profile.php?id=61554691509677
-            </p>
+            <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
           </div>
         </div>
       </section>
 
       {/* STATS */}
-      <section className="fade-in opacity-0 translate-y-6 transition-all duration-700 relative max-w-7xl mx-auto -mt-[95px] z-10 px-12 mb-20">
+      <section className="fade-in opacity-0 translate-y-6 transition-all duration-700 relative max-w-7xl mx-auto -mt-[50px] z-10 px-12 mb-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white border-2 border-amber-100 rounded-2xl px-6 py-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
             <div className="text-2xl mb-2">👥</div>
@@ -280,13 +270,11 @@ const LandingPage = () => {
             alt="Photo of Students accepting donations"
             className="w-full h-full object-cover rounded-3xl"
           ></img>
-          <p>
-            Photo credit: https://www.facebook.com/profile.php?id=61554691509677
-          </p>
+        <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
         </div>
 
         <div>
-          <h2 className="text-4xl font-serif font-black mb-6">
+          <h2 className="text-4xl font-sans font-black mb-6">
             What is UPVIS?
           </h2>
 
@@ -320,7 +308,7 @@ const LandingPage = () => {
         id="help"
         className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-28 max-w-7xl mx-auto text-center"
       >
-        <h2 className="text-4xl font-serif font-black mb-4">
+        <h2 className="text-4xl font-sans font-black mb-4">
           How You Can Help
         </h2>
 
@@ -335,7 +323,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Give any amount to support UPVIS scholars.
             </p>
-            <span className="text-amber-600 font-semibold">Donate Now →</span>
           </div>
 
           <div className="bg-white p-8 rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
@@ -344,7 +331,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Help us reach more donors by sharing the platform.
             </p>
-            <span className="text-amber-600 font-semibold">Share Now →</span>
           </div>
 
           <div className="bg-white p-8 rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
@@ -353,9 +339,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Join our team in packing and preparing support for scholars.
             </p>
-            <span className="text-amber-600 font-semibold">
-              Join as Volunteer →
-            </span>
           </div>
         </div>
       </section>
@@ -371,13 +354,11 @@ const LandingPage = () => {
             alt="Photo of Students accepting donations"
             className="w-full h-full object-cover rounded-3xl"
           ></img>
-          <p>
-            Photo credit: https://www.facebook.com/profile.php?id=61554691509677
-          </p>
+        <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
         </div>
 
         <div>
-          <h2 className="text-3xl font-serif font-black mb-4">
+          <h2 className="text-3xl font-sans font-black mb-4">
             Meet a UPVIS Scholar
           </h2>
 
@@ -385,13 +366,6 @@ const LandingPage = () => {
             “Because of donors like you, I can continue my studies. Your support
             helps me focus on my dreams.”
           </p>
-
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-amber-600 transition"
-          >
-            Help a Scholar
-          </button>
         </div>
       </section>
 
@@ -401,7 +375,7 @@ const LandingPage = () => {
         className="fade-in opacity-0 translate-y-6 transition-all duration-700 px-12 py-28 bg-white"
       >
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-serif font-black mb-6">
+          <h2 className="text-4xl md:text-5xl font-sans font-black mb-6">
             Get in Touch
           </h2>
 
@@ -420,7 +394,7 @@ const LandingPage = () => {
             <div className="bg-[#FAF9F6] border-2 border-amber-100 rounded-2xl p-6">
               <div className="text-3xl mb-3">📱</div>
               <h3 className="font-bold text-lg mb-1">Message Us</h3>
-              <p className="text-sm text-slate-500">Facebook / Messenger</p>
+              <p className="text-sm text-slate-500">UPV Virgils (Facebook)</p>
             </div>
 
             <div className="bg-[#FAF9F6] border-2 border-amber-100 rounded-2xl p-6">
@@ -429,20 +403,13 @@ const LandingPage = () => {
               <p className="text-sm text-slate-500">UP Visayas, Iloilo</p>
             </div>
           </div>
-
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition"
-          >
-            Contact Us
-          </button>
         </div>
       </section>
 
       {/* FINAL CTA */}
       <section className="fade-in opacity-0 translate-y-6 transition-all duration-700 relative py-20 px-12 bg-slate-900 text-white overflow-hidden">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif font-black leading-tight mb-5">
+          <h2 className="text-3xl md:text-4xl font-sans font-black leading-tight mb-5">
             Be the Reason Someone
             <br />
             <span className="text-amber-300">Stays in School</span>
@@ -452,22 +419,6 @@ const LandingPage = () => {
             Your donation helps students continue their education and build a
             better future.
           </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <button
-              onClick={() => navigate("/register")}
-              className="bg-white text-slate-900 px-6 py-3 rounded-xl font-bold shadow-md hover:bg-amber-100 transition"
-            >
-              Start Donating
-            </button>
-
-            <button
-              onClick={() => scrollToSection("about")}
-              className="border border-white/50 px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition"
-            >
-              Learn More
-            </button>
-          </div>
 
           <p className="text-sm text-amber-100/80 mt-5">
             ✔ 100% Transparency • ✔ Verified Scholars • ✔ Real Impact

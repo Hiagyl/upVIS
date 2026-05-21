@@ -65,7 +65,7 @@ const Sidebar = () => {
 
     {/* Brand Text */}
     <div className="flex flex-col">
-      <span className="text-2xl font-serif font-black tracking-tight text-slate-900 leading-none">
+      <span className="text-2xl font-sans font-black tracking-tight text-slate-900 leading-none">
         UP<span className="text-amber-600">VIS</span>
       </span>
 
@@ -107,7 +107,7 @@ const Sidebar = () => {
 
               <span
                 className={`text-base tracking-wide ${
-                  isActive ? "font-bold" : "font-semibold font-serif"
+                  isActive ? "font-bold" : "font-semibold font-sans"
                 }`}
               >
                 {item.name}
@@ -142,7 +142,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <p className="mt-5 text-[10px] text-center text-slate-400 font-serif italic font-medium leading-relaxed">
+        <p className="mt-5 text-[10px] text-center text-slate-400 font-sans italic font-medium leading-relaxed">
           "They can because they think they can."
         </p>
       </div>

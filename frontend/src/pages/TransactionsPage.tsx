@@ -117,10 +117,10 @@ const TransactionsPage = () => {
               <Receipt size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-2">
                 Transaction History
               </h1>
-              <p className="text-lg text-slate-500 font-medium font-serif italic">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 A permanent chronicle of all scholarship movements.
               </p>
             </div>
@@ -196,7 +196,7 @@ const TransactionsPage = () => {
               className="text-amber-500 animate-spin-reverse mb-2"
               size={48}
             />
-            <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">
+            <p className="text-2xl font-sans font-bold text-slate-400 tracking-wide">
               Consulting the Records...
             </p>
           </div>
@@ -325,7 +325,7 @@ const TransactionsPage = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all mt-4 shadow-xl"
             >
               {saveMutation.isPending
                 ? "Updating the Chronicle..."

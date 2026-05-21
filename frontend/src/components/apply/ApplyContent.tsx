@@ -78,7 +78,7 @@ const ApplyContent = ({ roleTab, studentSubtab, children }: ApplyContentProps) =
             <Icon size={16} />
             <span>{panel.badge}</span>
           </div>
-          <h2 className="mt-5 font-serif text-3xl font-black text-slate-900">
+          <h2 className="mt-5 font-sans text-3xl font-black text-slate-900">
             {panel.title}
           </h2>
           <p className="mt-3 text-base text-slate-600 sm:text-lg">

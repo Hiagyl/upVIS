@@ -16,7 +16,7 @@ const ApplicationCard = ({ application, onReview }: ApplicationCardProps) => {
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex-1">
-          <h3 className="text-xl font-bold font-serif text-slate-900">
+          <h3 className="text-xl font-bold font-sans text-slate-900">
             {application.fullName}
           </h3>
           <p className="mt-1 text-sm font-medium text-slate-500">

@@ -96,10 +96,10 @@ const ScholarsPage = () => {
               <GraduationCap size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
+              <h1 className="text-4xl font-sans font-bold text-slate-900 tracking-tight mb-2">
                 Scholar Directory
               </h1>
-              <p className="text-lg text-slate-500 font-medium font-serif italic">
+              <p className="text-lg text-slate-500 font-medium font-sans">
                 A permanent chronicle of academic excellence and potential.
               </p>
             </div>
@@ -135,7 +135,7 @@ const ScholarsPage = () => {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 gap-4 text-center">
             <History className="text-amber-500 animate-spin-reverse mb-2" size={48} />
-            <p className="text-2xl font-serif font-bold text-slate-400 tracking-wide">
+            <p className="text-2xl font-sans font-bold text-slate-400 tracking-wide">
               Consulting the Records...
             </p>
           </div>
@@ -160,7 +160,7 @@ const ScholarsPage = () => {
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-slate-400">
                         <History size={48} strokeWidth={1.5} className="opacity-20" />
-                        <p className="text-xl font-medium italic font-serif text-slate-500">
+                        <p className="text-xl font-medium font-sans text-slate-500">
                           {searchTerm
                             ? `No records matching "${searchTerm}" found.`
                             : "The scholar directory is currently empty."}
@@ -175,14 +175,14 @@ const ScholarsPage = () => {
                       className="hover:bg-slate-50 transition-colors"
                     >
                       <td className="p-6">
-                        <div className="text-lg font-bold text-slate-900 font-serif">
+                        <div className="text-lg font-bold text-slate-900 font-sans">
                           {scholar.name}
                         </div>
                         <div className="flex gap-2 mt-2">
-                          <span className="px-3 py-1.5 text-xs font-black rounded-full bg-slate-100 text-slate-700 border-2 border-slate-200 uppercase tracking-wider">
+                          <span className="px-3 py-1.5 text-xs font-bold rounded-full bg-slate-100 text-slate-700 border-2 border-slate-200 uppercase tracking-wider">
                             {scholar.studentNumber}
                           </span>
-                          <span className="px-3 py-1.5 text-xs font-black rounded-full bg-amber-50 text-amber-700 border-2 border-amber-200 uppercase tracking-wider">
+                          <span className="px-3 py-1.5 text-xs font-bold rounded-full bg-amber-50 text-amber-700 border-2 border-amber-200 uppercase tracking-wider">
                             {scholar.upMail}
                           </span>
                         </div>
@@ -199,7 +199,7 @@ const ScholarsPage = () => {
                       </td>
                       <td className="p-6">
                         <span
-                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wide border-2 ${
+                          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide border-2 ${
                             scholar.status === "Student"
                               ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                               : "bg-amber-50 border-amber-200 text-amber-700"
@@ -245,11 +245,11 @@ const ScholarsPage = () => {
                     <div className="p-6 bg-slate-50 border-t-2 border-slate-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">
                           upVIS
                         </p>
                       </div>
-                      <p className="text-xs text-slate-400 italic font-serif">
+                      <p className="text-xs text-slate-400 italic font-sans">
                         "From a little spark may burst a flame."
                       </p>
                     </div>
@@ -337,7 +337,7 @@ const ScholarsPage = () => {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-black hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl mt-4"
+              className="w-full bg-slate-900 text-white py-5 rounded-xl text-xl font-bold hover:bg-amber-600 disabled:bg-slate-300 transition-all shadow-xl mt-4"
             >
               {saveMutation.isPending ? (
                 <div className="flex items-center justify-center gap-2">

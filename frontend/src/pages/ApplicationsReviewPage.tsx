@@ -141,7 +141,7 @@ const ApplicationsReviewPage = () => {
                 <ClipboardCheck size={30} />
               </div>
               <div>
-                <h1 className="text-4xl font-serif font-black text-slate-900">
+                <h1 className="text-4xl font-sans font-bold text-slate-900">
                   Review Applications
                 </h1>
                 <p className="mt-2 text-base text-slate-500 sm:text-lg">
@@ -151,10 +151,10 @@ const ApplicationsReviewPage = () => {
             </div>
 
             <div className="rounded-2xl bg-[#FAF9F6] px-5 py-4 text-right">
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
                 Review Queue
               </p>
-              <p className="mt-1 text-3xl font-black text-slate-900">
+              <p className="mt-1 text-3xl font-bold text-slate-900">
                 {filteredApplications.length}
               </p>
             </div>
@@ -199,10 +199,10 @@ const ApplicationsReviewPage = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
                         {card.label}
                       </p>
-                      <p className="mt-2 text-3xl font-black text-slate-900">
+                      <p className="mt-2 text-3xl font-bold text-slate-900">
                         {counts[card.key]}
                       </p>
                     </div>
@@ -235,7 +235,7 @@ const ApplicationsReviewPage = () => {
           </div>
         ) : filteredApplications.length === 0 ? (
           <div className="rounded-[1.75rem] border-2 border-amber-100 bg-white px-6 py-16 text-center shadow-sm">
-            <p className="text-2xl font-serif font-bold text-slate-900">
+            <p className="text-2xl font-sans font-bold text-slate-900">
               No applications found
             </p>
             <p className="mt-3 text-slate-500">

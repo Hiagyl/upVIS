@@ -65,7 +65,7 @@ const LoginPage = () => {
             <span className="w-2 h-0.5 bg-amber-400/50 rounded-full" />
           </div>
 
-          <h2 className="text-white text-5xl font-serif font-black leading-[1.15] tracking-tight mb-6">
+          <h2 className="text-white text-5xl font-sans font-black leading-[1.15] tracking-tight mb-6">
             Don't you want to be a <span className="text-amber-400">Virgil?</span>
           </h2>
 
@@ -92,7 +92,7 @@ const LoginPage = () => {
 
         <div className="relative z-10 p-6 shrink-0">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="flex items-center gap-1.5 text-slate-400 hover:text-slate-700 text-sm font-semibold transition-colors group"
           >
             <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
@@ -112,7 +112,7 @@ const LoginPage = () => {
               <p className="text-amber-600 text-xs font-bold uppercase tracking-[0.18em] mb-3">
                 Welcome back
               </p>
-              <h1 className="text-4xl font-serif font-black text-slate-900 leading-tight tracking-tight">
+              <h1 className="text-4xl font-sans font-black text-slate-900 leading-tight tracking-tight">
                 Sign in to<br />your account
               </h1>
             </div>
