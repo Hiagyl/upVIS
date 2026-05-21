@@ -466,7 +466,7 @@ const StudentPoll = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Scholar Polls
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium">
                 Vote on active polls and view community results.
               </p>
             </div>

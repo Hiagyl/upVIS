@@ -204,15 +204,8 @@ const LandingPage = () => {
 
           <div className="flex gap-4">
             <button
-              onClick={() => navigate("/register")}
-              className="bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition hover:scale-105"
-            >
-              Donate Now
-            </button>
-
-            <button
               onClick={() => scrollToSection("about")}
-              className="border-2 border-slate-300 px-8 py-4 rounded-xl font-semibold hover:bg-slate-100 transition"
+              className="bg-slate-900 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition hover:scale-105"
             >
               Learn More
             </button>
@@ -230,10 +223,7 @@ const LandingPage = () => {
               alt="picture of upVIS"
               className="w-full h-full object-cover rounded-3xl"
             ></img>
-            <p className="mt-2 text-sm text-slate-500 italic text-center">
-              Photo credit:
-              https://www.facebook.com/profile.php?id=61554691509677
-            </p>
+          <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
           </div>
         </div>
       </section>
@@ -280,9 +270,7 @@ const LandingPage = () => {
             alt="Photo of Students accepting donations"
             className="w-full h-full object-cover rounded-3xl"
           ></img>
-          <p>
-            Photo credit: https://www.facebook.com/profile.php?id=61554691509677
-          </p>
+        <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
         </div>
 
         <div>
@@ -335,7 +323,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Give any amount to support UPVIS scholars.
             </p>
-            <span className="text-amber-600 font-semibold">Donate Now →</span>
           </div>
 
           <div className="bg-white p-8 rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
@@ -344,7 +331,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Help us reach more donors by sharing the platform.
             </p>
-            <span className="text-amber-600 font-semibold">Share Now →</span>
           </div>
 
           <div className="bg-white p-8 rounded-2xl border-2 border-amber-100 shadow-sm hover:shadow-xl transition hover:-translate-y-1">
@@ -353,9 +339,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-sm mb-4">
               Join our team in packing and preparing support for scholars.
             </p>
-            <span className="text-amber-600 font-semibold">
-              Join as Volunteer →
-            </span>
           </div>
         </div>
       </section>
@@ -371,9 +354,7 @@ const LandingPage = () => {
             alt="Photo of Students accepting donations"
             className="w-full h-full object-cover rounded-3xl"
           ></img>
-          <p>
-            Photo credit: https://www.facebook.com/profile.php?id=61554691509677
-          </p>
+        <p className="mt-2 text-xs text-slate-400 italic text-center">Photo credit: UPV Virgils</p>
         </div>
 
         <div>
@@ -385,13 +366,6 @@ const LandingPage = () => {
             “Because of donors like you, I can continue my studies. Your support
             helps me focus on my dreams.”
           </p>
-
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-amber-600 transition"
-          >
-            Help a Scholar
-          </button>
         </div>
       </section>
 
@@ -420,7 +394,7 @@ const LandingPage = () => {
             <div className="bg-[#FAF9F6] border-2 border-amber-100 rounded-2xl p-6">
               <div className="text-3xl mb-3">📱</div>
               <h3 className="font-bold text-lg mb-1">Message Us</h3>
-              <p className="text-sm text-slate-500">Facebook / Messenger</p>
+              <p className="text-sm text-slate-500">UPV Virgils on Facebook</p>
             </div>
 
             <div className="bg-[#FAF9F6] border-2 border-amber-100 rounded-2xl p-6">
@@ -429,13 +403,6 @@ const LandingPage = () => {
               <p className="text-sm text-slate-500">UP Visayas, Iloilo</p>
             </div>
           </div>
-
-          <button
-            onClick={() => navigate("/register")}
-            className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition"
-          >
-            Contact Us
-          </button>
         </div>
       </section>
 

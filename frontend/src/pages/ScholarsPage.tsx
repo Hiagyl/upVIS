@@ -99,7 +99,7 @@ const ScholarsPage = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
                 Scholar Directory
               </h1>
-              <p className="text-lg text-slate-500 font-medium font-serif italic">
+              <p className="text-lg text-slate-500 font-medium">
                 A permanent chronicle of academic excellence and potential.
               </p>
             </div>

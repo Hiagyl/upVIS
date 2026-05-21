@@ -256,7 +256,7 @@ const AdminPoll = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Poll Management
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium">
                 Manage polls, responses, and voting history.
               </p>
             </div>

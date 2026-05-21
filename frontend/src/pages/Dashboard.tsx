@@ -139,7 +139,7 @@ const Dashboard = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Dashboard
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium">
                 Financial overview of our organization.
               </p>
             </div>
@@ -223,7 +223,7 @@ const Dashboard = () => {
         >
           <form onSubmit={handleSubmit} className="p-2 space-y-6">
             <div>
-              <label className="block text-lg font-bold text-slate-800 mb-2">
+              <label className="block text-base font-semibold text-slate-700 mb-2">
                 Description of Event
               </label>
               <input

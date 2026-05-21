@@ -120,7 +120,7 @@ const TransactionsPage = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-2">
                 Transaction History
               </h1>
-              <p className="text-lg text-slate-500 font-medium font-serif italic">
+              <p className="text-lg text-slate-500 font-medium">
                 A permanent chronicle of all scholarship movements.
               </p>
             </div>
@@ -142,38 +142,38 @@ const TransactionsPage = () => {
         <div className="bg-white p-6 rounded-2xl border-2 border-amber-100 shadow-sm mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* SEARCH */}
-            <input
-              type="text"
-              placeholder="Search transactions..."
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-slate-500 px-1">Search</label>
+              <input
+                type="text"
+                placeholder="Search transactions..."
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+              />
+            </div>
 
             {/* START DATE */}
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-                setPage(1);
-              }}
-              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-slate-500 px-1">Start Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => { setStartDate(e.target.value); setPage(1); }}
+                className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+              />
+            </div>
 
             {/* END DATE */}
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => {
-                setEndDate(e.target.value);
-                setPage(1);
-              }}
-              className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-slate-500 px-1">End Date</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => { setEndDate(e.target.value); setPage(1); }}
+                className="border-2 border-slate-200 rounded-xl p-4 outline-none focus:border-amber-500"
+              />
+            </div>
 
             {/* RESET */}
             <button

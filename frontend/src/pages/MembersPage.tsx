@@ -99,7 +99,7 @@ const MembersPage = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Organization Roster
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic">
+              <p className="text-lg text-slate-500 font-medium">
                 Managing the hands that build our community.
               </p>
             </div>

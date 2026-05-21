@@ -133,7 +133,7 @@ const DonorsPage = () => {
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight mb-1">
                 Donors
               </h1>
-              <p className="text-lg text-slate-500 font-medium italic font-serif">
+              <p className="text-lg text-slate-500 font-medium">
                 Tracking the generosity that powers our programs.
               </p>
             </div>
